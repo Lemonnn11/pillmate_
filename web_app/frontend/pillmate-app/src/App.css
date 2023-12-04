@@ -1,0 +1,26 @@
+@font-face {
+  font-family: "LINESeedSansENBold";
+  src: url("./fonts/LineSeedSansEN/LINESeedSans_W_Bd.eot");
+  src: url("./fonts/LineSeedSansEN/LINESeedSans_W_Bd.woff") format('woff');
+  font-weight: bold;
+ }
+
+ @font-face {
+  font-family: "LINESeedSansENRegular";
+  src: url("./fonts/LineSeedSansEN/LINESeedSans_W_Rg.woff") format('woff');
+  font-weight: normal;
+ }
+
+ @font-face {
+  font-family: "LINESeedSansTHRegular";
+  src: url("./fonts/LineSeedSansTH/LINESeedSansTH_W_Rg.woff") format('woff');
+  font-weight: normal;
+ }
+
+ @font-face {
+  font-family: "LINESeedSansTHBold";
+  src: url("./fonts/LineSeedSansTH/LINESeedSansTH_W_Bd.woff") format('woff');
+  font-weight: bold;
+ }
+
+
