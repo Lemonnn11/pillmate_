@@ -1,6 +1,5 @@
 @font-face {
   font-family: "LINESeedSansENBold";
-  src: url("./fonts/LineSeedSansEN/LINESeedSans_W_Bd.eot");
   src: url("./fonts/LineSeedSansEN/LINESeedSans_W_Bd.woff") format('woff');
   font-weight: bold;
  }
@@ -8,6 +7,12 @@
  @font-face {
   font-family: "LINESeedSansENRegular";
   src: url("./fonts/LineSeedSansEN/LINESeedSans_W_Rg.woff") format('woff');
+  font-weight: normal;
+ }
+
+ @font-face {
+  font-family: "LINESeedSansENMd";
+  src: url("./fonts/LineSeedSansEN/LINESeedSans_W_Th.woff") format('woff');
   font-weight: normal;
  }
 
@@ -23,4 +28,29 @@
   font-weight: bold;
  }
 
+ .form-control:focus, .form-control-clicked {
+  border-color: #1AB48D;
+  box-shadow: 0 0 0 0.2rem rgba(213, 236, 230, 0.75);
+} 
 
+
+
+.btn-selected{
+  border-color: #1AB48D;
+  box-shadow: 0 0 0 0.2rem rgba(213, 236, 230, 0.75);
+}
+
+.onclicked-button{
+  border-left: none;
+  border-color: #1AB48D;
+  box-shadow: 0 0 0 0.2rem rgba(213, 236, 230, 0.75);
+}
+
+.tablerow:hover{
+  background-color: #D5ECE6;
+}
+
+.tablerow{
+  background-color: white;
+  width: 100vw;
+}

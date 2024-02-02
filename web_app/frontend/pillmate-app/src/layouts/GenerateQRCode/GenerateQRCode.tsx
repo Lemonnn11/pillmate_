@@ -7,10 +7,15 @@ import QRCodeModel from '../../models/QRCode';
 import { SlPrinter } from "react-icons/sl";
 import ReactToPrint from 'react-to-print';
 import { ImageComponent } from './components/ImageComponen';
+import { ReturnUnit } from './components/ReturnUnit';
+import{getAuth, onAuthStateChanged} from 'firebase/auth';
+import { useHistory, useLocation } from 'react-router-dom';
+
 
 export const GenerateQRCode = () => {
 
     const componentRef = useRef<HTMLDivElement>(null)
+    const history = useHistory();
     const [ imageID, setImageID ] = useState('');
     const [ dosagePerTake, setDosagePerTake ]  = useState('');
     const [timePerDay, setTimePerDay ] = useState('');
@@ -21,9 +26,42 @@ export const GenerateQRCode = () => {
     const [ noon, setNoon ] = useState(false); 
     const [ evening, setEvening ] = useState(false); 
     const [ Bed, setBed ] = useState(false);  
-    const [ takeMedWhen, setTakeMedWhen ] = useState("ก่อนอาหาร");
-    const [ every, setEvery ] = useState("4");
+    const [ takeMedWhen, setTakeMedWhen ] = useState("...");
+    const [ every, setEvery ] = useState("...");
+    const [ dosageClick, setDosageClick ] = useState(false)
+    const [ dosageClickDropdown, setDosageClickDropdown ] = useState(true); 
+    const [ unit, setUnit] = useState("แคปซูล");
     const [ addtionalAdvice, setAdditionalAdvice ] = useState('ยานี้อาจระคายเคืองกระเพาะอาหาร ให้รับประทานหลังอาหารทันที')
+    const auth = getAuth();
+    const [ tradeName, setTradeName] = useState('');
+    const [ genericName, setGenericName] = useState('');
+    const [ containers, setContainers ] = useState('');
+    const [dosageForm , setDosageForm]  = useState('');
+    const [category, setCategory] = useState('');
+    const location = useLocation();
+    
+    useEffect(() => {
+        if (location.state) {
+          setTradeName((location.state as any).tradeName);
+          setGenericName((location.state as any).genericName);
+          setContainers((location.state as any).containers);
+          setDosageForm((location.state as any).dosageForm);
+          setCategory((location.state as any).category);
+        } else {
+          console.error('Data is not available in location state.');
+        }
+      }, [location.state]);
+
+    useEffect(() => {
+        authCheck();
+        return () => authCheck();
+    }, [auth]);
+
+    const authCheck = onAuthStateChanged(auth, (user) => {
+        if(!user){
+            history.push('/login');
+        }
+    });
 
 
     const handleTakeMedWhen = (value: string) => {
@@ -36,6 +74,10 @@ export const GenerateQRCode = () => {
 
     const handleAddtionalAdvice = (value: string) => {
         setAdditionalAdvice(value);
+    }
+
+    const handleUnit = (value: string) => {
+        setUnit(value);
     }
 
     const handleMorning = () => {
@@ -53,6 +95,14 @@ export const GenerateQRCode = () => {
     const handleBed = () => {
         setBed(!Bed);
     }
+
+    const handleDosageClick = () => {
+        setDosageClick(!dosageClick);
+    } 
+    
+    const handleDosageClickDropdown = () => {
+        setDosageClickDropdown(false)
+    } 
 
     
 
@@ -106,7 +156,7 @@ export const GenerateQRCode = () => {
     }
 
     return (
-        <div className='row' style={{height:'100vh', marginRight:'1px'}}>
+        <div className='d-flex' style={{height:'100vh', width: '100vw', marginRight:'1px'}}>
             <div className="modal fade" id="exampleModalCenter"  role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style={{fontFamily: "LINESeedSansTHRegular"}}>
                 <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div className="modal-content">
@@ -215,9 +265,51 @@ export const GenerateQRCode = () => {
                 </div>
                 </div>
             </div>
-            <div className='col' style={{background: '#FFFFFF', boxShadow: '2px 3px 5px rgba(119, 119, 119, 0.25)'}}>        
+
+            <div style={{width: '38vw',background: '#FFFFFF', boxShadow: '2px 346px rgba(119, 119, 119, 0.25)', paddingTop: '3.5%'}}>       
+                <div className='d-flex gap-3'>
+                    <img src={process.env.PUBLIC_URL + '/images/para.png'} style={{width:'140px', height:'140px', marginLeft: '10%'}}/>
+                    <div>
+                        <div style={{fontSize: '24px', fontFamily: "LINESeedSansENBold"}}>
+                            {genericName}
+                        </div>
+                        <div className='d-flex mt-3'>
+                            <div style={{fontSize: '18px', fontFamily: "LINESeedSansENMd"}}>
+                                ชื่อทางการค้า:
+                            </div>
+                            <div style={{fontSize: '18px', fontFamily: "LINESeedSansENRegular"}}>
+                                {tradeName}
+                            </div>
+                        </div>
+                        <div className='d-flex mt-2'>
+                            <div style={{fontSize: '18px', fontFamily: "LINESeedSansENMd"}}>
+                                ประเภทยา:
+                            </div>
+                            <div style={{fontSize: '18px', fontFamily: "LINESeedSansENRegular"}}>
+                                {category}
+                            </div>
+                        </div>
+                        <div className='d-flex mt-2'>
+                            <div style={{fontSize: '18px', fontFamily: "LINESeedSansENMd"}}>
+                                บรรจุภัณฑ์:
+                            </div>
+                            <div style={{fontSize: '18px', fontFamily: "LINESeedSansENRegular"}}>
+                                {containers}
+                            </div>
+                        </div>
+                        <div className='d-flex mt-2'>
+                            <div style={{fontSize: '18px', fontFamily: "LINESeedSansENMd"}}>
+                                รูปแบบยาเตรียม:
+                            </div>
+                            <div style={{fontSize: '18px', fontFamily: "LINESeedSansENRegular"}}>
+                                {dosageForm}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div className='col' style={{background: '#DFDFDF', paddingRight: '8%',  paddingTop: '3%', paddingLeft: '4%'}}>
+
+            <div  style={{width: '62vw',background: '#F6F6F6', paddingRight: '8%',  paddingTop: '3%', paddingLeft: '7%'}}>
                 <div className='d-flex justify-content-start' style={{gap: '8px'}}>
                     <div className='d-flex align-items-center'>
                         <IoIosArrowBack size={32}/>
@@ -226,7 +318,7 @@ export const GenerateQRCode = () => {
                         Generate QR
                     </div>
                 </div>
-                <div style={{marginLeft: '1%', fontFamily: 'LINESeedSansTHRegular'}}>
+                <div className='mt-1'style={{marginLeft: '1%', fontFamily: 'LINESeedSansTHRegular'}}>
                     <div className='d-flex justify-content-start' style={{gap: '8px', fontFamily: 'LINESeedSansENRegular', marginBottom: '3.5%'}}>
                         <div style={{fontSize: '14px', color: '#757575'}}>
                             Drug list
@@ -238,8 +330,8 @@ export const GenerateQRCode = () => {
                             Paracetamol
                         </div>
                     </div>
-                    <form  onSubmit={createQRCode}>
-                        <div className='d-flex justify-content-start' style={{width:'100%', gap: '25%'}}>
+                    <form  onSubmit={createQRCode} style={{width: '39vw'}}>
+                        <div className='d-flex justify-content-between' style={{gap: '25%'}}>
                             <div>
                                 <label  className="form-label">
                                     <div className='d-flex'>
@@ -251,7 +343,28 @@ export const GenerateQRCode = () => {
                                         </div>
                                     </div>
                                 </label>
-                                <input type="text" className="form-control" placeholder='จำนวน' aria-label="Text input with dropdown button" name="dosagePerTake" required onChange={e => setDosagePerTake(e.target.value)} value={dosagePerTake} style={{width: '130%', height: '60%'}}/>
+                                <div className='d-flex'>
+                                    {dosageClick ? <input type="text" onClick={handleDosageClick} onBlur={handleDosageClick} className="form-control form-control-clicked" placeholder='จำนวน' name="dosagePerTake" required onChange={e => setDosagePerTake(e.target.value)} value={dosagePerTake} style={{width: '9vw', height: '46px', borderRight: 'none', borderTopRightRadius: '0px', borderBottomRightRadius: '0px'}}/>:
+                                    <input type="text" onClick={handleDosageClick} onBlur={handleDosageClick} className="form-control" placeholder='จำนวน' name="dosagePerTake" required onChange={e => setDosagePerTake(e.target.value)} value={dosagePerTake} style={{width: '9vw', height: '46px', borderRight: 'none', borderTopRightRadius: '0px', borderBottomRightRadius: '0px'}}/>}
+                                    { dosageClick ? 
+                                    <div className="dropdown">
+                                        <button className="btn onclicked-button" onClick={handleDosageClick} onBlur={handleDosageClick} type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" style={{backgroundColor: 'white', width: '5vw', height: '46px', borderTopLeftRadius: '0px', borderBottomLeftRadius: '0px'}}>
+                                        <div className='d-flex justify-content-between'>
+                                        {unit}
+                                        <IoIosArrowDown size={14} color='#2C2C2C' className='mt-1'/>
+                                        </div>
+                                        </button>
+                                        {dosageClickDropdown ? <ReturnUnit handleUnit={handleUnit} />: <div/>}
+                                    </div>:<div className="dropdown">
+                                        <button className="btn border border-start-0" onClick={handleDosageClick} onBlur={handleDosageClick} type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" style={{backgroundColor: 'white', width: '5vw', height: '46px', borderTopLeftRadius: '0px', borderBottomLeftRadius: '0px'}}>
+                                        <div className='d-flex justify-content-between'>
+                                        {unit}
+                                        <IoIosArrowDown size={14} color='#2C2C2C' className='mt-1'/>
+                                        </div>
+                                        </button>
+                                        <ReturnUnit handleUnit={handleUnit}/>
+                                    </div>}
+                                </div>
                             </div>
                             <div>
                                 <label  className="form-label">
@@ -264,11 +377,11 @@ export const GenerateQRCode = () => {
                                         </div>
                                     </div>
                                 </label>
-                                <input type="text" className="form-control" placeholder='จำนวน' aria-label="Text input with dropdown button" name="dosagePerTake" required onChange={e => setTimePerDay(e.target.value)} value={timePerDay}  style={{width: '130%', height: '60%'}}/>
+                                <input type="text" className="form-control" placeholder='จำนวน' aria-label="Text input with dropdown button" name="dosagePerTake" required onChange={e => setTimePerDay(e.target.value)} value={timePerDay}  style={{width: '14vw', height: '46px'}}/>
                             </div>
                         </div>
-                        <div className='d-flex justify-content-start align-self-end mt-4' style={{width:'100%'}}>
-                            <div style={{marginRight: '25%'}}>
+                        <div className='d-flex justify-content-between align-self-end mt-4'>
+                            <div>
                                 <label  className="form-label">
                                     <div className='d-flex'>
                                         <div style={{fontSize: '16px', color: '#000000'}}>
@@ -280,7 +393,7 @@ export const GenerateQRCode = () => {
                                     </div>
                                 </label>
                                 <div className="dropdown">
-                                    <button className="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"  style={{backgroundColor: 'white', width: '214%', height: '60%', paddingTop: '5.6%', paddingBottom: '5.6%'}}>
+                                    <button className="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"  style={{backgroundColor: 'white', width: '14vw', height: '46px'}}>
                                        <div className='d-flex justify-content-between'>
                                        {takeMedWhen}
                                         <IoIosArrowDown size={14} color='#2C2C2C' className='mt-1'/>
@@ -289,19 +402,19 @@ export const GenerateQRCode = () => {
                                     <ReturnTakemedWhen handleTakeMedWhen={handleTakeMedWhen}/>
                                 </div>
                             </div>
-                            <div className='align-self-end' style={{marginRight: '7.1%'}}>
+                            <div className='align-self-end'>
                                 หรือ
                             </div>
                             <div>
                                 <label  className="form-label">
-                                    <div className='d-flex justify-content-between'>
+                                    <div >
                                         <div style={{fontSize: '16px', color: '#000000'}}>
                                             ทุกๆ
                                         </div>
                                     </div>
                                 </label>
                                 <div className="dropdown">
-                                    <button className="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" style={{backgroundColor: 'white', width: '548%', height: '60%', paddingTop: '14.5%', paddingBottom: '14.5%'}}>
+                                    <button className="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" style={{backgroundColor: 'white', width: '14vw', height: '46px'}}>
                                        <div className='d-flex justify-content-between'>
                                        {every}
                                         <IoIosArrowDown size={14} color='#2C2C2C' className='mt-1'/>
@@ -312,8 +425,8 @@ export const GenerateQRCode = () => {
                             </div>
                         </div>
 
-                        <div className='d-flex justify-content-start align-self-end mt-4' style={{width:'100%'}}>
-                            <div style={{marginRight: '16.9%'}}>
+                        <div className='d-flex justify-content-between align-self-end mt-4'>
+                            <div>
                                 <label  className="form-label">
                                     <div className='d-flex'>
                                         <div style={{fontSize: '16px', color: '#000000'}}>
@@ -324,43 +437,43 @@ export const GenerateQRCode = () => {
                                         </div> */}
                                     </div>
                                 </label>
-                                <div className="d-flex gap-2" style={{width: '127%'}}>
+                                <div className="d-flex gap-2" >
                         
-                                    {morning ? <button className="btn" type="button" onClick={handleMorning} style={{backgroundColor: '#D5ECE6', width: '200%', height: '60%', paddingTop: '2.1%', paddingBottom: '2.1%'}}>
+                                    {morning ? <button className="btn btn-selected" type="button" onClick={handleMorning} style={{backgroundColor: 'white', width: '4.5vw', height: '50px'}}>
                                                         <div className='d-flex justify-content-center'>
                                                             เช้า
                                                          </div>
                                                 </button>:
-                                                <button className="btn" type="button" onClick={handleMorning} style={{backgroundColor: 'white', width: '200%', height: '60%', paddingTop: '2.1%', paddingBottom: '2.1%'}}>
+                                                <button className="btn" type="button" onClick={handleMorning} style={{backgroundColor: 'white', width: '4.5vw', height: '50px'}}>
                                                         <div className='d-flex justify-content-center'>
                                                             เช้า
                                                          </div>
                                                 </button>
                                     }
-                                    {noon ? <button className="btn" type="button" onClick={handleNoon} style={{backgroundColor: '#D5ECE6', width: '200%', height: '60%', paddingTop: '2.1%', paddingBottom: '2.1%'}}>
+                                    {noon ? <button className="btn btn-selected" type="button" onClick={handleNoon} style={{backgroundColor: 'white', width: '4.5vw', height: '50px'}}>
                                        <div className='d-flex justify-content-center'>
                                          กลางวัน
                                        </div>
                                     </button>:
-                                    <button className="btn" type="button" onClick={handleNoon} style={{backgroundColor: 'white', width: '200%', height: '60%', paddingTop: '2.1%', paddingBottom: '2.1%'}}>
+                                    <button className="btn" type="button" onClick={handleNoon} style={{backgroundColor: 'white', width: '4.5vw', height: '50px'}}>
                                     <div className='d-flex justify-content-center'>
                                       กลางวัน
                                     </div>
                                  </button>}
-                                    {evening ? <button className="btn" type="button" onClick={handleEvening} style={{backgroundColor: '#D5ECE6', width: '200%', height: '60%', paddingTop: '2.1%', paddingBottom: '2.1%'}}>
+                                    {evening ? <button className="btn btn-selected" type="button" onClick={handleEvening} style={{backgroundColor: 'white', width: '4.5vw', height: '50px'}}>
                                        <div className='d-flex justify-content-center'>
                                          เย็น
                                        </div>
-                                    </button>:<button className="btn" type="button" onClick={handleEvening} style={{backgroundColor: 'white', width: '200%', height: '60%', paddingTop: '2.1%', paddingBottom: '2.1%'}}>
+                                    </button>:<button className="btn" type="button" onClick={handleEvening} style={{backgroundColor: 'white', width: '4.5vw', height: '50px'}}>
                                        <div className='d-flex justify-content-center'>
                                          เย็น
                                        </div>
                                     </button>}
-                                    {Bed ? <button className="btn" type="button" onClick={handleBed} style={{backgroundColor: '#D5ECE6', width: '200%', height: '60%', paddingTop: '2.1%', paddingBottom: '2.1%'}}>
+                                    {Bed ? <button className="btn btn-selected" type="button" onClick={handleBed} style={{backgroundColor: 'white', width: '4.5vw', height: '50px'}}>
                                        <div className='d-flex justify-content-center'>
                                          ก่อนนอน
                                        </div>
-                                    </button>:<button className="btn" type="button" onClick={handleBed} style={{backgroundColor: 'white', width: '200%', height: '60%', paddingTop: '2.1%', paddingBottom: '2.1%'}}>
+                                    </button>:<button className="btn" type="button" onClick={handleBed} style={{backgroundColor: 'white', width: '4.5vw', height: '50px'}}>
                                        <div className='d-flex justify-content-center'>
                                          ก่อนนอน
                                        </div>
@@ -378,11 +491,11 @@ export const GenerateQRCode = () => {
                                         </div>
                                     </div>
                                 </label>
-                                <input type="text" className="form-control" placeholder='เดือน/วัน/ปี' aria-label="Text input with dropdown button" name="dosagePerTake" required onChange={e => setExpiredDate(e.target.value)} value={expiredDate}  style={{width: '129%', height: '60%'}}/>
+                                <input type="text" className="form-control" placeholder='เดือน/วัน/ปี' aria-label="Text input with dropdown button" name="dosagePerTake" required onChange={e => setExpiredDate(e.target.value)} value={expiredDate}  style={{width: '14vw', height: '46px'}}/>
                             </div>
                         </div>
 
-                        <div className='d-flex justify-content-start align-self-end mt-4' style={{width:'100%'}}>
+                        <div className='d-flex justify-content-start align-self-end mt-4'>
                             <div>
                                 <label  className="form-label">
                                     <div className='d-flex justify-content-between'>
@@ -394,11 +507,11 @@ export const GenerateQRCode = () => {
                                         </div>
                                     </div>
                                 </label>
-                                <input type="text" className="form-control" placeholder='เช่น ลดคลื่นไส้อาเจียน' aria-label="Text input with dropdown button" name="dosagePerTake" required onChange={e => setConditionOfUse(e.target.value)} value={conditionOfUse}  style={{width: '326%', height: '60%'}}/>
+                                <input type="text" className="form-control" placeholder='เช่น ลดคลื่นไส้อาเจียน' aria-label="Text input with dropdown button" name="dosagePerTake" required onChange={e => setConditionOfUse(e.target.value)} value={conditionOfUse}  style={{width: '39vw', height: '46px'}}/>
                             </div>
                         </div>
 
-                        <div className='d-flex justify-content-start align-self-end mt-4' style={{width:'100%'}}>
+                        <div className='d-flex justify-content-start align-self-end mt-4'>
                             <div>
                                 <label  className="form-label">
                                     <div className='d-flex justify-content-between'>
@@ -411,7 +524,7 @@ export const GenerateQRCode = () => {
                                     </div>
                                 </label>
                                 <div className="dropdown">
-                                    <button className="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style={{backgroundColor: 'white', width: '100%', paddingTop: '1.9%', paddingBottom: '1.9%'}}>
+                                    <button className="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style={{backgroundColor: 'white', width: '39vw', height:'46px'}}>
                                        <div className='d-flex justify-content-between'>
                                        {addtionalAdvice}
                                         <IoIosArrowDown size={14} color='#2C2C2C' className='mt-1'/>
@@ -423,7 +536,7 @@ export const GenerateQRCode = () => {
                         
                         </div>
 
-                        <div className='d-flex justify-content-between mt-4' style={{width:'100%', paddingRight: '23%'}}>
+                        <div className='d-flex justify-content-between mt-4' >
                             <div>
                                 <label  className="form-label">
                                     <div className='d-flex justify-content-between'>
@@ -435,10 +548,10 @@ export const GenerateQRCode = () => {
                                         </div>
                                     </div>
                                 </label>
-                                <input type="text" className="form-control" placeholder='จำนวนยา' aria-label="Text input with dropdown button" name="dosagePerTake" required onChange={e => setAmountOfMeds(e.target.value)} value={amountOfMeds}  style={{width: '116%', height: '60%'}}/>
+                                <input type="text" className="form-control" placeholder='จำนวนยา' aria-label="Text input with dropdown button" name="dosagePerTake" required onChange={e => setAmountOfMeds(e.target.value)} value={amountOfMeds}  style={{width: '14vw', height: '46px'}}/>
                             </div>
                             <div className='align-self-end'>
-                                    <button className="btn" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModalCenter" style={{ width: '159%', backgroundColor: '#1AB48D', paddingTop: '7.5%', paddingBottom: '7.5%', marginTop: '23%'}}>
+                                    <button className="btn" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModalCenter" style={{ width: '10vw', backgroundColor: '#1AB48D', height: '46px'}}>
                                        <div className='d-flex justify-content-center' style={{fontFamily: "LINESeedSansENBold", color: "white"}}>
                                          Generate QR
                                        </div>

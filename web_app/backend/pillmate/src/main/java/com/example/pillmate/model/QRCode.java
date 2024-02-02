@@ -15,8 +15,8 @@ public class QRCode {
     private String timeOfMed;
     private String timePeriodForMed;
     private String takeMedWhen;
-    private Date expiredDate;
-    private Date date;
+    private String expiredDate;
+    private String date;
     private String conditionOfUse;
     private String additionalAdvice;
     private int amountOfMeds;
@@ -27,11 +27,35 @@ public class QRCode {
     private String genericName;
     private String tradeName;
 
+    public QRCode(String qrCodeID, String pharID, int dosagePerTake, int timePerDay,
+                    String timeOfMed, String timePeriodForMed, String takeMedWhen,
+                    String expiredDate, String date, String conditionOfUse, String additionalAdvice,
+                    int amountOfMeds, int quantity, String adverseDrugReaction,
+                    String typeOfMedicine, String genericName, String tradeName) {
+        this.qrCodeID = qrCodeID;
+        this.pharID = pharID;
+        this.dosagePerTake = dosagePerTake;
+        this.timePerDay = timePerDay;
+        this.timeOfMed = timeOfMed;
+        this.timePeriodForMed = timePeriodForMed;
+        this.takeMedWhen = takeMedWhen;
+        this.expiredDate = expiredDate;
+        this.date = date;
+        this.conditionOfUse = conditionOfUse;
+        this.additionalAdvice = additionalAdvice;
+        this.amountOfMeds = amountOfMeds;
+        this.quantity = quantity;
+        this.adverseDrugReaction = adverseDrugReaction;
+        this.typeOfMedicine = typeOfMedicine;
+        this.genericName = genericName;
+        this.tradeName = tradeName;
+    }
+
     public String getPharID() {
         return pharID;
     }
 
-    public Date getExpiredDate() {
+    public String getExpiredDate() {
         return expiredDate;
     }
 
@@ -75,7 +99,7 @@ public class QRCode {
         return timePeriodForMed;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 

@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -18,14 +19,16 @@ public class PharmacyController {
 
     @CrossOrigin
     @PostMapping("/create")
-    public ResponseEntity<HttpStatus> createPharmacy(@RequestBody Pharmacy pharmacy){
+    public ResponseEntity<HashMap<String, String>> createPharmacy(@RequestBody Pharmacy pharmacy){
         try {
-            Boolean res = pharmacyService.addPharmacy(pharmacy);
-            if(res){
-                return new ResponseEntity<>(HttpStatus.CREATED);
+            String res = pharmacyService.addPharmacy(pharmacy);
+            if(res == null){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             else {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                HashMap<String, String> map = new HashMap<>();
+                map.put("id", res);
+                return new ResponseEntity<>(map, HttpStatus.CREATED);
             }
         } catch (ExecutionException | InterruptedException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
