@@ -9,11 +9,11 @@ public class Pharmacy {
     private String storeName;
 //    private Date date;
     private String address;
+    private String province;
+    private String city;
     private String latitude;
     private String longitude;
     private String phoneNumber;
-    private String email;
-    private String password;
     private String serviceTime;
     private String serviceDate;
 
@@ -21,29 +21,37 @@ public class Pharmacy {
 
     }
 
-    public Pharmacy(String pharID, String storeName, String address, String latitude, String longitude, String phoneNumber, String email, String password, String serviceTime, String serviceDate){
+    public Pharmacy(String pharID, String storeName, String address, String latitude, String longitude, String phoneNumber, String serviceTime, String serviceDate, String province, String city){
         this.pharID = pharID;
         this.storeName = storeName;
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
         this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.password = password;
         this.serviceTime = serviceTime;
         this.serviceDate = serviceDate;
+        this.province = province;
+        this.city = city;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
     }
 
     public String getPharID() {
         return pharID;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getAddress() {
@@ -72,14 +80,6 @@ public class Pharmacy {
 
     public String getStoreName() {
         return storeName;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public void setAddress(String address) {

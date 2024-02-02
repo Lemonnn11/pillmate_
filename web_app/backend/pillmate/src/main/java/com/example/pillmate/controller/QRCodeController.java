@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/qrCode")
@@ -23,15 +24,15 @@ public class QRCodeController {
 
     @CrossOrigin
     @RequestMapping("/create")
-    public ResponseEntity<String> createQRCode(@RequestBody QRCode qrCode){
+    public ResponseEntity<HashMap<String, String>> createQRCode(@RequestBody QRCode qrCode){
         try {
             String id = qrCodeService.createQRCode(qrCode);
-            return new ResponseEntity<>(id, HttpStatus.CREATED);
-        } catch (IOException | WriterException e) {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("id", id);
+            return new ResponseEntity<>(map, HttpStatus.CREATED);
+        } catch (IOException | WriterException | NotFoundException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (NotFoundException e) {
-            throw new RuntimeException(e);
         }
     }
 

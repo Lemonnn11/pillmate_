@@ -6,12 +6,20 @@ import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Repository
 public class QRCodeRepository {
 
     public void saveQRCode(BitMatrix matrix, String id) throws IOException {
-        String path = "C:\\src\\" + id +".png";
+        String currentWorkingDirectory = System.getProperty("user.dir");
+        Path currentPath = Paths.get(currentWorkingDirectory);
+        Path newPath = currentPath.getParent().getParent();
+        System.out.println("Current Project Path: " + newPath);
+
+        String path = newPath+ "\\frontend\\pillmate-app\\public\\images\\" + id +".png";
+        System.out.println("Absolute Path: " + new File(path).getAbsolutePath());
         MatrixToImageWriter.writeToFile(matrix, path.substring(path.lastIndexOf('.') + 1), new File(path));
     }
 
