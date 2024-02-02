@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1054158820437",
+    "project_id": "pillmate-18ac0",
+    "storage_bucket": "pillmate-18ac0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1054158820437:android:1b08347b367d3b8485f0dc",
+        "android_client_info": {
+          "package_name": "com.example.pillmate.pillmate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtlnFkublHVRZ-CQk2XEFi6RC6zyqoE3g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
