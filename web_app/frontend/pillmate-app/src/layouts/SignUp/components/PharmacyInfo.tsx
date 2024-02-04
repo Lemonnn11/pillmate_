@@ -42,7 +42,7 @@ export const PharmacyInfo: React.FC<PharmacyInfoProps> = (props) => {
             if (!response.ok) {
                 throw new Error('Error found');
             } else{
-                history.push("/generateQRCode");
+                history.push("/");
             }
         }
 

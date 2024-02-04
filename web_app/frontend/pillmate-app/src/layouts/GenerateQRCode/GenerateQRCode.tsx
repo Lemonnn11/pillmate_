@@ -44,7 +44,7 @@ export const GenerateQRCode = () => {
         if (location.state) {
           setTradeName((location.state as any).tradeName);
           setGenericName((location.state as any).genericName);
-          setContainers((location.state as any).containers);
+        //   setContainers((location.state as any).containers);
           setDosageForm((location.state as any).dosageForm);
           setCategory((location.state as any).category);
         } else {
@@ -289,14 +289,14 @@ export const GenerateQRCode = () => {
                                 {category}
                             </div>
                         </div>
-                        <div className='d-flex mt-2'>
+                        {/* <div className='d-flex mt-2'>
                             <div style={{fontSize: '18px', fontFamily: "LINESeedSansENMd"}}>
                                 บรรจุภัณฑ์:
                             </div>
                             <div style={{fontSize: '18px', fontFamily: "LINESeedSansENRegular"}}>
                                 {containers}
                             </div>
-                        </div>
+                        </div> */}
                         <div className='d-flex mt-2'>
                             <div style={{fontSize: '18px', fontFamily: "LINESeedSansENMd"}}>
                                 รูปแบบยาเตรียม:

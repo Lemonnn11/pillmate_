@@ -139,6 +139,7 @@ public class DrugRepository {
 //                }
 //                list.add(drug);
 //            }
+            list.remove(0);
             return list;
         } catch (IOException e) {
             e.printStackTrace();
