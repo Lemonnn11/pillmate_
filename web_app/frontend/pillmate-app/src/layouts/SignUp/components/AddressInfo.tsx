@@ -1,7 +1,6 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword} from 'firebase/auth';
 import { useHistory } from 'react-router-dom';
-import { IoCloseCircleOutline } from "react-icons/io5";
 import _thailand from "../../../data/thailand.json";
 import { District } from '../../../types/District';
 import { IoIosArrowDown } from 'react-icons/io';

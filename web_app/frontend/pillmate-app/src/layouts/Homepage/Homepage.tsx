@@ -4,27 +4,101 @@ import { ReturnDrug } from "./components/ReturnDrug";
 import DrugModel from "../../models/Drug";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useHistory } from "react-router-dom";
+import { error } from "console";
+import { Pagination } from "../../Utils/Pagination";
 
 export const Homepage = () => {
 
-    const [query, setQuery] = useState('');
     const history = useHistory();
-    const drugs = [
-        new DrugModel('Paracap Tab. 500 mg', 'Paracetamol', 'Container N/A, Storage N/A', 'TAB','Analgesics (Non-opioid) & antipyretics'),
-        new DrugModel('Moximo Cap. 500 mg', 'Amoxicillin', 'Container N/A, Storage N/A', 'CAP', 'Penicillins'),
-    ];
+    const [drugs, setDrugs] = useState<DrugModel[]>([]) 
     const auth = getAuth();
+    const [httpError, setHttpError] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [drugsPerPage] = useState(20);
+    const [totalDrugs, setTotalDrugs] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const [query, setQuery] = useState('');
+    const [queryUrl, setQueryUrl] = useState('');
 
     useEffect(() => {
         authCheck();
         return () => authCheck();
     }, [auth]);
 
+    useEffect(() => {
+        const fetchDrugs = async () => {
+            
+            let url: string = ''
+
+            if(queryUrl === ''){
+                url = `http://localhost:8080/api/drug/?page=${currentPage - 1}&size=${drugsPerPage}`;
+            }else{
+                url = `http://localhost:8080/api/drug/get-drugs?page=${currentPage - 1}&size=${drugsPerPage}` + queryUrl ;
+            }
+
+            const response = await fetch(url);
+
+            if(!response.ok){
+                throw new Error('Error found');
+            }
+            const responseJson = await response.json();
+
+            setTotalDrugs(responseJson.totalDrugs);
+            setTotalPages(responseJson.totalPages);
+
+            const loadedDrug: DrugModel[] = [];
+
+            for(let key in responseJson.drugs){
+                const drug = new DrugModel(
+                    responseJson.drugs[key].id,
+                    responseJson.drugs[key].tradeName,
+                    responseJson.drugs[key].genericName,
+                    responseJson.drugs[key].dosageForm,
+                    responseJson.drugs[key].category,
+                    responseJson.drugs[key].protectedFromLight,
+                    responseJson.drugs[key].imgSource,
+                );
+
+                loadedDrug.push(drug);
+            }
+
+            setDrugs(loadedDrug)
+        };
+        fetchDrugs().catch((error: any)=> {
+            setHttpError(error.message);
+        })
+        // window.scrollTo(0,0); 
+    }, [currentPage, queryUrl]);
+
+    if(httpError){
+        return(
+            <div className="container m-5">
+                <p>{httpError}</p>
+            </div>
+        )
+    }
+
     const authCheck = onAuthStateChanged(auth, (user) => {
         if(!user){
             history.push('/login');
         }
     });
+
+    const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+    const handleQuery = () => {
+        if (query === '') {
+          setQueryUrl('');
+        } else {
+          setQueryUrl(`&query=${query}&`);
+        }
+      };
+
+      const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+          handleQuery();
+        }
+      };
 
     return(
         <div className="d-flex">
@@ -66,7 +140,7 @@ export const Homepage = () => {
                         </div>
                     </button>        
                 </div>
-                <input type="text" className="form-control" placeholder='Search for a teachers by name or email' name="dosagePerTake" required onChange={e => setQuery(e.target.value)} value={query} style={{width: '90vw', height: '53px', border: 'none', borderTopLeftRadius: '0px', borderBottomLeftRadius: '0px', backgroundColor: '#EEEEEE', paddingLeft: '2%'}}/>
+                <input type="text" className="form-control" placeholder='Search...' name="dosagePerTake" required onChange={e => setQuery(e.target.value)} value={query} onKeyPress={handleKeyPress} style={{width: '90vw', height: '53px', border: 'none', borderTopLeftRadius: '0px', borderBottomLeftRadius: '0px', backgroundColor: '#EEEEEE', paddingLeft: '2%'}}/>
             </div>
             <div className="mt-4">
             <table className='table'>
@@ -87,6 +161,7 @@ export const Homepage = () => {
                     </tbody>
                 </table>
             </div>
+                {totalPages > 1 && <Pagination currentPage={currentPage} totalPages={totalPages} paginate={paginate}/>}
             </div>
             
         </div>

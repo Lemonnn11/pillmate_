@@ -17,7 +17,7 @@ export const ReturnDrug: React.FC<ReturnDrugProps> = (props) => {
             state: {
             tradeName: props.drug.tradeName,
             genericName: props.drug.genericName,
-            containers: props.drug.containers,
+            // containers: props.drug.containers,
             dosageForm: props.drug.dosageForm,
             category: props.drug.category,
         }});
@@ -27,15 +27,15 @@ export const ReturnDrug: React.FC<ReturnDrugProps> = (props) => {
         <tr className='align-middle tablerow'>
             <td style={{paddingTop: '1.75%', paddingBottom: '1.75%',paddingLeft: '1.5%'}}>
                 <div style={{fontFamily: 'LINESeedSansENBold', fontSize: '14px'}}>
-                    #0321
+                    {props.drug.id}
                 </div>
             </td>
-            <td style={{paddingTop: '1.5%', paddingBottom: '1.5%'}}>
+            <td style={{paddingTop: '1.5%', paddingBottom: '1.5%', width: '30%'}}>
                 <div style={{fontFamily: 'LINESeedSansENRegular', fontSize: '14px'}}>
                     {props.drug.tradeName}
                 </div>
             </td>
-            <td style={{paddingTop: '1.5%', paddingBottom: '1.5%'}}>
+            <td style={{paddingTop: '1.5%', paddingBottom: '1.5%', width: '30%'}}>
                 <div style={{fontFamily: 'LINESeedSansENRegular', fontSize: '14px'}}>
                     {props.drug.genericName}
                 </div>

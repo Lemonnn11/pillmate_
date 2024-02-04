@@ -1,16 +1,20 @@
 class DrugModel {
+    id: string;
     tradeName: string;
     genericName: string;
-    containers: string;
     dosageForm: string;
     category: string;
+    protectedFromLight: boolean; 
+    imgSource: string; 
 
-    constructor(tradeName: string, genericName: string, containers: string, dosageForm: string, category: string) {
+    constructor(id: string, tradeName: string, genericName: string, dosageForm: string, category: string, protectedFromLight: boolean, imgSource: string) {
+        this.id = id;
         this.tradeName = tradeName;
         this.genericName = genericName;
-        this.containers = containers;
         this.dosageForm = dosageForm;
-        this.category = category
+        this.category = category;
+        this.protectedFromLight = protectedFromLight;
+        this.imgSource = imgSource;
     }
 }
 
