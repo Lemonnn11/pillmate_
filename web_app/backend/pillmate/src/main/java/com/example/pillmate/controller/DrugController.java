@@ -50,7 +50,7 @@ public class DrugController {
     @GetMapping("/get-drugs")
     public ResponseEntity<Object> getDrugsByQuery(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("query") String query){
         List<Drug> drugs = drugService.getDrugsByQuery(query);
-        if(drugs == null){
+        if(drugs == null || drugs.size() == 0){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         List<Drug> pageDrugs  = new ArrayList<>();
@@ -69,5 +69,18 @@ public class DrugController {
         map.put("totalDrugs", drugs.size());
         map.put("totalPages", lastPage);
         return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
+    @CrossOrigin
+    @GetMapping("/get-categories")
+    public  ResponseEntity<Object> getCategories(){
+        List<String> categories = drugService.getCategories();
+        if(categories == null){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }else{
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("categories", categories);
+            return new ResponseEntity<>(map, HttpStatus.OK);
+        }
     }
 }

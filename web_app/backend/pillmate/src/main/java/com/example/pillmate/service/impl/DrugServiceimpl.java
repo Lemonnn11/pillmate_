@@ -38,12 +38,19 @@ public class DrugServiceimpl implements DrugService {
             if(drug.getGenericName().toLowerCase().contains(query.toLowerCase())){
                 result.add(drug);
             }
+
+            if(drug.getCategory().toLowerCase().contains(query.toLowerCase())){
+                result.add(drug);
+            }
         }
 
         return result;
     }
 
-
+    @Override
+    public List<String> getCategories() {
+        return drugRepository.getCategories();
+    }
 
 
 }
