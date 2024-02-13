@@ -25,4 +25,28 @@ public class PharmacyServiceimpl implements PharmacyService {
                 return null;
             }
     }
+
+    @Override
+    public String editPharmacy(Pharmacy pharmacy) throws ExecutionException, InterruptedException {
+        try{
+            String result = pharmacyRepository.updatePharmacy(pharmacy);
+            return result;
+        }
+        catch (FirestoreException e){
+            return null;
+        }
+    }
+
+    @Override
+    public Pharmacy getPharmacyByAccount(String email) throws ExecutionException, InterruptedException {
+        try{
+            Pharmacy result = pharmacyRepository.getPharmacyByAccount(email);
+            return result;
+        }
+        catch (FirestoreException e){
+            return null;
+        }
+    }
+
+
 }

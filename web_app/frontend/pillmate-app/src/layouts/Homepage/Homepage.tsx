@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { ReturnDrug } from "./components/ReturnDrug";
 import DrugModel from "../../models/Drug";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useHistory } from "react-router-dom";
 import { error } from "console";
 import { Pagination } from "../../Utils/Pagination";
@@ -22,6 +22,7 @@ export const Homepage = () => {
     const [queryUrl, setQueryUrl] = useState('');
     const [categories, setCategories] = useState<string[]>([]);
     const [categoryValue, setCategoryValue] = useState('Add filter');
+    const [email, setEmail] = useState('');
 
     useEffect(() => {
         authCheck();
@@ -111,6 +112,8 @@ export const Homepage = () => {
     const authCheck = onAuthStateChanged(auth, (user) => {
         if(!user){
             history.push('/login');
+        }else{
+
         }
     });
 
@@ -134,6 +137,16 @@ export const Homepage = () => {
           handleQuery();
         }
       };
+
+      const handleMyProfile = () => {
+        history.push("/edit-pharmacy");
+      }
+
+      const handleLogout = () => {
+        signOut(auth).then(() => {
+            history.push("/login");
+        })
+      }
 
     return(
         <div className="d-flex">
@@ -162,7 +175,18 @@ export const Homepage = () => {
                             100 drugs found
                         </div>
                     </div>
-                    <img src={process.env.PUBLIC_URL + '/images/hamburgermenu.png'} style={{width:'40px', height:'40px'}}/>
+                    <div className="dropdown">
+                        <button className="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown">
+                            <div className='d-flex justify-content-around align-items-center gap-2'>
+                                <img src={process.env.PUBLIC_URL + '/images/lemon.jpg'} style={{width:'55px', height:'55px', borderRadius: '50%', verticalAlign: 'middle'}}/>
+                                <IoIosArrowDown size={20} color='#8A8A8A' className='mt-1'/>
+                            </div>
+                        </button>
+                        <ul className="dropdown-menu dropdown-menu-end">
+                            <li key={"myprofile"}><a className="dropdown-item" href="#" onClick={handleMyProfile}>My profile</a></li>
+                            <li key={"logout"}><a className="dropdown-item" href="#" onClick={handleLogout}>Logout</a></li>
+                        </ul>
+                    </div>
                 </div>
                 <div className="d-flex mt-4">
                 <div className="dropdown">

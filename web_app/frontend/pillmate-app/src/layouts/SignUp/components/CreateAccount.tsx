@@ -6,6 +6,7 @@ import PharmacyModel from '../../../models/Pharmacy';
 
 export interface CreateAccountProps {
     handleStep: (value: number) => void;
+    handlePharmacy: (pharmacy: PharmacyModel) => void;
 }
 
 export const CreateAccount: React.FC<CreateAccountProps> = (props) => {
@@ -25,7 +26,11 @@ export const CreateAccount: React.FC<CreateAccountProps> = (props) => {
         else{
             try {
                 await createUserWithEmailAndPassword(auth, email, password);
+                const pharmacy1: PharmacyModel = new PharmacyModel();
+                pharmacy1.setEmail(email);
+                props.handlePharmacy(pharmacy1);
                 props.handleStep(1);
+                
               } catch (error:any) {
                 console.log( error.message);
               }

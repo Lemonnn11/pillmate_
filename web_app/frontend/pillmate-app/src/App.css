@@ -33,7 +33,9 @@
   box-shadow: 0 0 0 0.2rem rgba(213, 236, 230, 0.75);
 } 
 
-
+.btn:focus{
+  outline: none;
+}
 
 .btn-selected{
   border-color: #1AB48D;

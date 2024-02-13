@@ -39,6 +39,7 @@ export const GenerateQRCode = () => {
     const [dosageForm , setDosageForm]  = useState('');
     const [category, setCategory] = useState('');
     const location = useLocation();
+    const [ modalShow, setModalShow ] = useState(false);
     
     useEffect(() => {
         if (location.state) {
@@ -121,13 +122,25 @@ export const GenerateQRCode = () => {
 
             let timeOfTaken: string = '';
             if(morning){
-                timeOfTaken += 'เช้า ';
+                if(noon || evening || Bed){
+                    timeOfTaken += 'เช้า ';
+                }else{
+                    timeOfTaken += 'เช้า';
+                }
             }
             if(noon){
-                timeOfTaken += 'กลางวัน ';
+                if(evening || Bed){
+                    timeOfTaken += 'กลางวัน ';
+                }else{
+                    timeOfTaken += 'กลางวัน';
+                }
             }
             if(evening){
-                timeOfTaken += 'เย็น ';
+                if(Bed){
+                    timeOfTaken += 'เย็น ';
+                }else{
+                    timeOfTaken += 'เย็น';
+                }
             }
             if(Bed){
                 timeOfTaken += 'ก่อนนอน';
@@ -151,13 +164,14 @@ export const GenerateQRCode = () => {
                 const response = await create.json()
                 console.log(response["id"])
                 setImageID(response["id"])
+                setModalShow(true);
             }
         }
     }
 
     return (
         <div className='d-flex' style={{height:'100vh', width: '100vw', marginRight:'1px'}}>
-            <div className="modal fade" id="exampleModalCenter"  role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style={{fontFamily: "LINESeedSansTHRegular"}}>
+            {modalShow ? (<div className="modal fade" id="exampleModalCenter"  role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style={{fontFamily: "LINESeedSansTHRegular"}}>
                 <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div className="modal-content">
                         <div className="modal-header d-flex justify-content-end">
@@ -264,7 +278,23 @@ export const GenerateQRCode = () => {
                     </div>
                 </div>
                 </div>
+            </div>):
+            (<div className="modal fade" id="exampleModalCenter"  role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style={{fontFamily: "LINESeedSansTHRegular"}}>
+            <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div className="modal-content">
+                    <div className="modal-header d-flex justify-content-end">
+                        <button type="button" className="close btn" data-bs-dismiss="modal" aria-label="Close">
+                            ปิด
+                        </button>
             </div>
+            <div className="modal-body">
+                <div className='d-flex' style={{marginLeft: '5.5%', marginRight: '8.5%', gap: '11%', marginBottom:'2%'}}>
+                    <a>Please Fill in all information</a>
+                </div>
+            </div>
+            </div>
+            </div>
+        </div>)}
 
             <div style={{width: '38vw',background: '#FFFFFF', boxShadow: '2px 346px rgba(119, 119, 119, 0.25)', paddingTop: '3.5%'}}>       
                 <div className='d-flex gap-3'>

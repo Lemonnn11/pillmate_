@@ -17,11 +17,13 @@ public class Pharmacy {
     private String serviceTime;
     private String serviceDate;
 
+    private String email;
+
     public Pharmacy(){
 
     }
 
-    public Pharmacy(String pharID, String storeName, String address, String latitude, String longitude, String phoneNumber, String serviceTime, String serviceDate, String province, String city){
+    public Pharmacy(String pharID, String storeName, String address, String latitude, String longitude, String phoneNumber, String serviceTime, String serviceDate, String province, String city, String email){
         this.pharID = pharID;
         this.storeName = storeName;
         this.address = address;
@@ -32,6 +34,15 @@ public class Pharmacy {
         this.serviceDate = serviceDate;
         this.province = province;
         this.city = city;
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getCity() {
