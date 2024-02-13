@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { ReturnDrug } from "./components/ReturnDrug";
 import DrugModel from "../../models/Drug";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useHistory } from "react-router-dom";
 import { error } from "console";
 import { Pagination } from "../../Utils/Pagination";
+import { ReturnCategory } from "./components/ReturnCategory";
 
 export const Homepage = () => {
 
@@ -19,6 +20,9 @@ export const Homepage = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [query, setQuery] = useState('');
     const [queryUrl, setQueryUrl] = useState('');
+    const [categories, setCategories] = useState<string[]>([]);
+    const [categoryValue, setCategoryValue] = useState('Add filter');
+    const [email, setEmail] = useState('');
 
     useEffect(() => {
         authCheck();
@@ -70,6 +74,33 @@ export const Homepage = () => {
         // window.scrollTo(0,0); 
     }, [currentPage, queryUrl]);
 
+    useEffect(() => {
+        const fetchCategory = async () => {
+            
+            let url: string = `http://localhost:8080/api/drug/get-categories`;
+
+            const response = await fetch(url);
+
+            if(!response.ok){
+                throw new Error('Error found');
+            }
+            const responseJson = await response.json();
+
+
+            const loadedCategory: string[] = [];
+
+            for(let key in responseJson.categories){
+
+                loadedCategory.push(responseJson.categories[key]);
+            }
+
+            setCategories(loadedCategory)
+        };
+        fetchCategory().catch((error: any)=> {
+            setHttpError(error.message);
+        })
+    });
+
     if(httpError){
         return(
             <div className="container m-5">
@@ -81,6 +112,8 @@ export const Homepage = () => {
     const authCheck = onAuthStateChanged(auth, (user) => {
         if(!user){
             history.push('/login');
+        }else{
+
         }
     });
 
@@ -94,11 +127,26 @@ export const Homepage = () => {
         }
       };
 
+    const handleCategory = (value: string) => {
+        setCategoryValue(value);
+        setQueryUrl(`&query=${value}&`);
+    } 
+
       const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
           handleQuery();
         }
       };
+
+      const handleMyProfile = () => {
+        history.push("/edit-pharmacy");
+      }
+
+      const handleLogout = () => {
+        signOut(auth).then(() => {
+            history.push("/login");
+        })
+      }
 
     return(
         <div className="d-flex">
@@ -127,18 +175,34 @@ export const Homepage = () => {
                             100 drugs found
                         </div>
                     </div>
-                    <img src={process.env.PUBLIC_URL + '/images/hamburgermenu.png'} style={{width:'40px', height:'40px'}}/>
+                    <div className="dropdown">
+                        <button className="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown">
+                            <div className='d-flex justify-content-around align-items-center gap-2'>
+                                <img src={process.env.PUBLIC_URL + '/images/lemon.jpg'} style={{width:'55px', height:'55px', borderRadius: '50%', verticalAlign: 'middle'}}/>
+                                <IoIosArrowDown size={20} color='#8A8A8A' className='mt-1'/>
+                            </div>
+                        </button>
+                        <ul className="dropdown-menu dropdown-menu-end">
+                            <li key={"myprofile"}><a className="dropdown-item" href="#" onClick={handleMyProfile}>My profile</a></li>
+                            <li key={"logout"}><a className="dropdown-item" href="#" onClick={handleLogout}>Logout</a></li>
+                        </ul>
+                    </div>
                 </div>
                 <div className="d-flex mt-4">
                 <div className="dropdown">
                     <button className="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"  style={{backgroundColor: 'white', width: '8vw', height: '53px', borderTopRightRadius: '0px', borderBottomRightRadius: '0px'}}>
                         <div className='d-flex justify-content-around'>
-                            <div style={{fontFamily: 'LINESeedSansENRegular', fontSize: '14px', color:'#8A8A8A'}}>
-                                Add filter
+                            <div style={{fontFamily: 'LINESeedSansENRegular', fontSize: '14px', color:'black',  whiteSpace: 'nowrap', overflow: 'hidden'}}>
+                                {categoryValue}
                             </div>
                         <IoIosArrowDown size={14} color='#2C2C2C' className='mt-1'/>
                         </div>
-                    </button>        
+                    </button>  
+                    <ul className="dropdown-menu" style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                        {categories.slice(0, categories.length).map(category => (
+                            <ReturnCategory category={category} handleCategory={handleCategory}/>
+                        ))}
+                    </ul>      
                 </div>
                 <input type="text" className="form-control" placeholder='Search...' name="dosagePerTake" required onChange={e => setQuery(e.target.value)} value={query} onKeyPress={handleKeyPress} style={{width: '90vw', height: '53px', border: 'none', borderTopLeftRadius: '0px', borderBottomLeftRadius: '0px', backgroundColor: '#EEEEEE', paddingLeft: '2%'}}/>
             </div>

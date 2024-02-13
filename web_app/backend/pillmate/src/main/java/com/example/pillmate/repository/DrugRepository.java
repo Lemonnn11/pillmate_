@@ -13,10 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.io.File;
 
 @Repository
@@ -146,6 +143,41 @@ public class DrugRepository {
         }
 
         return null;
+    }
+
+    public List<String> getCategories() {
+        List<Drug> drugs = this.getAllDrugs();
+        List<String> categories = new ArrayList<>();
+        for (Drug drug:drugs){
+            drug.setCategory(drug.getCategory().toLowerCase());
+            if(drug.getCategory().contains(", ") || drug.getCategory().contains(",")){
+                String[] tmp = {};
+                if(drug.getCategory().contains(", ")){
+                    tmp = drug.getCategory().split(", ");
+                }else{
+                    tmp = drug.getCategory().split(",");
+                }
+                for(String i: tmp){
+                    if(i.contains(",")){
+                        String[] tmpp = i.split(",");
+                        for(String j: tmpp){
+                            if(!categories.contains(j) && !j.equals("")){
+                                categories.add(j);
+                            }
+                        }
+                    }
+                    else if(!categories.contains(i) && !i.equals("")){
+                        categories.add(i);
+                    }
+                }
+            }else{
+                if(!categories.contains(drug.getCategory()) && !drug.getCategory().equals("")){
+                    categories.add(drug.getCategory());
+                }
+            }
+        }
+        Collections.sort(categories);
+        return categories;
     }
 
 }

@@ -9,6 +9,7 @@ class PharmacyModel {
     phoneNumber: string;
     serviceTime: string;
     serviceDate: string;
+    email: string;
 
     constructor() {
         this.pharID = '';
@@ -21,6 +22,11 @@ class PharmacyModel {
         this.phoneNumber = '';
         this.serviceTime = '';
         this.serviceDate = '';
+        this.email ='';
+    }
+
+    setPharID(value: string){
+        this.pharID = value;
     }
 
     setStoreName(value: string) {
@@ -57,6 +63,10 @@ class PharmacyModel {
 
     setServiceDate(value: string) {
         this.serviceDate = value;
+    }
+
+    setEmail(value:string){
+        this.email = value;
     }
 }
 
