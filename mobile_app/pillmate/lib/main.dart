@@ -11,7 +11,11 @@ import 'package:pillmate/pages/profile.dart';
 import 'package:pillmate/pages/welcome_page.dart';
 import 'package:pillmate/services/local_notification_service.dart';
 import 'package:timezone/data/latest.dart' as tz;
+<<<<<<< Updated upstream
 import 'package:flutter/services.dart';
+=======
+import 'package:flutter_config/flutter_config.dart';
+>>>>>>> Stashed changes
 
 // final navigatorKey = GlobalKey<NavigatorState>();
 
