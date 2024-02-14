@@ -18,7 +18,6 @@ export interface AddressInfoProps {
 
 export const AddressInfo: React.FC<AddressInfoProps> = (props) => {
     const auth = getAuth();
-    const user = auth.currentUser;
     const [ pharmacyName, setPharmacyName ] = useState('');
     const [ addressLine1, setAddressLine1 ] = useState('');
     const [ addressLine2, setAddressLine2 ] = useState('');
@@ -29,60 +28,8 @@ export const AddressInfo: React.FC<AddressInfoProps> = (props) => {
     const [ districtList, setDistrictList ] = useState<string[]>([]);
     const [ subdistrictList, setSubdistrictList ] = useState<string[]>([]);
     const districts = _thailand as District[];
-    const [email, setEmail] = useState('');
-    const [httpError, setHttpError] = useState(null);
 
-    if(user !== null){
-        setEmail(user.email!);
-    }
-
-    useEffect(() => {
-        const fetchPharmacy = async () => {
-        
-                const url = `http://localhost:8080/api/pharmacy/get-pharmacy?email=${email}`;
     
-                const response = await fetch(url);
-
-                if(!response.ok){
-                    throw new Error('Error found');
-                }
-    
-                const responseJson = await response.json();
-    
-                const pharmacy1: PharmacyModel = new PharmacyModel();
-
-                pharmacy1.setStoreName(responseJson.storeName);
-                pharmacy1.setAddress(responseJson.address);
-                pharmacy1.setProvince(responseJson.province);
-                pharmacy1.setCity(responseJson.city);
-                pharmacy1.setLatitude(responseJson.latitude);
-                pharmacy1.setLongitude(responseJson.longitude);
-                pharmacy1.setPhoneNumber(responseJson.phoneNumber);
-                pharmacy1.setServiceTime(responseJson.serviceTime);
-                pharmacy1.setServiceDate(responseJson.serviceDate);
-                pharmacy1.setEmail(responseJson.email);
-
-                const tmp: string[] = pharmacy1.address.split(', ');
-                const tmp2: string[] = tmp[tmp.length - 1].split(' ');
-                setZipcode(tmp2[1]);
-                setProvince(tmp2[0]);
-                setDistrict( tmp[tmp.length - 2]);
-                setSubDistrict(tmp[tmp.length - 3]);
-                setAddressLine1(tmp[0]);
-    };
-        fetchPharmacy().catch((error: any)=> {
-            setHttpError(error.message);
-        });
-    
-}, []);
-
-if(httpError){
-    return(
-        <div className="container m-5">
-            <p>{httpError}</p>
-        </div>
-    )
-}
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()

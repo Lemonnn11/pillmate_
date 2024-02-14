@@ -5,6 +5,8 @@ import { IoIosArrowDown } from 'react-icons/io';
 import { ReturnDate } from './ReturnDate';
 import { ReturnTime } from './ReturnTime';
 import PharmacyModel from '../../../models/Pharmacy';
+import { getAuth, updateProfile } from 'firebase/auth';
+import { log } from 'console';
 
 export interface PharmacyInfoProps{
     pharmacy?: PharmacyModel;
@@ -17,12 +19,14 @@ export const PharmacyInfo: React.FC<PharmacyInfoProps> = (props) => {
     const [ closedDate, setClosedDate ] = useState('วัน');
     const [ openedHour, setOpenedHour ] = useState('เวลา');
     const [ closedHour, setClosedHour ] = useState('เวลา');
+    const auth = getAuth();
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
 
         if(phoneNumber !== '' && openedDate !== 'วัน' && closedDate !== 'วัน'
         && openedHour !== 'เวลา' && closedHour !== 'เวลา'){
+
             props.pharmacy?.setPhoneNumber(phoneNumber);
             props.pharmacy?.setServiceDate(openedDate + ' - ' + closedDate);
             props.pharmacy?.setServiceTime(openedHour + ' - ' + closedHour);
@@ -42,6 +46,22 @@ export const PharmacyInfo: React.FC<PharmacyInfoProps> = (props) => {
             if (!response.ok) {
                 throw new Error('Error found');
             } else{
+                const responseJSON = await response.json(); 
+                const auth = getAuth();
+                updateProfile(auth.currentUser!, {
+                    displayName: responseJSON["id"]
+                  }).then(() => {
+                    console.log('Profile updated!');
+                    const user = auth.currentUser;
+
+                  if (user !== null) {
+                    user.providerData.forEach((profile) => {
+                      console.log("Name: " + profile.displayName);
+                    });
+                  }
+                  }).catch((error) => {
+                    console.log(`An error occurred: ${error}`);
+                  });
                 history.push("/");
             }
         }
