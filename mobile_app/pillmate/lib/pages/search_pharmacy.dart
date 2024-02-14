@@ -5,10 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pillmate/components/reusable_pharmacy_item.dart';
-import 'package:location/location.dart';
+import 'package:location/location.dart' as location;
 import 'package:http/http.dart' as http;
 import 'package:pillmate/pages/qr_code_scanner.dart';
 
@@ -27,9 +28,11 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
   final _firestore = FirebaseFirestore.instance;
   List<Map<String, String>> _pharList = [];
   List<Map<String, String>> _resultList = [];
-  Location _locationController = new Location();
+  location.Location _locationController = new location.Location();
   FirebaseAuth _auth = FirebaseAuth.instance;
+  String address = '';
   bool? isLoggedIn = false;
+  LatLng? _currLocation = null;
 
   @override
   void initState() {
@@ -40,6 +43,27 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
     _resultList = _pharList;
     authChangesListener();
   }
+
+  void convertLatLngToAddress(double lat, double lng) async {
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        lat,
+        lng,
+        localeIdentifier: 'th',
+      );
+      if (placemarks != null && placemarks.isNotEmpty) {
+        final placemark = placemarks.reversed.last;
+        setState(() {
+          address = '${placemark.street}';
+        });
+      } else {
+        print('No placemarks found.');
+      }
+    } catch (e) {
+      print('Error converting coordinates to address: $e');
+    }
+  }
+
   void authChangesListener(){
     FirebaseAuth.instance
         .authStateChanges()
@@ -83,7 +107,7 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
 
   Future<void> getCurrentLocation() async {
     bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
+    location.PermissionStatus _permissionGranted;
 
     _serviceEnabled = await _locationController.serviceEnabled();
     if(_serviceEnabled){
@@ -93,35 +117,21 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
     }
 
     _permissionGranted = await _locationController.hasPermission();
-    if(_permissionGranted == PermissionStatus.denied){
+    if(_permissionGranted == location.PermissionStatus.denied){
       _permissionGranted = await _locationController.requestPermission();
-      if(_permissionGranted != PermissionStatus.granted){
+      if(_permissionGranted != location.PermissionStatus.granted){
         print('location permission denied');
         return;
       }
     }
     else{
       // initLocation = await _locationController.getLocation();
-      _locationController.onLocationChanged.listen((LocationData currLocation) {
+      _locationController.onLocationChanged.listen((location.LocationData currLocation) {
         if(currLocation.latitude != null && currLocation.longitude != null){
-          getAddressFromLatLng(context, currLocation.latitude! , currLocation.longitude!);
+          convertLatLngToAddress(currLocation.latitude! , currLocation.longitude!);
         }
       });
     }
-  }
-
-  getAddressFromLatLng(context, double lat, double lng) async {
-    String _host = 'https://maps.google.com/maps/api/geocode/json';
-    final url = '$_host?key=AIzaSyDBq1_J47STSxQY5RsV9X4sWHS6R2NC7gM&language=en&latlng=$lat,$lng';
-    if(lat != null && lng != null){
-      var response = await http.get(Uri.parse(url));
-      if(response.statusCode == 200) {
-        Map data = jsonDecode(response.body);
-        String _formattedAddress = data["results"][0]["formatted_address"];
-        print("response ==== $_formattedAddress");
-        return _formattedAddress;
-      } else return null;
-    } else return null;
   }
 
 
@@ -187,12 +197,16 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
                         color: Color(0xff2C2C2C)
                     ),
                   ),
-                  Text(
-                    'อนุสาวรีย์ชัยสมรภูมิ',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontFamily: 'PlexSansThaiMd',
-                        color: Color(0xff047E60)
+                  Container(
+                    width: screenWidth*0.6,
+                    child: Text(
+                      address,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: 'PlexSansThaiMd',
+                          color: Color(0xff047E60)
+                      ),
                     ),
                   ),
                 ],
@@ -303,7 +317,7 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: ReusableBottomNavigationBar(isLoggedIn: isLoggedIn,),
+      bottomNavigationBar: ReusableBottomNavigationBar(isLoggedIn: isLoggedIn, page: 'searchPharmacy',),
     );
   }
 }

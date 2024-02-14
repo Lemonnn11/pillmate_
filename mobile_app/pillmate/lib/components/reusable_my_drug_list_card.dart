@@ -1,13 +1,72 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pillmate/models/medicine.dart';
 import 'package:pillmate/pages/drug_information.dart';
 
-class ReusableMyDrugListCard extends StatelessWidget {
+class ReusableMyDrugListCard extends StatefulWidget {
   final MedicineModel med;
-
   const ReusableMyDrugListCard({super.key, required this.med});
+
+  @override
+  State<ReusableMyDrugListCard> createState() => _ReusableMyDrugListCardState();
+}
+
+class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
+  String formattedDispensing = '';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    formattedDate();
+  }
+
+  void formattedDate(){
+    DateTime des = DateTime.parse(widget.med.date);
+    final formatter = new DateFormat('d MMMM y');
+    formattedDispensing = formatter.format(des);
+    List<String> tmpDes = formattedDispensing.split(' ');
+    switch (tmpDes[1].toLowerCase()) {
+      case 'january':
+        formattedDispensing = formattedDispensing.replaceAll('January', 'มกราคม');
+        break;
+      case 'february':
+        formattedDispensing = formattedDispensing.replaceAll('February', 'กุมภาพันธ์');
+        break;
+      case 'march':
+        formattedDispensing = formattedDispensing.replaceAll('March', 'มีนาคม');
+        break;
+      case 'april':
+        formattedDispensing = formattedDispensing.replaceAll('April', 'เมษายน');
+        break;
+      case 'may':
+        formattedDispensing = formattedDispensing.replaceAll('May', 'พฤษภาคม');
+        break;
+      case 'june':
+        formattedDispensing = formattedDispensing.replaceAll('June', 'มิถุนายน');
+        break;
+      case 'july':
+        formattedDispensing = formattedDispensing.replaceAll('July', 'กรกฎาคม');
+        break;
+      case 'august':
+        formattedDispensing = formattedDispensing.replaceAll('August', 'สิงหาคม');
+        break;
+      case 'september':
+        formattedDispensing = formattedDispensing.replaceAll('September', 'กันยายน');
+        break;
+      case 'october':
+        formattedDispensing = formattedDispensing.replaceAll('October', 'ตุลาคม');
+        break;
+      case 'november':
+        formattedDispensing = formattedDispensing.replaceAll('November', 'พฤศจิกายน');
+        break;
+      case 'december':
+        formattedDispensing = formattedDispensing.replaceAll('December', 'ธันวาคม');
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +99,7 @@ class ReusableMyDrugListCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            med.genericName,
+                            widget.med.genericName,
                             style: TextStyle(
                                 fontSize: 16,
                                 fontFamily: 'PlexSansThaiMd',
@@ -59,7 +118,7 @@ class ReusableMyDrugListCard extends StatelessWidget {
                                 child:  Padding(
                                   padding: EdgeInsets.symmetric(vertical: screenHeight*0.0005, horizontal: screenWidth*0.025),
                                   child: Text(
-                                    med.dosagePerTake.toString(),
+                                    widget.med.dosagePerTake.toString(),
                                     style: TextStyle(
                                         fontSize: 14,
                                         fontFamily: 'PlexSansThaiRg',
@@ -79,7 +138,7 @@ class ReusableMyDrugListCard extends StatelessWidget {
                                 child:  Padding(
                                   padding: EdgeInsets.symmetric(vertical: screenHeight*0.0005, horizontal: screenWidth*0.025),
                                   child: Text(
-                                    med.takeMedWhen,
+                                    widget.med.takeMedWhen,
                                     style: TextStyle(
                                         fontSize: 14,
                                         fontFamily: 'PlexSansThaiRg',
@@ -102,14 +161,14 @@ class ReusableMyDrugListCard extends StatelessWidget {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.all(Radius.circular(10)),
                                   child: LinearProgressIndicator(
-                                    value: med.amountTaken/med.amountOfMeds,
+                                    value: widget.med.amountTaken/widget.med.amountOfMeds,
                                     backgroundColor: Color(0xffdddddd),
                                     valueColor: AlwaysStoppedAnimation<Color>(Color(0xffED6B81)),
                                   ),
                                 ),
                               ),
                               SizedBox(width: screenWidth*0.015,),
-                              Text(med.amountTaken.toString() + '/' + med.amountOfMeds.toString(),
+                              Text(widget.med.amountTaken.toString() + '/' + widget.med.amountOfMeds.toString(),
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w700,
@@ -123,7 +182,7 @@ class ReusableMyDrugListCard extends StatelessWidget {
 
                   GestureDetector(
                     onTap: (){
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => DrugInformation(med: med)));
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => DrugInformation(med: widget.med)));
                     },
                     child: Padding(
                       padding: EdgeInsets.only(right: screenWidth*0.017),
@@ -170,7 +229,7 @@ class ReusableMyDrugListCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          med.date,
+                          formattedDispensing,
                           style: TextStyle(
                               fontFamily: 'PlexSansThaiRg',
                               fontSize: 14,
@@ -212,3 +271,4 @@ class ReusableMyDrugListCard extends StatelessWidget {
     );
   }
 }
+

@@ -28,7 +28,6 @@ class LocalNotificationService{
   }
 
   static Future showScheduleNotification(List<bool> notiList, DaileyMedModel daileyMedModel) async {
-    print("dai list: " + daileyMedModel.morningTimeMinute.toString());
     print(notiList);
     tz.initializeTimeZones();
     final String? timeZoneName = await FlutterTimezone.getLocalTimezone();
@@ -46,20 +45,23 @@ class LocalNotificationService{
       }
     }
     print("jukru: " + notiTime.toString());
-    // for(int i = 0;i < notiTime.length;i++){
-    //   await _flutterLocalNotificationsPlugin.zonedSchedule(
-    //       i,
-    //       'Medication Notification',
-    //       'Morning Medication!!!',
-    //       notiTime[i],
-    //       const NotificationDetails(
-    //           android: AndroidNotificationDetails('your channel id', 'your channel name',
-    //               channelDescription: 'your channel description')),
-    //       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-    //       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime);
-    // }
+    for(int i = 0;i < notiTime.length;i++){
+      await _flutterLocalNotificationsPlugin.zonedSchedule(
+          i,
+          'Medication Notification',
+          'Morning Medication!!!',
+          notiTime[i],
+          const NotificationDetails(
+              android: AndroidNotificationDetails('your channel id', 'your channel name',
+                  channelDescription: 'your channel description')),
+          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+          uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime);
+    }
   }
 
+  static Future cancelAllNotifications() async {
+    await _flutterLocalNotificationsPlugin.cancelAll();
+  }
 
   // static Future showSimpleNotification({
   //   required String title,

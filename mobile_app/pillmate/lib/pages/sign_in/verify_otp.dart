@@ -97,7 +97,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
             ),
             SizedBox(height: 3,),
             Text(
-              'กรุณากรอกรหัส OTP 4 หลักที่ส่งไปยัง ${widget.phoneNumber}',
+              'กรุณากรอกรหัส OTP 6 หลักที่ส่งไปยัง ${widget.phoneNumber}',
               style: TextStyle(
                 fontSize: 16,
                 fontFamily: 'PlexSansThaiMd',
@@ -114,9 +114,11 @@ class _VerifyOTPState extends State<VerifyOTP> {
               height:62,
               child: TextField(
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400,
                 ),
                 decoration: InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
                   enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Color(0xffD0D0D0)),
                       borderRadius: BorderRadius.circular(8.0)
@@ -135,6 +137,9 @@ class _VerifyOTPState extends State<VerifyOTP> {
                     pin1 = text;
                     FocusScope.of(context).nextFocus();
                   }
+                  if(text.length == 0){
+                    FocusScope.of(context).previousFocus();
+                  }
                 },
                 keyboardType: TextInputType.number,
                 inputFormatters: [
@@ -149,9 +154,11 @@ class _VerifyOTPState extends State<VerifyOTP> {
                     height:62,
                     child: TextField(
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
                       ),
                       decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Color(0xffD0D0D0)),
                             borderRadius: BorderRadius.circular(8.0)
@@ -170,6 +177,9 @@ class _VerifyOTPState extends State<VerifyOTP> {
                           pin2 = text;
                           FocusScope.of(context).nextFocus();
                         }
+                        if(text.length == 0){
+                          FocusScope.of(context).previousFocus();
+                        }
                       },
                       keyboardType: TextInputType.number,
                       inputFormatters: [
@@ -184,9 +194,11 @@ class _VerifyOTPState extends State<VerifyOTP> {
                     height:62,
                     child: TextField(
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
                       ),
                       decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Color(0xffD0D0D0)),
                             borderRadius: BorderRadius.circular(8.0)
@@ -205,6 +217,9 @@ class _VerifyOTPState extends State<VerifyOTP> {
                           pin3 = text;
                           FocusScope.of(context).nextFocus();
                         }
+                        if(text.length == 0){
+                          FocusScope.of(context).previousFocus();
+                        }
                       },
                       keyboardType: TextInputType.number,
                       inputFormatters: [
@@ -219,9 +234,11 @@ class _VerifyOTPState extends State<VerifyOTP> {
                     height:62,
                     child: TextField(
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
                       ),
                       decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Color(0xffD0D0D0)),
                             borderRadius: BorderRadius.circular(8.0)
@@ -240,6 +257,9 @@ class _VerifyOTPState extends State<VerifyOTP> {
                           pin4 = text;
                           FocusScope.of(context).nextFocus();
                         }
+                        if(text.length == 0){
+                          FocusScope.of(context).previousFocus();
+                        }
                       },
                       keyboardType: TextInputType.number,
                       inputFormatters: [
@@ -254,9 +274,11 @@ class _VerifyOTPState extends State<VerifyOTP> {
                     height:62,
                     child: TextField(
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
                       ),
                       decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Color(0xffD0D0D0)),
                             borderRadius: BorderRadius.circular(8.0)
@@ -275,6 +297,9 @@ class _VerifyOTPState extends State<VerifyOTP> {
                           pin5 = text;
                           FocusScope.of(context).nextFocus();
                         }
+                        if(text.length == 0){
+                          FocusScope.of(context).previousFocus();
+                        }
                       },
                       keyboardType: TextInputType.number,
                       inputFormatters: [
@@ -289,9 +314,11 @@ class _VerifyOTPState extends State<VerifyOTP> {
                     height:62,
                     child: TextField(
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
                       ),
                       decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Color(0xffD0D0D0)),
                             borderRadius: BorderRadius.circular(8.0)
@@ -309,6 +336,9 @@ class _VerifyOTPState extends State<VerifyOTP> {
                         if(text.length == 1){
                           pin6 = text;
                           FocusScope.of(context).nextFocus();
+                        }
+                        if(text.length == 0){
+                          FocusScope.of(context).previousFocus();
                         }
                       },
                       keyboardType: TextInputType.number,

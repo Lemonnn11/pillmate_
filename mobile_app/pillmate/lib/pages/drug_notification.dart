@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -6,7 +7,9 @@ import '../components/reusable_bottom_navigation_bar.dart';
 import 'package:ionicons/ionicons.dart';
 
 import '../models/daily_med.dart';
+import '../services/local_notification_service.dart';
 import '../services/sqlite_service.dart';
+import 'add_drug.dart';
 
 class DrugNotification extends StatefulWidget {
   const DrugNotification({super.key});
@@ -19,14 +22,41 @@ class _DrugNotificationState extends State<DrugNotification> {
   bool isEdit = false;
   late SqliteService _sqliteService;
   List<DaileyMedModel> _dailyMedList = [];
-  String morningHour = "0";
-  String morningMinute = "0";
-  String noonHour = "0";
-  String noonMinute = "0";
-  String eveningHour = "0";
-  String eveningMinute = "0";
-  String nightHour = "0";
-  String nightMinute = "0";
+  TextEditingController morning = TextEditingController();
+  TextEditingController noon= TextEditingController();
+  TextEditingController evening = TextEditingController();
+  TextEditingController night = TextEditingController();
+  bool isSwitched = false;
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  bool? isLoggedIn = false;
+
+  @override
+  void dispose() {
+    super.dispose();
+    morning.dispose();
+    noon.dispose();
+    evening.dispose();
+    night.dispose();
+  }
+
+  void authChangesListener(){
+    FirebaseAuth.instance
+        .authStateChanges()
+        .listen((User? user) {
+      if (user == null) {
+        setState(() {
+          isLoggedIn = false;
+          print("isLoggedIn: " + isLoggedIn.toString());
+        });
+      } else {
+        setState(() {
+          isLoggedIn = true;
+          print("isLoggedIn: " + isLoggedIn.toString());
+
+        });
+      }
+    });
+  }
 
 
   Future<void> getDailyMeds() async {
@@ -35,44 +65,44 @@ class _DrugNotificationState extends State<DrugNotification> {
       this._dailyMedList = data;
       print("noti: " + _dailyMedList[0].morningTimeHour.toString());
       if(_dailyMedList[0].morningTimeHour < 10){
-        morningHour += _dailyMedList[0].morningTimeHour.toString();
+        morning.text = '0${_dailyMedList[0].morningTimeHour}:';
       }else{
-        morningHour = _dailyMedList[0].morningTimeHour.toString();
+        morning.text = "${_dailyMedList[0].morningTimeHour}:";
       }
       if(_dailyMedList[0].morningTimeMinute < 10){
-        morningMinute += _dailyMedList[0].morningTimeMinute.toString();
+        morning.text += "0${_dailyMedList[0].morningTimeMinute}";
       }else{
-        morningMinute = _dailyMedList[0].morningTimeMinute.toString();
+        morning.text += _dailyMedList[0].morningTimeMinute.toString();
       }
       if(_dailyMedList[0].noonTimeHour < 10){
-        noonHour += _dailyMedList[0].noonTimeHour.toString();
+        noon.text = '0${_dailyMedList[0].noonTimeHour}:';
       }else{
-        noonHour = _dailyMedList[0].noonTimeHour.toString();
+        noon.text = '${_dailyMedList[0].noonTimeHour}:';
       }
       if(_dailyMedList[0].noonTimeMinute < 10){
-        noonMinute += _dailyMedList[0].noonTimeMinute.toString();
+        noon.text += '0${_dailyMedList[0].noonTimeMinute}';
       }else{
-        noonMinute = _dailyMedList[0].noonTimeMinute.toString();
+        noon.text += _dailyMedList[0].noonTimeMinute.toString();
       }
       if(_dailyMedList[0].eveningTimeHour < 10){
-        eveningHour += _dailyMedList[0].eveningTimeHour.toString();
+        evening.text = '0${_dailyMedList[0].eveningTimeHour}:';
       }else{
-        eveningHour = _dailyMedList[0].eveningTimeHour.toString();
+        evening.text = '${_dailyMedList[0].eveningTimeHour}:';
       }
       if(_dailyMedList[0].noonTimeMinute < 10){
-        eveningMinute += _dailyMedList[0].eveningTimeMinute.toString();
+        evening.text += '0${_dailyMedList[0].eveningTimeMinute}';
       }else{
-        eveningMinute = _dailyMedList[0].eveningTimeMinute.toString();
+        evening.text += _dailyMedList[0].eveningTimeMinute.toString();
       }
       if(_dailyMedList[0].eveningTimeHour < 10){
-        nightHour += _dailyMedList[0].nightTimeHour.toString();
+        night.text = '0${_dailyMedList[0].nightTimeHour}:';
       }else{
-        nightHour = _dailyMedList[0].nightTimeHour.toString();
+        night.text = '${_dailyMedList[0].nightTimeHour}:';
       }
       if(_dailyMedList[0].noonTimeMinute < 10){
-        nightMinute += _dailyMedList[0].nightTimeMinute.toString();
+        night.text += '0${_dailyMedList[0].nightTimeMinute}';
       }else{
-        nightMinute = _dailyMedList[0].nightTimeMinute.toString();
+        night.text += _dailyMedList[0].nightTimeMinute.toString();
       }
     });
   }
@@ -83,6 +113,22 @@ class _DrugNotificationState extends State<DrugNotification> {
     this._sqliteService= SqliteService();
     this._sqliteService.initializeDB();
     getDailyMeds();
+    authChangesListener();
+    initIsNotified();
+  }
+
+  Future<void> initIsNotified() async {
+    List<DaileyMedModel> daileyMedModel = await _sqliteService.getDailyMedicines();
+    print(daileyMedModel[0].isNotified);
+    if(daileyMedModel[0].isNotified == 0){
+      setState(() {
+        isSwitched = false;
+      });
+    }else{
+      setState(() {
+        isSwitched = true;
+      });
+    }
   }
 
   @override
@@ -113,7 +159,20 @@ class _DrugNotificationState extends State<DrugNotification> {
         ),
         actions: [
           GestureDetector(
-            onTap: (){
+            onTap: () async {
+              List<String> tmpMorning = morning.text.split(':');
+              int morningHour = int.parse(tmpMorning[0]);
+              int morningMinute = int.parse(tmpMorning[1]);
+              List<String> tmpNoon = noon.text.split(':');
+              int noonHour = int.parse(tmpNoon[0]);
+              int noonMinute = int.parse(tmpNoon[1]);
+              List<String> tmpEvening = evening.text.split(':');
+              int eveningHour = int.parse(tmpEvening[0]);
+              int eveningMinute = int.parse(tmpEvening[1]);
+              List<String> tmpNight = night.text.split(':');
+              int nightHour = int.parse(tmpNight[0]);
+              int nightMinute = int.parse(tmpNight[1]);
+              await _sqliteService.updateNotificationTime(morningHour, morningMinute, noonHour, noonMinute, eveningHour, eveningMinute, nightHour, nightMinute);
               setState(() {
                 this.isEdit = !isEdit;
               });
@@ -138,7 +197,7 @@ class _DrugNotificationState extends State<DrugNotification> {
           padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 15),
           child: ListView(
             children: [
-              Row(
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 25),
@@ -153,6 +212,21 @@ class _DrugNotificationState extends State<DrugNotification> {
                       ),
                     ),
                   ),
+                  CupertinoSwitch(value: isSwitched,
+                      activeColor: Color(0xff19B48D),
+                      onChanged: (value){
+                    setState((){
+                      this.isSwitched = value;
+                      if(isSwitched){
+                        _sqliteService.turnOnNotification();
+                      }else{
+                        _sqliteService.turnOffNotification();
+                      }
+                    });
+                  }
+
+               )
+
                 ],
               ),
               Column(
@@ -175,7 +249,7 @@ class _DrugNotificationState extends State<DrugNotification> {
                     child: TextField(
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(top: 2, left: 15),
-                        hintText: '$morningHour:$morningMinute',
+                        hintText: morning.text,
                         hintStyle: TextStyle(
                             fontSize: 14,
                             fontFamily: 'PlexSansThaiRg',
@@ -195,6 +269,7 @@ class _DrugNotificationState extends State<DrugNotification> {
                         ),
                       ),
                       readOnly: !isEdit,
+                      controller: morning,
                     ),
                   ),
                   Row(
@@ -214,7 +289,7 @@ class _DrugNotificationState extends State<DrugNotification> {
                     child: TextField(
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(top: 2, left: 15),
-                        hintText: '$noonHour:$noonMinute',
+                        hintText: noon.text,
                         hintStyle: TextStyle(
                             fontSize: 14,
                             fontFamily: 'PlexSansThaiRg',
@@ -234,6 +309,7 @@ class _DrugNotificationState extends State<DrugNotification> {
                         ),
                       ),
                       readOnly: !isEdit,
+                      controller: noon,
                     ),
                   ),
                   Row(
@@ -253,7 +329,7 @@ class _DrugNotificationState extends State<DrugNotification> {
                     child: TextField(
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(top: 2, left: 15),
-                        hintText: '$eveningHour:$eveningMinute',
+                        hintText: evening.text,
                         hintStyle: TextStyle(
                             fontSize: 14,
                             fontFamily: 'PlexSansThaiRg',
@@ -273,6 +349,7 @@ class _DrugNotificationState extends State<DrugNotification> {
                         ),
                       ),
                       readOnly: !isEdit,
+                      controller: evening,
                     ),
                   ),
                   Row(
@@ -292,7 +369,7 @@ class _DrugNotificationState extends State<DrugNotification> {
                     child: TextField(
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(top: 2, left: 15),
-                        hintText: '$nightHour:$nightMinute',
+                        hintText: night.text,
                         hintStyle: TextStyle(
                             fontSize: 14,
                             fontFamily: 'PlexSansThaiRg',
@@ -312,6 +389,7 @@ class _DrugNotificationState extends State<DrugNotification> {
                         ),
                       ),
                       readOnly: !isEdit,
+                      controller: night,
                     ),
                   ),
                 ],
@@ -320,17 +398,6 @@ class _DrugNotificationState extends State<DrugNotification> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(FontAwesomeIcons.add),
-        backgroundColor: Color(0xff6CCAB7),
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => QRCodeScanner()
-          ));
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: ReusableBottomNavigationBar(),
     );
   }
 }

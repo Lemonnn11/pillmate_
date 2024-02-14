@@ -482,17 +482,6 @@ class _PersonalInformationState extends State<PersonalInformation> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(FontAwesomeIcons.add),
-        backgroundColor: Color(0xff6CCAB7),
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => QRCodeScanner()
-          ));
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: ReusableBottomNavigationBar(),
     );
   }
 }

@@ -11,6 +11,7 @@ class DaileyMedModel{
   final int eveningTimeMinute;
   final int nightTimeHour;
   final int nightTimeMinute;
+  final int isNotified;
 
   DaileyMedModel(
       this.id,
@@ -25,6 +26,7 @@ class DaileyMedModel{
       this.eveningTimeMinute,
       this.nightTimeHour,
       this.nightTimeMinute,
+      this.isNotified
       );
 
   DaileyMedModel.fromMap(Map<String, dynamic> item)
@@ -39,7 +41,8 @@ class DaileyMedModel{
         eveningTimeHour = item["evening_time_hour"],
         eveningTimeMinute = item["evening_time_minute"],
         nightTimeHour = item["night_time_hour"],
-        nightTimeMinute = item["night_time_minute"];
+        nightTimeMinute = item["night_time_minute"],
+        isNotified = item["is_notified"];
 
   Map<String, dynamic> toMap() {
     return {
@@ -55,8 +58,11 @@ class DaileyMedModel{
       'evening_time_minute': eveningTimeMinute,
       'night_time_hour': nightTimeHour,
       'night_time_minute': nightTimeMinute,
+      'is_notified': isNotified
     };
   }
+
+
 
 
 }

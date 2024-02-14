@@ -9,6 +9,8 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:pillmate/constants/constants.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 
 class GoogleMapPage extends StatefulWidget {
   final Map<String, String> pharmacy;
@@ -21,7 +23,7 @@ class GoogleMapPage extends StatefulWidget {
 
 
 class _GoogleMapPageState extends State<GoogleMapPage> {
-  static const LatLng phar = LatLng(37.334805852670385, -122.0090041896894);
+  late LatLng phar;
   LatLng? _currLocation = null;
   Location _locationController = new Location();
   final Completer<GoogleMapController> _mapController = Completer<
@@ -34,6 +36,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   void initState() {
     super.initState();
     getCurrentLocation();
+    phar = LatLng(double.parse(widget.pharmacy['latitude']!), double.parse(widget.pharmacy['longitude']!));
     // getCurrentLocation().then((_) =>
     //     getPolyPoints().then((coordinates) =>
     //     print("test: " + coordinates.toString())
@@ -276,8 +279,8 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                         children: [
                           Expanded(
                             child: ElevatedButton(
-                              onPressed: ()  {
-
+                              onPressed: () {
+                                MapsLauncher.launchCoordinates(double.parse(widget.pharmacy['latitude']!), double.parse(widget.pharmacy['longitude']!));
                               },
                               child:
                               Text('เปิดใน Google Map', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 20, color: Colors.white),

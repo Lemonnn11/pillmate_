@@ -4,7 +4,8 @@ import 'package:pillmate/models/medicine.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-import '../models/personal_information.dart';class SqliteService {
+import '../models/personal_information.dart';
+import 'local_notification_service.dart';class SqliteService {
   Future<Database> initializeDB() async {
     String path = await getDatabasesPath();
     return openDatabase(
@@ -17,7 +18,7 @@ import '../models/personal_information.dart';class SqliteService {
             "CREATE TABLE IF NOT EXISTS MEDICINE(qrcode_id TEXT PRIMARY KEY, phar_id TEXT, dosage_per_take INTEGER, time_per_day INTEGER, time_of_med TEXT, time_period_for_med TEXT, take_med_when TEXT, expired_date TEXT, dispensing_date TEXT, condition_of_use TEXT, additional_advice TEXT, amount INTEGER, quantity REAL, adverse_drug_reaction TEXT, type_of_medicine TEXT, generic_name TEXT,  trade_name TEXT, saved_date TEXT, amount_taken INTEGER, status INTEGER, medication_schedule TEXT);",
         );
         await database.execute(
-          "CREATE TABLE IF NOT EXISTS DAILY_MED(id INTEGER PRIMARY KEY AUTOINCREMENT, day INTEGER, amount_taken INTEGER, daily_med INTEGER, morning_time_hour INTEGER, morning_time_minute INTEGER, noon_time_hour INTEGER, noon_time_minute INTEGER, evening_time_hour INTEGER, evening_time_minute INTEGER, night_time_hour INTEGER, night_time_minute INTEGER);",
+          "CREATE TABLE IF NOT EXISTS DAILY_MED(id INTEGER PRIMARY KEY AUTOINCREMENT, day INTEGER, amount_taken INTEGER, daily_med INTEGER, morning_time_hour INTEGER, morning_time_minute INTEGER, noon_time_hour INTEGER, noon_time_minute INTEGER, evening_time_hour INTEGER, evening_time_minute INTEGER, night_time_hour INTEGER, night_time_minute INTEGER, is_notified INTEGER);",
         );
         // await database.execute(
         //   "CREATE TABLE [IF NOT EXISTS] PERSONAL_INFO(id INTEGER PRIMARY KEY AUTOINCREMENT, dob TEXT, blood_type TEXT, gender TEXT, weight REAL, height REAL, health_condition TEXT, drug_allergies TEXT, personal_medicine TEXT); CREATE TABLE [IF NOT EXISTS] MEDICINE(id INTEGER PRIMARY KEY AUTOINCREMENT, trade_name TEXT, generic_name TEXT, form TEXT, expired_date TEXT, amount INTEGER, amount_taken INTEGER, quantity REAL, dossage_per_take TEXT, time_of_med TEXT,take_med_when TEXT, time_period_for_med TEXT, condition_of_use TEXT, additional_advice TEXT, adverseDrugReaction TEXT, dispensing_date TEXT, saved_date TEXT, pharmacy TEXT);",
@@ -48,6 +49,12 @@ import '../models/personal_information.dart';class SqliteService {
     final List<DaileyMedModel> list = queryResult.map((e) => DaileyMedModel.fromMap(e)).toList();
     bool flag = false;
     DateTime dt = DateTime.now();
+    late DaileyMedModel dailyMedModel1 ;
+    if(list.length != 0){
+      dailyMedModel1 = new DaileyMedModel(1, daileyMedModel.day, daileyMedModel.amountTaken, daileyMedModel.dailyMed, daileyMedModel.morningTimeHour, daileyMedModel.morningTimeHour, daileyMedModel.noonTimeHour , daileyMedModel.noonTimeMinute, daileyMedModel.eveningTimeHour, daileyMedModel.eveningTimeMinute, daileyMedModel.nightTimeHour, daileyMedModel.nightTimeMinute, list[0].isNotified);
+    }else{
+      dailyMedModel1 = new DaileyMedModel(1, daileyMedModel.day, daileyMedModel.amountTaken, daileyMedModel.dailyMed, daileyMedModel.morningTimeHour, daileyMedModel.morningTimeHour, daileyMedModel.noonTimeHour , daileyMedModel.noonTimeMinute, daileyMedModel.eveningTimeHour, daileyMedModel.eveningTimeMinute, daileyMedModel.nightTimeHour, daileyMedModel.nightTimeMinute, 1);
+    }
     for(int i = 0; i < list.length;i++){
       if(list[i].day == dt.day){
         flag = true;
@@ -127,6 +134,32 @@ import '../models/personal_information.dart';class SqliteService {
     List<DaileyMedModel> list = await getDailyMedicines();
     await db.rawUpdate(''' UPDATE DAILY_MED SET daily_med = ? ''', [list[0].dailyMed + med]);
   }
+
+  Future<void> decreaseDailyMed(int med) async {
+    final Database db = await initializeDB();
+    List<DaileyMedModel> list = await getDailyMedicines();
+    await db.rawUpdate(''' UPDATE DAILY_MED SET daily_med = ? ''', [list[0].dailyMed - med]);
+  }
+
+  Future<void> updateNotificationTime(int morningHour, int morningMinute, int noonHour, int noonMinute, int eveningHour, int eveningMinute, int nightHour, int nightMinute)async {
+    final Database db = await initializeDB();
+    List<DaileyMedModel> list = await getDailyMedicines();
+    await db.rawUpdate(''' UPDATE DAILY_MED SET morning_time_hour = ?, morning_time_minute = ? , noon_time_hour = ?, noon_time_minute = ?, evening_time_hour = ?, evening_time_minute = ?, night_time_hour = ?, night_time_minute = ? ''', [morningHour, morningMinute, noonHour, noonMinute, eveningHour, eveningMinute, nightHour, nightMinute]);
+  }
+
+  Future<void> turnOffNotification() async {
+    final Database db = await initializeDB();
+    List<DaileyMedModel> list = await getDailyMedicines();
+    await LocalNotificationService.cancelAllNotifications();
+    await db.rawUpdate(''' UPDATE DAILY_MED SET is_notified = ? ''', [0]);
+  }
+
+  Future<void> turnOnNotification() async {
+    final Database db = await initializeDB();
+    List<DaileyMedModel> list = await getDailyMedicines();
+    await db.rawUpdate(''' UPDATE DAILY_MED SET is_notified = ? ''', [1]);
+  }
+
 
   Future<List<MedicineModel>> getInactiveMedicine() async{
     final db = await initializeDB();
