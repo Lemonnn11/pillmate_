@@ -10,6 +10,7 @@ import { ImageComponent } from './components/ImageComponen';
 import { ReturnUnit } from './components/ReturnUnit';
 import{getAuth, onAuthStateChanged} from 'firebase/auth';
 import { useHistory, useLocation } from 'react-router-dom';
+import { log } from 'console';
 
 
 export const GenerateQRCode = () => {
@@ -37,9 +38,11 @@ export const GenerateQRCode = () => {
     const [ genericName, setGenericName] = useState('');
     const [ containers, setContainers ] = useState('');
     const [dosageForm , setDosageForm]  = useState('');
+    const [ adverseDrugReaction, setAdverseDrugReaction ] = useState('หากมีอาการผื่นแพ้ เยื่อบุผิวลอก ให้หยุดใช้ยาและหากมีอาการหนักควรปรึกษาแพทย์ทันที');
     const [category, setCategory] = useState('');
     const location = useLocation();
     const [ modalShow, setModalShow ] = useState(false);
+    const [ pharID, setPharID] = useState(''); 
     
     useEffect(() => {
         if (location.state) {
@@ -146,7 +149,14 @@ export const GenerateQRCode = () => {
                 timeOfTaken += 'ก่อนนอน';
             }
 
-            const qrCode: QRCodeModel = new QRCodeModel('', 'I8piP5C9Weqz37gI37vX', parseInt(dosagePerTake), parseInt(timePerDay), takeMedWhen, every, timeOfTaken, gmtsDate.toISOString(), gmtsLocalDate.toISOString(), conditionOfUse, addtionalAdvice, parseInt(amountOfMeds), 250, 'หากมีอาการผื่นแพ้ เยื่อบุผิวลอก ให้หยุดใช้ยาและหากมีอาการหนักควรปรึกษาแพทย์ทันที', 'แคปซูล', 'Paracetamol', 'Paracap Tab. 500 mg')
+            const user = auth.currentUser;
+
+            if (user !== null) {
+            user.providerData.forEach(async (profile) => {
+
+                console.log('pharID: ' + profile.displayName!);
+            
+            const qrCode: QRCodeModel = new QRCodeModel('', profile.displayName!, parseInt(dosagePerTake), parseInt(timePerDay), takeMedWhen, every, timeOfTaken, gmtsDate.toISOString(), gmtsLocalDate.toISOString(), conditionOfUse, addtionalAdvice, parseInt(amountOfMeds), 250, adverseDrugReaction, dosageForm, genericName, tradeName);
             console.log(JSON.stringify(qrCode));
 
             const request = {
@@ -166,6 +176,9 @@ export const GenerateQRCode = () => {
                 setImageID(response["id"])
                 setModalShow(true);
             }
+            });
+            }
+            
         }
     }
 
@@ -564,6 +577,19 @@ export const GenerateQRCode = () => {
                                 </div>
                             </div>
                         
+                        </div>
+
+                        <div className='d-flex justify-content-start align-self-end mt-4'>
+                            <div>
+                                <label  className="form-label">
+                                    <div className='d-flex justify-content-between'>
+                                        <div style={{fontSize: '16px', color: '#000000'}}>
+                                            อาการไม่พึ่งประสงค์
+                                        </div>
+                                    </div>
+                                </label>
+                                <input type="text" className="form-control" aria-label="Text input with dropdown button" name="adverseDrugReaction" required onChange={e => setAdverseDrugReaction(e.target.value)} value={adverseDrugReaction}  style={{width: '39vw', height: '46px'}}/>
+                            </div>
                         </div>
 
                         <div className='d-flex justify-content-between mt-4' >
