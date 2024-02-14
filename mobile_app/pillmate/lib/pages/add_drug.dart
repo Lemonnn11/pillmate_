@@ -2,16 +2,16 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pillmate/models/medicine.dart';
 
 import '../services/sqlite_service.dart';
-import  'package:intl/intl.dart';
 
 class AddDrug extends StatefulWidget {
-  // final String info = '{"timePeriodForMed":"","date":"05/01/24","pharID":"I8piP5C9Weqz37gI37vX","additionalAdvice":"ยานี้อาจระคายเคืองกระเพาะอาหาร ให้รับประทานหลังอาหารทันที","quantity":250,"amountOfMeds":10,"genericName":"Paracetamol","expiredDate":"5/09/24","adverseDrugReaction":"หากมีอาการผื่นแพ้ เยื่อบุผิวลอก ให้หยุดใช้ยาและหากมีอาการหนักควรปรึกษาแพทย์ทันที","timeOfMed":"ก่อนอาหาร","typeOfMedicine":"แคปซูล","tradeName":"Paracap Tab. 500 mg","dosagePerTake":2,"takeMedWhen":"เช้า กลางวัน เย็น","QRCodeID":"b5d65286-d901-4d71-beea-19ef9ebd4bed","timePerDay":3,"conditionOfUse":"ลดคลื่นไส้อาเจียน"}';
-  final String info;
-  const AddDrug({super.key, required this.info, });
+  final String info = '{"qrCodeID":"","pharID":"Fy751CumG69MLZfZLvqe","dosagePerTake":2,"timePerDay":3,"timeOfMed":"หลังอาหาร","timePeriodForMed":"...","takeMedWhen":"เช้า กลางวัน เย็น","expiredDate":"2023-11-04T00:00:00.000Z","date":"2024-02-14T18:22:31.091Z","conditionOfUse":"ลดคลื่นไส้อาเจียน","additionalAdvice":"ยานี้อาจระคายเคืองกระเพาะอาหาร ให้รับประทานหลังอาหารทันที","amountOfMeds":10,"quantity":250,"adverseDrugReaction":"หากมีอาการผื่นแพ้ เยื่อบุผิวลอก ให้หยุดใช้ยาและหากมีอาการหนักควรปรึกษาแพทย์ทันที","typeOfMedicine":"Capsule","genericName":"Alfacalcidol","tradeName":"MEDI-ALPHA Cap. 0.25 mg"}';
+  // final String info;
+  const AddDrug({super.key});
 
   @override
   State<AddDrug> createState() => _AddDrugState();
@@ -21,6 +21,8 @@ class _AddDrugState extends State<AddDrug> {
   late Map<String, dynamic> data;
   List<String> tmp = [];
   late SqliteService _sqliteService;
+  String formattedExpired = '';
+  String formattedDispensing = '';
 
 
   @override
@@ -31,7 +33,95 @@ class _AddDrugState extends State<AddDrug> {
     print(data);
     this._sqliteService= SqliteService();
     this._sqliteService.initializeDB();
+    formattedDate();
   }
+
+  void formattedDate(){
+    DateTime exp = DateTime.parse(data['expiredDate']);
+    DateTime des = DateTime.parse(data['expiredDate']);
+    final formatter = new DateFormat('d MMMM y');
+    formattedExpired = formatter.format(exp);
+    List<String> tmpExp = formattedExpired.split(' ');
+    switch (tmpExp[1].toLowerCase()) {
+      case 'january':
+        formattedExpired = formattedExpired.replaceAll('January', 'มกราคม');
+        break;
+      case 'february':
+        formattedExpired = formattedExpired.replaceAll('February', 'กุมภาพันธ์');
+        break;
+      case 'march':
+        formattedExpired = formattedExpired.replaceAll('March', 'มีนาคม');
+        break;
+      case 'april':
+        formattedExpired = formattedExpired.replaceAll('April', 'เมษายน');
+        break;
+      case 'may':
+        formattedExpired = formattedExpired.replaceAll('May', 'พฤษภาคม');
+        break;
+      case 'june':
+        formattedExpired = formattedExpired.replaceAll('June', 'มิถุนายน');
+        break;
+      case 'july':
+        formattedExpired = formattedExpired.replaceAll('July', 'กรกฎาคม');
+        break;
+      case 'august':
+        formattedExpired = formattedExpired.replaceAll('August', 'สิงหาคม');
+        break;
+      case 'september':
+        formattedExpired = formattedExpired.replaceAll('September', 'กันยายน');
+        break;
+      case 'october':
+        formattedExpired = formattedExpired.replaceAll('October', 'ตุลาคม');
+        break;
+      case 'november':
+        formattedExpired = formattedExpired.replaceAll('November', 'พฤศจิกายน');
+        break;
+      case 'december':
+        formattedExpired = formattedExpired.replaceAll('December', 'ธันวาคม');
+        break;
+    }
+    formattedDispensing = formatter.format(des);
+    List<String> tmpDes = formattedDispensing.split(' ');
+    switch (tmpDes[1].toLowerCase()) {
+      case 'january':
+        formattedDispensing = formattedDispensing.replaceAll('January', 'มกราคม');
+        break;
+      case 'february':
+        formattedDispensing = formattedDispensing.replaceAll('February', 'กุมภาพันธ์');
+        break;
+      case 'march':
+        formattedDispensing = formattedDispensing.replaceAll('March', 'มีนาคม');
+        break;
+      case 'april':
+        formattedDispensing = formattedDispensing.replaceAll('April', 'เมษายน');
+        break;
+      case 'may':
+        formattedDispensing = formattedDispensing.replaceAll('May', 'พฤษภาคม');
+        break;
+      case 'june':
+        formattedDispensing = formattedDispensing.replaceAll('June', 'มิถุนายน');
+        break;
+      case 'july':
+        formattedDispensing = formattedDispensing.replaceAll('July', 'กรกฎาคม');
+        break;
+      case 'august':
+        formattedDispensing = formattedDispensing.replaceAll('August', 'สิงหาคม');
+        break;
+      case 'september':
+        formattedDispensing = formattedDispensing.replaceAll('September', 'กันยายน');
+        break;
+      case 'october':
+        formattedDispensing = formattedDispensing.replaceAll('October', 'ตุลาคม');
+        break;
+      case 'november':
+        formattedDispensing = formattedDispensing.replaceAll('November', 'พฤศจิกายน');
+        break;
+      case 'december':
+        formattedDispensing = formattedDispensing.replaceAll('December', 'ธันวาคม');
+        break;
+    }
+  }
+
 
 
   @override
@@ -127,7 +217,7 @@ class _AddDrugState extends State<AddDrug> {
                               fontSize: 14,
                               fontFamily: 'PlexSansThaiRg',
                             ),),
-                          Text('25/06/67',
+                          Text(formattedExpired,
                             style: TextStyle(
                               fontSize: 14,
                               fontFamily: 'PlexSansThaiRg',
@@ -559,7 +649,7 @@ class _AddDrugState extends State<AddDrug> {
               Wrap(
                 crossAxisAlignment: WrapCrossAlignment.end,
                 children: [
-                  Container(
+                  data['takeMedWhen'].contains('เช้า') ? Container(
                     width: screenWidth*0.29,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -615,9 +705,9 @@ class _AddDrugState extends State<AddDrug> {
                         ),
                       ],
                     ),
-                  ),
+                  ): Container(width: 0, height: 0,),
                   SizedBox(width: 8,),
-                  Padding(
+                  data['takeMedWhen'].contains('กลางวัน') ? Padding(
                     padding: const EdgeInsets.only(top: 4.0),
                     child: Container(
                       width: screenWidth*0.29,
@@ -663,9 +753,9 @@ class _AddDrugState extends State<AddDrug> {
                         ],
                       ),
                     ),
-                  ),
+                  ): Container(width: 0, height: 0,),
                   SizedBox(width: 8,),
-                  Padding(
+                  data['takeMedWhen'].contains('เย็น') ? Padding(
                     padding: const EdgeInsets.only(top: 4.0),
                     child: Container(
                       width: screenWidth*0.29,
@@ -711,8 +801,8 @@ class _AddDrugState extends State<AddDrug> {
                         ],
                       ),
                     ),
-                  ),
-                  Padding(
+                  ): Container(width: 0, height: 0,),
+                  data['takeMedWhen'].contains('ก่อนนอน') ? Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Container(
                       width: screenWidth*0.2935,
@@ -758,7 +848,7 @@ class _AddDrugState extends State<AddDrug> {
                         ],
                       ),
                     ),
-                  ),
+                  ): Container(width: 0, height: 0,),
                 ],
               ),
               SizedBox(
@@ -803,7 +893,7 @@ class _AddDrugState extends State<AddDrug> {
                             Column(
                               children: [
                                 Text(
-                                  'ลดคลื่นไส้อาเจียน',
+                                  data['conditionOfUse'],
                                   style: TextStyle(
                                       fontFamily: 'PlexSansThaiRg',
                                       fontSize: 14,
@@ -871,7 +961,7 @@ class _AddDrugState extends State<AddDrug> {
                               child: Column(
                                 children: [
                                   Text(
-                                    'ยานี้อาจระคายเคืองกระเพาะอาหาร ให้รับประทานหลังอาหารทันที',
+                                    data['additionalAdvice'],
                                     style: TextStyle(
                                         fontFamily: 'PlexSansThaiRg',
                                         fontSize: 14,
@@ -931,7 +1021,7 @@ class _AddDrugState extends State<AddDrug> {
                               child: Column(
                                 children: [
                                   Text(
-                                    'หากมีอาการผื่นแพ้ เยื่อบุผิวลอก ให้หยุดใช้ยา และหากมีอาการหนักควรปรึกษาแพทย์ทันที',
+                                    data['adverseDrugReaction'],
                                     style: TextStyle(
                                         fontFamily: 'PlexSansThaiRg',
                                         fontSize: 14,
@@ -1012,7 +1102,7 @@ class _AddDrugState extends State<AddDrug> {
                                 ),
                                 Expanded(
                                   child: Text(
-                                    '12 มกราคม 2566',
+                                    formattedDispensing,
                                     style: TextStyle(
                                         fontFamily: 'PlexSansThaiRg',
                                         fontSize: 14,
@@ -1106,16 +1196,18 @@ class _AddDrugState extends State<AddDrug> {
                         String time = DateFormat("HH:mm").format(DateTime.now());
                         String tmpp = "";
                         int firstDailyMeds = 0;
+                        final daileyMed = await _sqliteService.getDailyMedicines();
                         if(data['takeMedWhen'] != null || data['takeMedWhen'] != ""){
                           final list = data['takeMedWhen'].split(' ');
                           int round = (data['amountOfMeds'] / list.length).toInt();
+                          print('${data['amountOfMeds']} ${list.length}');
                           String tm = '';
                           bool flag = false;
-                          if(8 < 21){
+                          if(dt.hour < daileyMed[0].nightTimeHour || (dt.hour == daileyMed[0].nightTimeHour && dt.minute < daileyMed[0].nightTimeMinute)){
                             tmpp += dt.day.toString();
                             tmpp += ' ';
                             for(int i = 0;i < list.length;i++){
-                              if(list[i] == 'เช้า' && (8 < 9) ){
+                              if(list[i] == 'เช้า' && (dt.hour < daileyMed[0].morningTimeHour || (dt.hour == daileyMed[0].morningTimeHour && dt.minute < daileyMed[0].morningTimeMinute)) ){
                                 flag = true;
                                 tmpp += 'เช้า';
                                 firstDailyMeds += 1;
@@ -1123,7 +1215,7 @@ class _AddDrugState extends State<AddDrug> {
                                   tmpp += ' ';
                                 }
                               }
-                              else if(list[i] == 'กลางวัน' && (8 < 12 )){
+                              else if(list[i] == 'กลางวัน' && (dt.hour < daileyMed[0].noonTimeHour || (dt.hour == daileyMed[0].noonTimeHour && dt.minute < daileyMed[0].noonTimeMinute)) ){
                                 flag = true;
                                 tmpp += 'กลางวัน';
                                 firstDailyMeds += 1;
@@ -1131,7 +1223,7 @@ class _AddDrugState extends State<AddDrug> {
                                   tmpp += ' ';
                                 }
                               }
-                              else if(list[i] == 'เย็น' && (8 < 17 )){
+                              else if(list[i] == 'เย็น' && (dt.hour < daileyMed[0].eveningTimeHour || (dt.hour == daileyMed[0].eveningTimeHour && dt.minute < daileyMed[0].eveningTimeMinute))){
                                 flag = true;
                                 tmpp += 'เย็น';
                                 firstDailyMeds += 1;
@@ -1139,7 +1231,7 @@ class _AddDrugState extends State<AddDrug> {
                                   tmpp += ' ';
                                 }
                               }
-                              else if(list[i] == 'ก่อนนอน' && (8 < 21)){
+                              else if(list[i] == 'ก่อนนอน' && (dt.hour < daileyMed[0].nightTimeHour || (dt.hour == daileyMed[0].nightTimeHour && dt.minute < daileyMed[0].nightTimeMinute))){
                                 flag = true;
                                 tmpp += 'ก่อนนอน';
                                 firstDailyMeds += 1;

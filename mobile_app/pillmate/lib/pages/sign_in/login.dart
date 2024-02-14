@@ -72,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(top: 20, left: 15),
-                        hintText: '0XX-XXX-XXXX',
+                        hintText: '0812345678',
                         hintStyle: TextStyle(
                             fontSize: 18,
                             fontFamily: 'PlexSansThaiRg',
@@ -101,7 +101,18 @@ class _LoginPageState extends State<LoginPage> {
                       color: Color(0xff3F3F3F),
                     ),
                   ),
-                  SizedBox(height: 140,),
+                  SizedBox(height: 90,),
+                  Center(
+                    child: TextButton(
+                      onPressed: ()  {
+                        Navigator.pop(context);
+                      },
+                      child:
+                      Text('ภายหลัง', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 18, color: Colors.grey[800]),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10,),
                   Container(
                     height: 54,
                     width: screenWidth,

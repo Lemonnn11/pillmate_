@@ -66,9 +66,8 @@ class _ProfilePageState extends State<ProfilePage> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: Container(
-        color: Colors.white,
-        child: ListView(
+      body: SingleChildScrollView(
+        child: Stack(
           children: [
             Container(
               height: 181,
@@ -84,402 +83,414 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
                     begin: Alignment.topLeft, end: Alignment.bottomRight),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    radius: 40,
-                    // backgroundImage: AssetImage('images/profile-pic.png'),
-                  ),
-                  Text(name,style: TextStyle(fontSize: 18, fontFamily: 'PlexSansThaiMd', color:  Colors.white),)
-                ],
+              child: Padding(
+                padding: EdgeInsets.only(top: 35.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                      radius: 40,
+                      // backgroundImage: AssetImage('images/profile-pic.png'),
+                    ),
+                    Text(name,style: TextStyle(fontSize: 18, fontFamily: 'PlexSansThaiMd', color:  Colors.white),)
+                  ],
+                ),
               ),
             ),
-            Column(
-              children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                  padding: EdgeInsets.only(top: 4.0),
+                  child: Column(
                     children: [
-                      Text(
-                        'การตั้งค่าข้อมูล',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontFamily: 'PlexSansThaiMd',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: screenWidth,
-                  height: 1.2,
-                  color: Color(0xffE7E7E7),
-                ),
-                GestureDetector(
-                  onTap: (){
-                    Navigator.pushNamed(context, '/personal-info');
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding:EdgeInsets.only(top: 2.0, right: screenWidth*0.025),
-                          child: Container(
-                            width: 24,
-                            child: Image.asset('icons/user-green.png'),
-                          ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      SizedBox(height: 180,),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              'ข้อมูลส่วนตัว',
+                              'การตั้งค่าข้อมูล',
                               style: TextStyle(
-                                fontSize: 15,
+                                fontSize: 18,
                                 fontFamily: 'PlexSansThaiMd',
-                              ),
-                            ),
-                            Text(
-                              'แก้ไขและเปลี่ยนแปลงข้อมูลของคุณได้ที่นี่',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontFamily: 'PlexSansThaiRg',
                               ),
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                  width: screenWidth,
-                  height: 1.2,
-                  color: Color(0xffE7E7E7),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/drug-notification');
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding:EdgeInsets.only(top: 2.0, right: screenWidth*0.025),
-                          child: Container(
-                            width: 24,
-                            child: Image.asset('icons/clock-alarm.png'),
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
+                      ),
+                      Container(
+                        width: screenWidth,
+                        height: 1.2,
+                        color: Color(0xffE7E7E7),
+                      ),
+                      GestureDetector(
+                        onTap: (){
+                          Navigator.pushNamed(context, '/personal-info');
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
+                          child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text(
-                                'ตั้งค่าเวลาและการแจ้งเตือน',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontFamily: 'PlexSansThaiMd',
+                              Padding(
+                                padding:EdgeInsets.only(top: 2.0, right: screenWidth*0.025),
+                                child: Container(
+                                  width: 24,
+                                  child: Image.asset('icons/user-green.png'),
                                 ),
                               ),
-                              Text(
-                                'เปลี่ยนเวลาการแจ้งเตือนให้เข้ากับชีวิตประจำวันของคุณ',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontFamily: 'PlexSansThaiRg',
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'ข้อมูลส่วนตัว',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: 'PlexSansThaiMd',
+                                    ),
+                                  ),
+                                  Text(
+                                    'แก้ไขและเปลี่ยนแปลงข้อมูลของคุณได้ที่นี่',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontFamily: 'PlexSansThaiRg',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: screenWidth,
+                        height: 1.2,
+                        color: Color(0xffE7E7E7),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, '/drug-notification');
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding:EdgeInsets.only(top: 2.0, right: screenWidth*0.025),
+                                child: Container(
+                                  width: 24,
+                                  child: Image.asset('icons/clock-alarm.png'),
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'ตั้งค่าเวลาและการแจ้งเตือน',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontFamily: 'PlexSansThaiMd',
+                                      ),
+                                    ),
+                                    Text(
+                                      'เปลี่ยนเวลาการแจ้งเตือนให้เข้ากับชีวิตประจำวันของคุณ',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        fontFamily: 'PlexSansThaiRg',
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                  width: screenWidth,
-                  height: 1.2,
-                  color: Color(0xffE7E7E7),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
+                      ),
+                      Container(
+                        width: screenWidth,
+                        height: 1.2,
+                        color: Color(0xffE7E7E7),
+                      ),
                       Padding(
-                        padding:EdgeInsets.only(top: 2.0, right: screenWidth*0.025),
-                        child: Container(
-                          width: 24,
-                          child: Image.asset('icons/location.png'),
+                        padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding:EdgeInsets.only(top: 2.0, right: screenWidth*0.025),
+                              child: Container(
+                                width: 24,
+                                child: Image.asset('icons/location.png'),
+                              ),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'ที่ตั้งและสถานที่',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontFamily: 'PlexSansThaiMd',
+                                  ),
+                                ),
+                                Text(
+                                  'ตั้งค่าสถานที่เพื่อเข้าถึงร้านยาที่ให้บริการ',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontFamily: 'PlexSansThaiRg',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'ที่ตั้งและสถานที่',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontFamily: 'PlexSansThaiMd',
-                            ),
-                          ),
-                          Text(
-                            'ตั้งค่าสถานที่เพื่อเข้าถึงร้านยาที่ให้บริการ',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontFamily: 'PlexSansThaiRg',
-                            ),
-                          ),
-                        ],
+                      Container(
+                        width: screenWidth,
+                        height: 1.2,
+                        color: Color(0xffE7E7E7),
                       ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: screenWidth,
-                  height: 1.2,
-                  color: Color(0xffE7E7E7),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        'การตั้งค่าทั่วไป',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontFamily: 'PlexSansThaiMd',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: screenWidth,
-                  height: 1.2,
-                  color: Color(0xffE7E7E7),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
                       Padding(
-                        padding:EdgeInsets.only(top: 2.0, right: screenWidth*0.025),
-                        child: Container(
-                          width: 24,
-                          child: Image.asset('icons/color-mode.png'),
+                        padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              'การตั้งค่าทั่วไป',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontFamily: 'PlexSansThaiMd',
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'การตั้งค่าระบบ',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontFamily: 'PlexSansThaiMd',
-                            ),
-                          ),
-                          Text(
-                            'โหมด: สว่าง',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontFamily: 'PlexSansThaiRg',
-                            ),
-                          ),
-                        ],
+                      Container(
+                        width: screenWidth,
+                        height: 1.2,
+                        color: Color(0xffE7E7E7),
                       ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: screenWidth,
-                  height: 1.2,
-                  color: Color(0xffE7E7E7),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding:EdgeInsets.only(top: 2.0, right: screenWidth*0.025),
-                        child: Container(
-                          width: 24,
-                          child: Image.asset('icons/ci_font.png'),
-                        ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'การตั้งค่าขนาดของตัวอักษร',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontFamily: 'PlexSansThaiMd',
-                            ),
-                          ),
-                          Text(
-                            'ปรับเปลี่ยนขนาดตัวอักษรให้เข้ากับคุณ',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontFamily: 'PlexSansThaiRg',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: screenWidth,
-                  height: 1.2,
-                  color: Color(0xffE7E7E7),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding:EdgeInsets.only(top: 3.0, left: 2 ,right: screenWidth*0.03),
-                        child: Container(
-                          width: 20,
-                          child: Image.asset('icons/note.png'),
-                        ),
-                      ),
-                      Expanded(child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'การยินยอมเก็บรวบรวมข้อมูลส่วนบุคคล (PDPA)',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontFamily: 'PlexSansThaiMd',
-                            ),
-                          ),
-                          Text(
-                            'เพื่อให้เราเก็บข้อมูลเพื่ออำนวยความสะดวกของตัวคุณ',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontFamily: 'PlexSansThaiRg',
-                            ),
-                          ),
-                        ],
-                      ),)
-                    ],
-                  ),
-                ),
-                Container(
-                  width: screenWidth,
-                  height: 1.2,
-                  color: Color(0xffE7E7E7),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding:EdgeInsets.only(top: 2.0, right: screenWidth*0.025),
-                        child: Container(
-                          width: 24,
-                          child: Image.asset('icons/message.png'),
-                        ),
-                      ),
-                      Expanded(child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'เงื่อนไขและข้อตกลง',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontFamily: 'PlexSansThaiMd',
-                            ),
-                          ),
-                          Text(
-                            'เพื่อให้เราเก็บข้อมูลเพื่ออำนวยความสะดวกของตัวคุณ',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontFamily: 'PlexSansThaiRg',
-                            ),
-                          ),
-                        ],
-                      ),)
-                    ],
-                  ),
-                ),
-                Container(
-                  width: screenWidth,
-                  height: 1.2,
-                  color: Color(0xffE7E7E7),
-                ),
-                GestureDetector(
-                  onTap: () async {
-                    await _auth.signOut();
-                    Navigator.pushNamed(context, '/homepage');
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding:EdgeInsets.only(top: 2.0, right: screenWidth*0.025),
-                          child: Container(
-                            width: 24,
-                            child: Image.asset('icons/logout.png'),
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
+                      GestureDetector(
+                        onTap: (){
+                          Navigator.pushNamed(context, '/appearance');
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
+                          child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text(
-                                'ออกจากระบบ',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontFamily: 'PlexSansThaiMd',
+                              Padding(
+                                padding:EdgeInsets.only(top: 2.0, right: screenWidth*0.025),
+                                child: Container(
+                                  width: 24,
+                                  child: Image.asset('icons/color-mode.png'),
                                 ),
                               ),
-                              Text(
-                                'คุณสามารถเข้าสู่ระบบได้อีกครั้ง ด้วยเบอร์โทรศัพท์ของคุณ',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontFamily: 'PlexSansThaiRg',
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'การตั้งค่าระบบ',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: 'PlexSansThaiMd',
+                                    ),
+                                  ),
+                                  Text(
+                                    'โหมด: สว่าง',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontFamily: 'PlexSansThaiRg',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: screenWidth,
+                        height: 1.2,
+                        color: Color(0xffE7E7E7),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding:EdgeInsets.only(top: 2.0, right: screenWidth*0.025),
+                              child: Container(
+                                width: 24,
+                                child: Image.asset('icons/ci_font.png'),
+                              ),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'การตั้งค่าขนาดของตัวอักษร',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontFamily: 'PlexSansThaiMd',
+                                  ),
+                                ),
+                                Text(
+                                  'ปรับเปลี่ยนขนาดตัวอักษรให้เข้ากับคุณ',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontFamily: 'PlexSansThaiRg',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: screenWidth,
+                        height: 1.2,
+                        color: Color(0xffE7E7E7),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding:EdgeInsets.only(top: 3.0, left: 2 ,right: screenWidth*0.03),
+                              child: Container(
+                                width: 20,
+                                child: Image.asset('icons/note.png'),
+                              ),
+                            ),
+                            Expanded(child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'การยินยอมเก็บรวบรวมข้อมูลส่วนบุคคล (PDPA)',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontFamily: 'PlexSansThaiMd',
+                                  ),
+                                ),
+                                Text(
+                                  'เพื่อให้เราเก็บข้อมูลเพื่ออำนวยความสะดวกของตัวคุณ',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontFamily: 'PlexSansThaiRg',
+                                  ),
+                                ),
+                              ],
+                            ),)
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: screenWidth,
+                        height: 1.2,
+                        color: Color(0xffE7E7E7),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding:EdgeInsets.only(top: 2.0, right: screenWidth*0.025),
+                              child: Container(
+                                width: 24,
+                                child: Image.asset('icons/message.png'),
+                              ),
+                            ),
+                            Expanded(child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'เงื่อนไขและข้อตกลง',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontFamily: 'PlexSansThaiMd',
+                                  ),
+                                ),
+                                Text(
+                                  'เพื่อให้เราเก็บข้อมูลเพื่ออำนวยความสะดวกของตัวคุณ',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontFamily: 'PlexSansThaiRg',
+                                  ),
+                                ),
+                              ],
+                            ),)
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: screenWidth,
+                        height: 1.2,
+                        color: Color(0xffE7E7E7),
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          await _auth.signOut();
+                          Navigator.pushNamed(context, '/homepage');
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding:EdgeInsets.only(top: 2.0, right: screenWidth*0.025),
+                                child: Container(
+                                  width: 24,
+                                  child: Image.asset('icons/logout.png'),
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'ออกจากระบบ',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontFamily: 'PlexSansThaiMd',
+                                      ),
+                                    ),
+                                    Text(
+                                      'คุณสามารถเข้าสู่ระบบได้อีกครั้ง ด้วยเบอร์โทรศัพท์ของคุณ',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        fontFamily: 'PlexSansThaiRg',
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      Container(
+                        width: screenWidth,
+                        height: 1.2,
+                        color: Color(0xffE7E7E7),
+                      ),
+                      SizedBox(height: 20,),
+                    ],
                   ),
                 ),
-                Container(
-                  width: screenWidth,
-                  height: 1.2,
-                  color: Color(0xffE7E7E7),
-                ),
-                SizedBox(height: 20,),
-              ],
-            ),
           ],
         ),
       ),
@@ -512,7 +523,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: ReusableBottomNavigationBar(isLoggedIn: isLoggedIn,),
+      bottomNavigationBar: ReusableBottomNavigationBar(isLoggedIn: isLoggedIn, page: 'profile'),
     );
   }
 }

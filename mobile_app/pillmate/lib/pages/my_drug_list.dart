@@ -439,7 +439,7 @@ class _MyDrugListState extends State<MyDrugList> {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: ReusableBottomNavigationBar(isLoggedIn: isLoggedIn,),
+        bottomNavigationBar: ReusableBottomNavigationBar(isLoggedIn: isLoggedIn, page: 'drugList',),
       ),
     );
   }

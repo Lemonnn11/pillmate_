@@ -1,22 +1,17 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:pillmate/apis/firebase_notification_api.dart';
-import 'package:pillmate/pages/drug_information.dart';
+import 'package:pillmate/pages/appearance.dart';
 import 'package:pillmate/pages/drug_notification.dart';
-import 'package:pillmate/pages/google_map.dart';
 import 'package:pillmate/pages/homepage.dart';
 import 'package:pillmate/pages/search_pharmacy.dart';
 import 'package:pillmate/pages/sign_in/login.dart';
 import 'package:pillmate/pages/my_drug_list.dart';
 import 'package:pillmate/pages/personal_information.dart';
 import 'package:pillmate/pages/profile.dart';
-import 'package:pillmate/pages/qr_code_scanner.dart';
-import 'package:pillmate/pages/sign_in/verify_otp.dart';
-import 'package:pillmate/pages/sign_up_form/name.dart';
 import 'package:pillmate/pages/welcome_page.dart';
 import 'package:pillmate/services/local_notification_service.dart';
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:flutter/services.dart';
 
 // final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -52,6 +47,7 @@ class MyApp extends StatelessWidget {
         '/drug-notification': (context) => DrugNotification(),
         '/welcome': (context) => WelcomePage(),
         '/search-pharmacy': (context) => SearchPharmacy(),
+        '/appearance': (context) => Appearance(),
       },
     );
   }

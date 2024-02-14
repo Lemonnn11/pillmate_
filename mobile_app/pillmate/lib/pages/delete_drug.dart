@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../models/medicine.dart';
 import '../services/sqlite_service.dart';
@@ -15,6 +16,8 @@ class DeleteDrug extends StatefulWidget {
 
 class _DeleteDrugState extends State<DeleteDrug> {
   late SqliteService _sqliteService;
+  String formattedExpired = '';
+  String formattedDispensing = '';
 
   @override
   void initState() {
@@ -22,6 +25,92 @@ class _DeleteDrugState extends State<DeleteDrug> {
     super.initState();
     this._sqliteService= SqliteService();
     this._sqliteService.initializeDB();
+  }
+
+  void formattedDate(){
+    DateTime exp = DateTime.parse(widget.med.expiredDate);
+    DateTime des = DateTime.parse(widget.med.date);
+    final formatter = new DateFormat('d MMMM y');
+    formattedExpired = formatter.format(exp);
+    List<String> tmpExp = formattedExpired.split(' ');
+    switch (tmpExp[1].toLowerCase()) {
+      case 'january':
+        formattedExpired = formattedExpired.replaceAll('January', 'มกราคม');
+        break;
+      case 'february':
+        formattedExpired = formattedExpired.replaceAll('February', 'กุมภาพันธ์');
+        break;
+      case 'march':
+        formattedExpired = formattedExpired.replaceAll('March', 'มีนาคม');
+        break;
+      case 'april':
+        formattedExpired = formattedExpired.replaceAll('April', 'เมษายน');
+        break;
+      case 'may':
+        formattedExpired = formattedExpired.replaceAll('May', 'พฤษภาคม');
+        break;
+      case 'june':
+        formattedExpired = formattedExpired.replaceAll('June', 'มิถุนายน');
+        break;
+      case 'july':
+        formattedExpired = formattedExpired.replaceAll('July', 'กรกฎาคม');
+        break;
+      case 'august':
+        formattedExpired = formattedExpired.replaceAll('August', 'สิงหาคม');
+        break;
+      case 'september':
+        formattedExpired = formattedExpired.replaceAll('September', 'กันยายน');
+        break;
+      case 'october':
+        formattedExpired = formattedExpired.replaceAll('October', 'ตุลาคม');
+        break;
+      case 'november':
+        formattedExpired = formattedExpired.replaceAll('November', 'พฤศจิกายน');
+        break;
+      case 'december':
+        formattedExpired = formattedExpired.replaceAll('December', 'ธันวาคม');
+        break;
+    }
+    formattedDispensing = formatter.format(des);
+    List<String> tmpDes = formattedDispensing.split(' ');
+    switch (tmpDes[1].toLowerCase()) {
+      case 'january':
+        formattedDispensing = formattedDispensing.replaceAll('January', 'มกราคม');
+        break;
+      case 'february':
+        formattedDispensing = formattedDispensing.replaceAll('February', 'กุมภาพันธ์');
+        break;
+      case 'march':
+        formattedDispensing = formattedDispensing.replaceAll('March', 'มีนาคม');
+        break;
+      case 'april':
+        formattedDispensing = formattedDispensing.replaceAll('April', 'เมษายน');
+        break;
+      case 'may':
+        formattedDispensing = formattedDispensing.replaceAll('May', 'พฤษภาคม');
+        break;
+      case 'june':
+        formattedDispensing = formattedDispensing.replaceAll('June', 'มิถุนายน');
+        break;
+      case 'july':
+        formattedDispensing = formattedDispensing.replaceAll('July', 'กรกฎาคม');
+        break;
+      case 'august':
+        formattedDispensing = formattedDispensing.replaceAll('August', 'สิงหาคม');
+        break;
+      case 'september':
+        formattedDispensing = formattedDispensing.replaceAll('September', 'กันยายน');
+        break;
+      case 'october':
+        formattedDispensing = formattedDispensing.replaceAll('October', 'ตุลาคม');
+        break;
+      case 'november':
+        formattedDispensing = formattedDispensing.replaceAll('November', 'พฤศจิกายน');
+        break;
+      case 'december':
+        formattedDispensing = formattedDispensing.replaceAll('December', 'ธันวาคม');
+        break;
+    }
   }
 
   @override
@@ -117,7 +206,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                               fontSize: 14,
                               fontFamily: 'PlexSansThaiRg',
                             ),),
-                          Text('25/06/67',
+                          Text(formattedExpired,
                             style: TextStyle(
                               fontSize: 14,
                               fontFamily: 'PlexSansThaiRg',
@@ -564,7 +653,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                             ),
                           ),
                         ),
-                        Padding(
+                        widget.med.takeMedWhen.contains('เช้า') ? Padding(
                           padding: const EdgeInsets.only(top: 4.0),
                           child: Container(
                             height: 50,
@@ -602,12 +691,12 @@ class _DeleteDrugState extends State<DeleteDrug> {
                               ),
                             ),
                           ),
-                        ),
+                        ):Container(width: 0, height: 0,),
                       ],
                     ),
                   ),
                   SizedBox(width: 8,),
-                  Padding(
+                  widget.med.takeMedWhen.contains('กลางวัน') ? Padding(
                     padding: const EdgeInsets.only(top: 4.0),
                     child: Container(
                       width: screenWidth*0.29,
@@ -653,9 +742,9 @@ class _DeleteDrugState extends State<DeleteDrug> {
                         ],
                       ),
                     ),
-                  ),
+                  ):Container(width: 0, height: 0,),
                   SizedBox(width: 8,),
-                  Padding(
+                  widget.med.takeMedWhen.contains('เย็น') ? Padding(
                     padding: const EdgeInsets.only(top: 4.0),
                     child: Container(
                       width: screenWidth*0.29,
@@ -701,8 +790,8 @@ class _DeleteDrugState extends State<DeleteDrug> {
                         ],
                       ),
                     ),
-                  ),
-                  Padding(
+                  ):Container(width: 0, height: 0,),
+                  widget.med.takeMedWhen.contains('ก่อนนอน') ? Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Container(
                       width: screenWidth*0.2935,
@@ -748,7 +837,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                         ],
                       ),
                     ),
-                  ),
+                  ):Container(width: 0, height: 0,),
                 ],
               ),
               SizedBox(
@@ -793,7 +882,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                             Column(
                               children: [
                                 Text(
-                                  'ลดคลื่นไส้อาเจียน',
+                                  widget.med.conditionOfUse,
                                   style: TextStyle(
                                       fontFamily: 'PlexSansThaiRg',
                                       fontSize: 14,
@@ -861,7 +950,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                               child: Column(
                                 children: [
                                   Text(
-                                    'ยานี้อาจระคายเคืองกระเพาะอาหาร ให้รับประทานหลังอาหารทันที',
+                                    widget.med.additionalAdvice,
                                     style: TextStyle(
                                         fontFamily: 'PlexSansThaiRg',
                                         fontSize: 14,
@@ -921,7 +1010,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                               child: Column(
                                 children: [
                                   Text(
-                                    'หากมีอาการผื่นแพ้ เยื่อบุผิวลอก ให้หยุดใช้ยา และหากมีอาการหนักควรปรึกษาแพทย์ทันที',
+                                    widget.med.adverseDrugReaction,
                                     style: TextStyle(
                                         fontFamily: 'PlexSansThaiRg',
                                         fontSize: 14,
@@ -1002,7 +1091,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                 ),
                                 Expanded(
                                   child: Text(
-                                    '12 มกราคม 2566',
+                                    formattedDispensing,
                                     style: TextStyle(
                                         fontFamily: 'PlexSansThaiRg',
                                         fontSize: 14,
@@ -1025,8 +1114,100 @@ class _DeleteDrugState extends State<DeleteDrug> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () async {
-                        await _sqliteService.deleteMedicineItem(widget.med.qrcodeID);
-                        Navigator.pushNamed(context, '/my-drug-list');
+                        showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext context){
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20)
+                                  ),
+                                ),
+                                height: 200,
+                                child: Column(
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        SizedBox(height: 30,),
+                                        Text(
+                                          'คุณแน่ใจใช่ไหมที่จะลบข้อมูลยา?',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontFamily: 'PlexSansThaiMd',
+                                            color: Color(0xff059E78),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 4,
+                                        ),
+                                        Text(
+                                          'คุณสามารถดูข้อมูลยาของคุณได้ที่หน้า “ยาของฉัน”',
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: screenWidth*0.045),
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child:
+                                                  Text('ยกเลิก', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 17, color: Colors.black),
+                                                  ),
+                                                  style: ElevatedButton.styleFrom(
+                                                    backgroundColor: Color(0xffECECEC),
+                                                    elevation: 0.5,
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(8), // Set your desired border radius
+                                                    ),
+                                                    minimumSize: Size(screenWidth, 57),),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: screenWidth*0.04,
+                                              ),
+                                              Expanded(
+                                                child: ElevatedButton(
+                                                  onPressed: () async {
+                                                    await _sqliteService.deleteMedicineItem(widget.med.qrcodeID);
+                                                    Navigator.pushNamed(context, '/my-drug-list');
+                                                  },
+                                                  child:
+                                                  Text('ลบข้อมูล', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 17, color: Colors.white),
+                                                  ),
+                                                  style: ElevatedButton.styleFrom(
+                                                    backgroundColor: Color(0xffE2514F),
+                                                    elevation: 0.5,
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(8), // Set your desired border radius
+                                                    ),
+                                                    minimumSize: Size(screenWidth, 57),),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                        );
                       },
                       child:
                       Text('ลบข้อมูล', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 18, color: Colors.white),

@@ -4,8 +4,9 @@ import 'package:ionicons/ionicons.dart';
 class BottomIcon extends StatelessWidget {
   final Image image;
   final String label;
+  final Color fontColor;
 
-  BottomIcon({required this.image, required this.label});
+  BottomIcon({required this.image, required this.label, required this.fontColor});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class BottomIcon extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-              fontSize: 12, fontWeight: FontWeight.bold, color:Color(0xff8B8B8B), fontFamily: 'PlexSansThaiRg'),
+              fontSize: 12, fontWeight: FontWeight.bold, color:fontColor, fontFamily: 'PlexSansThaiRg'),
         ),
       ],
     );
