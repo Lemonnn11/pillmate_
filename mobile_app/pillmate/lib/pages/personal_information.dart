@@ -1,10 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:pillmate/pages/qr_code_scanner.dart';
-
-import '../components/reusable_bottom_navigation_bar.dart';
 import '../services/sqlite_service.dart';
 import 'package:pillmate/models/personal_information.dart';
 
@@ -98,32 +94,38 @@ class _PersonalInformationState extends State<PersonalInformation> {
         },
         ),
         actions: [
-          Padding(padding: EdgeInsets.only(top: 11, right: 9),
-            child: this.isEdit ? GestureDetector(
-              onTap: () async {
-                PersonalInformationModel p2 = new PersonalInformationModel(1, _nameController.text, _dobController.text, _genderController.text, double.parse(_weightController.text), double.parse(_heightController.text), _healthConditionController.text, _drugAllergiesController.text, _personalMedicineController.text, _bloodTypeController.text);
-                final res = await _sqliteService.createPersonalInfoItem(p2);
-                setState(() {
-                  this.isEdit = !isEdit;
-                });
-              },
-              child: Text( 'บันทึก', style: TextStyle(
+            this.isEdit ? GestureDetector(
+            onTap: () async {
+              PersonalInformationModel p2 = new PersonalInformationModel(1, _nameController.text, _dobController.text, _genderController.text, _weightController.text == '' ? 0.0: double.parse(_weightController.text), _heightController.text == '' ? 0.0 : double.parse(_heightController.text), _healthConditionController.text, _drugAllergiesController.text, _personalMedicineController.text, _bloodTypeController.text);
+              final res = await _sqliteService.createPersonalInfoItem(p2);
+              setState(() {
+                this.isEdit = !isEdit;
+              });
+            },
+            child: Padding(
+              padding: EdgeInsets.only(top: 11, right: 9),
+              child:  Text( 'บันทึก', style: TextStyle(
                   fontSize: 16,
                   fontFamily: 'PlexSansThaiRg',
                   color: Colors.black
-              ),),
-            ): GestureDetector(
-              onTap: (){
-                setState(() {
-                  this.isEdit = !isEdit;
-                });
-              },
-              child: Text('แก้ไข', style: TextStyle(
-                  fontSize: 16,
-                  fontFamily: 'PlexSansThaiRg',
-                  color: Colors.black
-              ),),
-            ))
+              ),)
+            ),
+          ):
+          GestureDetector(
+          onTap: () async {
+          setState(() {
+          this.isEdit = !isEdit;
+          });
+          },
+          child: Padding(
+          padding: EdgeInsets.only(top: 11, right: 9),
+          child:  Text( 'แก้ไข', style: TextStyle(
+          fontSize: 16,
+          fontFamily: 'PlexSansThaiRg',
+          color: Colors.black
+          ),)
+          ),
+          )
         ],
       ),
       body: Container(
@@ -142,8 +144,11 @@ class _PersonalInformationState extends State<PersonalInformation> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 6, bottom: 8),
-                    child: Text(p1 == null ? '': p1!.first.name ,style: TextStyle(fontSize: 18, fontFamily: 'PlexSansThaiMd', color:  Colors.black),),
-                  ),
+                    child: Text(
+                      p1 == null || p1!.isEmpty ? '' : p1!.first.name,
+                      style: TextStyle(fontSize: 18, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                    ),
+                  )
                 ],
               ),
               Column(
@@ -158,7 +163,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                     child: TextField(
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.only(top: 2, left: 15),
-                          hintText: p1 == null ? '': p1!.first.dob ,
+                          hintText: p1 == null || p1!.isEmpty ? '': p1!.first.dob ,
                           hintStyle: TextStyle(
                             fontSize: 14,
                             fontFamily: 'PlexSansThaiRg',
@@ -198,7 +203,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                           child: TextField(
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.only(top: 2, left: 15),
-                              hintText: p1 == null ? '': p1!.first.bloodType,
+                              hintText: p1 == null|| p1!.isEmpty ? '': p1!.first.bloodType,
                               hintStyle: TextStyle(
                                   fontSize: 14,
                                   fontFamily: 'PlexSansThaiRg',
@@ -237,7 +242,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         child: TextField(
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.only(top: 2, left: 15),
-                            hintText: p1 == null ? '': p1!.first.gender,
+                            hintText: p1 == null|| p1!.isEmpty ? '': p1!.first.gender,
                             hintStyle: TextStyle(
                                 fontSize: 14,
                                 fontFamily: 'PlexSansThaiRg',
@@ -290,7 +295,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                 ),
                               ),
                               contentPadding: EdgeInsets.only(top: 2, left: 15),
-                              hintText: p1 == null ? '': p1!.first.weight.toString(),
+                              hintText: p1 == null|| p1!.isEmpty ? '': p1!.first.weight.toString(),
                               hintStyle: TextStyle(
                                   fontSize: 14,
                                   fontFamily: 'PlexSansThaiRg',
@@ -340,7 +345,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                               ),
                             ),
                             contentPadding: EdgeInsets.only(top: 2, left: 15),
-                            hintText: p1 == null ? '': p1!.first.height.toString(),
+                            hintText: p1 == null || p1!.isEmpty? '': p1!.first.height.toString(),
                             hintStyle: TextStyle(
                                 fontSize: 14,
                                 fontFamily: 'PlexSansThaiRg',
@@ -379,7 +384,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                     child: TextField(
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(top: 2, left: 15),
-                        hintText: p1 == null ? '': p1!.first.healthCondition,
+                        hintText: p1 == null || p1!.isEmpty? '': p1!.first.healthCondition,
                         hintStyle: TextStyle(
                             fontSize: 14,
                             fontFamily: 'PlexSansThaiRg',
@@ -416,7 +421,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                     child: TextField(
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(top: 2, left: 15),
-                        hintText: p1 == null ? '': p1!.first.drugAllergies,
+                        hintText: p1 == null || p1!.isEmpty? '': p1!.first.drugAllergies,
                         hintStyle: TextStyle(
                             fontSize: 14,
                             fontFamily: 'PlexSansThaiRg',
@@ -453,7 +458,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                     child: TextField(
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(top: 2, left: 15),
-                        hintText: p1 == null ? '': p1!.first.personalMedicine,
+                        hintText: p1 == null || p1!.isEmpty? '': p1!.first.personalMedicine,
                         hintStyle: TextStyle(
                             fontSize: 14,
                             fontFamily: 'PlexSansThaiRg',
