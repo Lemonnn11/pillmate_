@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pillmate/pages/appearance.dart';
 import 'package:pillmate/pages/drug_notification.dart';
 import 'package:pillmate/pages/homepage.dart';
+import 'package:pillmate/pages/on_boarding_1.dart';
 import 'package:pillmate/pages/search_pharmacy.dart';
 import 'package:pillmate/pages/sign_in/login.dart';
 import 'package:pillmate/pages/my_drug_list.dart';
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
         '/welcome': (context) => WelcomePage(),
         '/search-pharmacy': (context) => SearchPharmacy(),
         '/appearance': (context) => Appearance(),
+        '/on-boarding-1': (context) => OnBoarding1(),
       },
     );
   }

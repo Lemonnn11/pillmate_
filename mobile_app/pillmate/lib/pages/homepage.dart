@@ -6,9 +6,11 @@ import 'package:ionicons/ionicons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pillmate/models/daily_med.dart';
 import 'package:pillmate/models/medicine.dart';
+import 'package:pillmate/models/on_boarding.dart';
 import 'package:pillmate/models/personal_information.dart';
 import 'package:pillmate/pages/add_drug.dart';
 import 'package:pillmate/pages/drug_information.dart';
+import 'package:pillmate/pages/on_boarding_1.dart';
 import 'package:pillmate/pages/qr_code_scanner.dart';
 import 'package:pillmate/services/local_notification_service.dart';
 import '../apis/firebase_notification_api.dart';
@@ -126,10 +128,23 @@ class _HomepageState extends State<Homepage> {
     authChangesListener();
     this._sqliteService= SqliteService();
     this._sqliteService.initializeDB();
+    this._sqliteService.createOnBoarding(new OnBoardingModel(1, 1));
     getMedicines();
     getPersons();
     setHeader();
     getDailyMeds();
+    navigateToOnBoarding();
+  }
+
+  Future<void> navigateToOnBoarding() async {
+    final data = await _sqliteService.getOnBoarding();
+    if(data.length == 0){
+      this._sqliteService.createOnBoarding(new OnBoardingModel(1, 1));
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => OnBoarding1()),
+      );
+    }
   }
 
   Future<void> scheduledNotification() async {
@@ -482,7 +497,7 @@ class _HomepageState extends State<Homepage> {
                                                       child: ClipRRect(
                                                         borderRadius: BorderRadius.all(Radius.circular(10)),
                                                         child: LinearProgressIndicator(
-                                                          value: dailyActiveMed == 0? 0.0: (amoungMedTaken/dailyActiveMed),
+                                                          value: isLoggedIn! ? 0.0: dailyActiveMed == 0  ? 0.0: (amoungMedTaken/dailyActiveMed),
                                                           backgroundColor: Color(0xffdddddd),
                                                           valueColor: AlwaysStoppedAnimation<Color>(Color(0xffED6B81)),
                                                         ),
@@ -576,9 +591,10 @@ class _HomepageState extends State<Homepage> {
                                     ],
                                   ),
                                   Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Container(
-                                          width: 65,
+                                          width: 60,
                                           child: Image.asset('images/scandrug_0.png')),
                                     ],
                                   )
@@ -1061,12 +1077,12 @@ class _HomepageState extends State<Homepage> {
             shape: CircleBorder(),
             backgroundColor: Color(0xff059E78),
             onPressed: () {
-              // Navigator.of(context).push(MaterialPageRoute(
-              //   builder: (context) => QRCodeScanner()
-              // ));
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => AddDrug()
+                builder: (context) => QRCodeScanner()
               ));
+              // Navigator.of(context).push(MaterialPageRoute(
+              //     builder: (context) => AddDrug()
+              // ));
             },
           ),
         ),

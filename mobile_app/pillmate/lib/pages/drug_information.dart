@@ -1211,10 +1211,12 @@ class _DrugInformationState extends State<DrugInformation> {
                                                     print(tmp);
                                                     for(int i = 0; i < tmp.length;i++){
                                                       final eachDailyMed = tmp[i].split(' ');
-                                                      print(eachDailyMed);
+                                                      print(eachDailyMed.length);
                                                       print(eachDailyMed[0]);
                                                       if(eachDailyMed[0] == dt.day.toString()){
-                                                        _sqliteService.decreaseDailyMed(eachDailyMed.length-1);
+                                                        if(eachDailyMed[eachDailyMed.length - 1] != ''){
+                                                          _sqliteService.decreaseDailyMed(eachDailyMed.length-1);
+                                                        }
                                                       }
                                                     }
                                                     await _sqliteService.deleteMedicineItem(widget.med.qrcodeID);
