@@ -175,15 +175,15 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
     controller.scannedDataStream.listen((barcode) => {
     if(!isNavigate && barcode != null){
       isNavigate = true,
-      // Navigator.push(
-      // context,
-      // MaterialPageRoute(
-      //   builder: (context) => AddDrug(info: barcode!.code.toString()),
-      // ),
-      // ).then((_){
-      //   isNavigate = false;
-      //   controller.dispose();
-      // })
+      Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddDrug(info: barcode!.code.toString()),
+      ),
+      ).then((_){
+        isNavigate = false;
+        controller.dispose();
+      })
 
     }
     });
