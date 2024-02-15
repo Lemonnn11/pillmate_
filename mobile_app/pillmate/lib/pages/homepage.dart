@@ -646,7 +646,7 @@ class _HomepageState extends State<Homepage> {
                                   Column(
                                     children: [
                                       Container(
-                                          width: 60,
+                                          width: 59,
                                           child: Image.asset('images/mydrugs_0.png')),
                                     ],
                                   )

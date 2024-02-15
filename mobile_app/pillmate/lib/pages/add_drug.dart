@@ -9,9 +9,9 @@ import 'package:pillmate/models/medicine.dart';
 import '../services/sqlite_service.dart';
 
 class AddDrug extends StatefulWidget {
-  final String info = '{"timePeriodForMed":"","date":"2023-12-02T00:00:00","pharID":"Fy751CumG69MLZfZLvqe","additionalAdvice":"ยานี้อาจระคายเคืองกระเพาะอาหาร ให้รับประทานหลังอาหารทันที","quantity":250,"amountOfMeds":10,"genericName":"Paracetamol","expiredDate":"2024-06-25T00:00:00","adverseDrugReaction":"หากมีอาการผื่นแพ้ เยื่อบุผิวลอก ให้หยุดใช้ยาและหากมีอาการหนักควรปรึกษาแพทย์ทันที","timeOfMed":"ก่อนอาหาร","typeOfMedicine":"แคปซูล","tradeName":"Paracap Tab. 500 mg","dosagePerTake":1,"takeMedWhen":"เช้า กลางวัน เย็น","QRCodeID":"4f18f518-8655-446b-89fc-372a0ea39347","timePerDay":2,"conditionOfUse":"ลดคลื่นไส้อาเจียน"}';
-  // final String info;
-  const AddDrug({super.key});
+  // final String info = '{"timePeriodForMed":"","date":"2023-12-02T00:00:00","pharID":"Fy751CumG69MLZfZLvqe","additionalAdvice":"ยานี้อาจระคายเคืองกระเพาะอาหาร ให้รับประทานหลังอาหารทันที","quantity":250,"amountOfMeds":10,"genericName":"Paracetamol","expiredDate":"2024-06-25T00:00:00","adverseDrugReaction":"หากมีอาการผื่นแพ้ เยื่อบุผิวลอก ให้หยุดใช้ยาและหากมีอาการหนักควรปรึกษาแพทย์ทันที","timeOfMed":"ก่อนอาหาร","typeOfMedicine":"แคปซูล","tradeName":"Paracap Tab. 500 mg","dosagePerTake":1,"takeMedWhen":"เช้า กลางวัน เย็น","QRCodeID":"4f18f518-8655-446b-89fc-372a0ea39347","timePerDay":2,"conditionOfUse":"ลดคลื่นไส้อาเจียน"}';
+  final String info;
+  const AddDrug({super.key, required this.info});
 
   @override
   State<AddDrug> createState() => _AddDrugState();
