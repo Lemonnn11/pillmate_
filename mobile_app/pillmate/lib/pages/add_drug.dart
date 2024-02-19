@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -9,9 +10,9 @@ import 'package:pillmate/models/medicine.dart';
 import '../services/sqlite_service.dart';
 
 class AddDrug extends StatefulWidget {
-  // final String info = '{"timePeriodForMed":"","date":"2023-12-02T00:00:00","pharID":"Fy751CumG69MLZfZLvqe","additionalAdvice":"ยานี้อาจระคายเคืองกระเพาะอาหาร ให้รับประทานหลังอาหารทันที","quantity":250,"amountOfMeds":10,"genericName":"Paracetamol","expiredDate":"2024-06-25T00:00:00","adverseDrugReaction":"หากมีอาการผื่นแพ้ เยื่อบุผิวลอก ให้หยุดใช้ยาและหากมีอาการหนักควรปรึกษาแพทย์ทันที","timeOfMed":"ก่อนอาหาร","typeOfMedicine":"แคปซูล","tradeName":"Paracap Tab. 500 mg","dosagePerTake":1,"takeMedWhen":"เช้า กลางวัน เย็น","QRCodeID":"4f18f518-8655-446b-89fc-372a0ea39347","timePerDay":2,"conditionOfUse":"ลดคลื่นไส้อาเจียน"}';
-  final String info;
-  const AddDrug({super.key, required this.info});
+  final String info = '{"timePeriodForMed":"...","date":"2024-02-19T01:44:23.470Z","pharID":"Fy751CumG69MLZfZLvqe","additionalAdvice":"ยานี้อาจระคายเคืองกระเพาะอาหาร ให้รับประทานหลังอาหารทันที","quantity":250,"amountOfMeds":10,"genericName":"Paracetamol","expiredDate":"2023-11-04T00:00:00.000Z","adverseDrugReaction":"หากมีอาการผื่นแพ้ เยื่อบุผิวลอก ให้หยุดใช้ยาและหากมีอาการหนักควรปรึกษาแพทย์ทันที","timeOfMed":"หลังอาหาร","typeOfMedicine":"Tablet","tradeName":"Bakamol Tab. 500 mg","dosagePerTake":2,"takeMedWhen":"เช้า กลางวัน เย็น","QRCodeID":"8c5ea443-83e4-4d92-88d9-5d0e06a06db8","timePerDay":3,"conditionOfUse":"ลดคลื่นไส้อาเจียน"}';
+  // final String info;
+  const AddDrug({super.key});
 
   @override
   State<AddDrug> createState() => _AddDrugState();
@@ -23,7 +24,24 @@ class _AddDrugState extends State<AddDrug> {
   late SqliteService _sqliteService;
   String formattedExpired = '';
   String formattedDispensing = '';
+  bool isActived = true;
+  final _firestore = FirebaseFirestore.instance;
+  String storeName = '';
 
+
+  void _getPharmacyName() async {
+    _firestore.collection("pharmacies").where("pharID", isEqualTo: data["pharID"]).get().then(
+          (querySnapshot) {
+        print("Successfully completed");
+        for (var docSnapshot in querySnapshot.docs) {
+          setState(() {
+            storeName = docSnapshot.data()['storeName'];
+          });
+        }
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+  }
 
   @override
   void initState() {
@@ -34,6 +52,19 @@ class _AddDrugState extends State<AddDrug> {
     this._sqliteService= SqliteService();
     this._sqliteService.initializeDB();
     formattedDate();
+    formattedType();
+    _getPharmacyName();
+  }
+  
+  void formattedType(){
+    switch(data['typeOfMedicine'].toString()){
+      case 'Tablet':
+        data['typeOfMedicine'] = data['typeOfMedicine'].toString().replaceAll('Tablet', 'เม็ด');
+        break;
+      case 'Capsule':
+        data['typeOfMedicine'] = data['typeOfMedicine'].toString().replaceAll('Capsule', 'แคปซูล');
+        break;
+    }
   }
 
   void formattedDate(){
@@ -44,42 +75,44 @@ class _AddDrugState extends State<AddDrug> {
     List<String> tmpExp = formattedExpired.split(' ');
     switch (tmpExp[1].toLowerCase()) {
       case 'january':
-        formattedExpired = formattedExpired.replaceAll('January', 'มกราคม');
+        formattedExpired = formattedExpired.replaceAll('January', 'ม.ค.');
         break;
       case 'february':
-        formattedExpired = formattedExpired.replaceAll('February', 'กุมภาพันธ์');
+        formattedExpired = formattedExpired.replaceAll('February', 'ก.พ.');
         break;
       case 'march':
-        formattedExpired = formattedExpired.replaceAll('March', 'มีนาคม');
+        formattedExpired = formattedExpired.replaceAll('March', 'มี.ค.');
         break;
       case 'april':
-        formattedExpired = formattedExpired.replaceAll('April', 'เมษายน');
+        formattedExpired = formattedExpired.replaceAll('April', 'เม.ย.');
         break;
       case 'may':
-        formattedExpired = formattedExpired.replaceAll('May', 'พฤษภาคม');
+        formattedExpired = formattedExpired.replaceAll('May', 'พ.ค.');
         break;
       case 'june':
-        formattedExpired = formattedExpired.replaceAll('June', 'มิถุนายน');
+        formattedExpired = formattedExpired.replaceAll('June', 'มิ.ย.');
         break;
       case 'july':
-        formattedExpired = formattedExpired.replaceAll('July', 'กรกฎาคม');
+        formattedExpired = formattedExpired.replaceAll('July', 'ก.ค.');
         break;
       case 'august':
-        formattedExpired = formattedExpired.replaceAll('August', 'สิงหาคม');
+        formattedExpired = formattedExpired.replaceAll('August', 'ส.ค.');
         break;
       case 'september':
-        formattedExpired = formattedExpired.replaceAll('September', 'กันยายน');
+        formattedExpired = formattedExpired.replaceAll('September', 'ก.ย.');
         break;
       case 'october':
-        formattedExpired = formattedExpired.replaceAll('October', 'ตุลาคม');
+        formattedExpired = formattedExpired.replaceAll('October', 'ต.ค.');
         break;
       case 'november':
-        formattedExpired = formattedExpired.replaceAll('November', 'พฤศจิกายน');
+        formattedExpired = formattedExpired.replaceAll('November', 'พ.ย.');
         break;
       case 'december':
-        formattedExpired = formattedExpired.replaceAll('December', 'ธันวาคม');
+        formattedExpired = formattedExpired.replaceAll('December', 'ธ.ค.');
         break;
     }
+    List<String> tmpExp1 = formattedExpired.split(' ');
+    formattedExpired = tmpExp1[0] + ' ' + tmpExp1[1] + ' ' + (int.parse(tmpExp1[2]) + 543).toString();
     formattedDispensing = formatter.format(des);
     List<String> tmpDes = formattedDispensing.split(' ');
     switch (tmpDes[1].toLowerCase()) {
@@ -120,6 +153,8 @@ class _AddDrugState extends State<AddDrug> {
         formattedDispensing = formattedDispensing.replaceAll('December', 'ธันวาคม');
         break;
     }
+    List<String> tmpDes1 = formattedDispensing.split(' ');
+    formattedDispensing = tmpDes1[0] + ' ' + tmpDes1[1] + ' ' + (int.parse(tmpDes1[2]) + 543).toString();
   }
 
 
@@ -210,20 +245,20 @@ class _AddDrugState extends State<AddDrug> {
                         ],
                       ),
                       SizedBox(height: 3,),
-                      Row(
-                        children: [
-                          Text('วันหมดอายุ: ',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontFamily: 'PlexSansThaiRg',
-                            ),),
-                          Text(formattedExpired,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontFamily: 'PlexSansThaiRg',
-                            ),),
-                        ],
-                      ),
+                        Wrap(
+                          children: [
+                            Text('วันหมดอายุ: ',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontFamily: 'PlexSansThaiRg',
+                              ),),
+                            Text(formattedExpired,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontFamily: 'PlexSansThaiRg',
+                              ),),
+                          ],
+                        ),
                     ],
                   ),
                 ],
@@ -1078,7 +1113,7 @@ class _AddDrugState extends State<AddDrug> {
                                 ),
                                 Expanded(
                                   child: Text(
-                                    'ร้านขายยาเภสัชมหิดล สถานปฏิบัติการเภสัชกรรมชุมชน',
+                                    storeName,
                                     style: TextStyle(
                                         fontFamily: 'PlexSansThaiRg',
                                         fontSize: 14,
@@ -1120,14 +1155,14 @@ class _AddDrugState extends State<AddDrug> {
                 ),
               ),
               SizedBox(height: 10,),
-              Row(
+              isActived ? Row(
                 children: [
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () async {
                         var dt = DateTime.now();
                         String tmp;
-                        switch(dt.toString()){
+                        switch(dt.month.toString()){
                           case '1': {
                             tmp = 'มกราคม';
                           }
@@ -1203,7 +1238,7 @@ class _AddDrugState extends State<AddDrug> {
                           print('${data['amountOfMeds']} ${list.length}');
                           String tm = '';
                           bool flag = false;
-                          if(dt.hour < daileyMed[0].nightTimeHour || (dt.hour == daileyMed[0].nightTimeHour && dt.minute < daileyMed[0].nightTimeMinute)){
+                          if (daileyMed.isNotEmpty && (dt.hour < daileyMed[0].nightTimeHour || (dt.hour == daileyMed[0].nightTimeHour && dt.minute < daileyMed[0].nightTimeMinute))){
                             tmpp += dt.day.toString();
                             tmpp += ' ';
                             for(int i = 0;i < list.length;i++){
@@ -1496,6 +1531,9 @@ class _AddDrugState extends State<AddDrug> {
                               );
                             }
                         );
+                        setState(() {
+                          isActived = false;
+                        });
                       },
                       child:
                       Text('เพิ่มข้อมูลยา', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 18, color: Colors.white),
@@ -1507,6 +1545,24 @@ class _AddDrugState extends State<AddDrug> {
                           borderRadius: BorderRadius.circular(8), // Set your desired border radius
                         ),
                         minimumSize: Size(screenWidth, 52),),
+                    ),
+                  ),
+                ],
+              ): Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+
+                      child:
+                      Text('เพิ่มข้อมูลยาเรีบยร้อย', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 18, color: Colors.white),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xff059E78),
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8), // Set your desired border radius
+                        ),
+                        minimumSize: Size(screenWidth, 52),), onPressed: null,
                     ),
                   ),
                 ],

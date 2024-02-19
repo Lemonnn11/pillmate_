@@ -23,12 +23,14 @@ class _VerifyOTPState extends State<VerifyOTP> {
   late SqliteService _sqliteService;
   List<PersonalInformationModel> _personList = [];
   late String verificationId;
-  late String pin1;
-  late String pin2;
-  late String pin3;
-  late String pin4;
-  late String pin5;
-  late String pin6;
+  bool showInvalidOTP = false;
+  bool showEmptyOTP = false;
+  String pin1 = '';
+  String pin2 = '';
+  String pin3 = '';
+  String pin4 = '';
+  String pin5 = '';
+  String pin6 = '';
   Duration duration = Duration();
   Timer? timer;
   int secondss = 120;
@@ -70,346 +72,385 @@ class _VerifyOTPState extends State<VerifyOTP> {
     final seconds = twoDigits(duration.inSeconds.remainder(60));
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Container(
-        color: Colors.white,
-        width: screenWidth,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-            SizedBox(height: 150,),
-            Container(
-              width: screenWidth * 0.5,
-              child: Image.asset('images/pillmate1.png'),
-            ),
-            Row(
-              children: [
-                Text(
-                  'เข้าสู่ระบบ',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: 'PlexSansThaiMd',
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 3,),
-            Text(
-              'กรุณากรอกรหัส OTP 6 หลักที่ส่งไปยัง ${widget.phoneNumber}',
-              style: TextStyle(
-                fontSize: 16,
-                fontFamily: 'PlexSansThaiMd',
-                color: Color(0xff3F3F3F),
-              ),
-            ),
-              SizedBox(height: 15,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Stack(
+        children: [
+          Container(
+            color: Colors.white,
+            width: screenWidth,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
+                SizedBox(height: 150,),
                 Container(
-              width: screenWidth*0.13,
-              height:62,
-              child: TextField(
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
+                  width: screenWidth * 0.5,
+                  child: Image.asset('images/pillmate1.png'),
                 ),
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
-                  enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xffD0D0D0)),
-                      borderRadius: BorderRadius.circular(8.0)
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xffD0D0D0)),
-                      borderRadius: BorderRadius.circular(8.0)
-                  ),
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xffD0D0D0)),
-                      borderRadius: BorderRadius.circular(8.0)
-                  ),
-                ),
-                onChanged: (text){
-                  if(text.length == 1){
-                    pin1 = text;
-                    FocusScope.of(context).nextFocus();
-                  }
-                  if(text.length == 0){
-                    FocusScope.of(context).previousFocus();
-                  }
-                },
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(1),
-                  FilteringTextInputFormatter.allow(RegExp("[0-9]")),
-                ],
-                textAlign: TextAlign.center,
-              ),
-                ),
-                  Container(
-                    width: screenWidth*0.13,
-                    height:62,
-                    child: TextField(
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xffD0D0D0)),
-                            borderRadius: BorderRadius.circular(8.0)
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xffD0D0D0)),
-                            borderRadius: BorderRadius.circular(8.0)
-                        ),
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xffD0D0D0)),
-                            borderRadius: BorderRadius.circular(8.0)
-                        ),
-                      ),
-                      onChanged: (text){
-                        if(text.length == 1){
-                          pin2 = text;
-                          FocusScope.of(context).nextFocus();
-                        }
-                        if(text.length == 0){
-                          FocusScope.of(context).previousFocus();
-                        }
-                      },
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(1),
-                        FilteringTextInputFormatter.allow(RegExp("[0-9]")),
-                      ],
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Container(
-                    width: screenWidth*0.13,
-                    height:62,
-                    child: TextField(
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xffD0D0D0)),
-                            borderRadius: BorderRadius.circular(8.0)
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xffD0D0D0)),
-                            borderRadius: BorderRadius.circular(8.0)
-                        ),
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xffD0D0D0)),
-                            borderRadius: BorderRadius.circular(8.0)
-                        ),
-                      ),
-                      onChanged: (text){
-                        if(text.length == 1){
-                          pin3 = text;
-                          FocusScope.of(context).nextFocus();
-                        }
-                        if(text.length == 0){
-                          FocusScope.of(context).previousFocus();
-                        }
-                      },
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(1),
-                        FilteringTextInputFormatter.allow(RegExp("[0-9]")),
-                      ],
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Container(
-                    width: screenWidth*0.13,
-                    height:62,
-                    child: TextField(
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xffD0D0D0)),
-                            borderRadius: BorderRadius.circular(8.0)
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xffD0D0D0)),
-                            borderRadius: BorderRadius.circular(8.0)
-                        ),
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xffD0D0D0)),
-                            borderRadius: BorderRadius.circular(8.0)
-                        ),
-                      ),
-                      onChanged: (text){
-                        if(text.length == 1){
-                          pin4 = text;
-                          FocusScope.of(context).nextFocus();
-                        }
-                        if(text.length == 0){
-                          FocusScope.of(context).previousFocus();
-                        }
-                      },
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(1),
-                        FilteringTextInputFormatter.allow(RegExp("[0-9]")),
-                      ],
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Container(
-                    width: screenWidth*0.13,
-                    height:62,
-                    child: TextField(
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xffD0D0D0)),
-                            borderRadius: BorderRadius.circular(8.0)
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xffD0D0D0)),
-                            borderRadius: BorderRadius.circular(8.0)
-                        ),
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xffD0D0D0)),
-                            borderRadius: BorderRadius.circular(8.0)
-                        ),
-                      ),
-                      onChanged: (text){
-                        if(text.length == 1){
-                          pin5 = text;
-                          FocusScope.of(context).nextFocus();
-                        }
-                        if(text.length == 0){
-                          FocusScope.of(context).previousFocus();
-                        }
-                      },
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(1),
-                        FilteringTextInputFormatter.allow(RegExp("[0-9]")),
-                      ],
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Container(
-                    width: screenWidth*0.13,
-                    height:62,
-                    child: TextField(
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xffD0D0D0)),
-                            borderRadius: BorderRadius.circular(8.0)
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xffD0D0D0)),
-                            borderRadius: BorderRadius.circular(8.0)
-                        ),
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xffD0D0D0)),
-                            borderRadius: BorderRadius.circular(8.0)
-                        ),
-                      ),
-                      onChanged: (text){
-                        if(text.length == 1){
-                          pin6 = text;
-                          FocusScope.of(context).nextFocus();
-                        }
-                        if(text.length == 0){
-                          FocusScope.of(context).previousFocus();
-                        }
-                      },
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(1),
-                        FilteringTextInputFormatter.allow(RegExp("[0-9]")),
-                      ],
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-              ],),
-              SizedBox(
-                height: 15,
-              ),
-              Container(
-                width: screenWidth,
-                child: Column(
-                 crossAxisAlignment: CrossAxisAlignment.center,
-                  children:[
+                Row(
+                  children: [
                     Text(
-                      'รหัสมีอายุ $minutes:$seconds',
+                      'เข้าสู่ระบบ',
                       style: TextStyle(
-                        fontSize: 14,
-                        fontFamily: 'PlexSansThaiRg',
+                        fontSize: 20,
+                        fontFamily: 'PlexSansThaiMd',
                         color: Colors.black,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    GestureDetector(
-                      onTap: () async {
-                        setState(() {
-                          secondss = 120;
-                          startTimer();
-                        });
-                        await _auth.verifyPhoneNumber(
-                          phoneNumber: '+66 ' + widget.phoneNumber,
-                          timeout: const Duration(seconds: 120),
-                          verificationCompleted: (PhoneAuthCredential credential) {},
-                          verificationFailed: (FirebaseAuthException e) {
-                            if (e.code == 'invalid-phone-number') {
-                              print('The provided phone number is not valid.');
-                            }
-                          },
-                          codeSent: (verificationId, [forceResendingToken]) {
-                            this.verificationId = verificationId;
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => VerifyOTP(verificationId: this.verificationId, phoneNumber: widget.phoneNumber),
-                              ),
-                            );
-                          },
-                          codeAutoRetrievalTimeout: (verificationId) {},
-                        );
-                      },
-                      child: Text(
-                        'ขอรหัสใหม่',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontFamily: 'PlexSansThaiMd',
-                          color: Color(0xff059E78),
-                        ),
                       ),
                     ),
                   ],
                 ),
+                SizedBox(height: 3,),
+                Text(
+                  'กรุณากรอกรหัส OTP 6 หลักที่ส่งไปยัง ${widget.phoneNumber}',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'PlexSansThaiMd',
+                    color: Color(0xff3F3F3F),
+                  ),
+                ),
+                  SizedBox(height: 15,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                    Container(
+                  width: screenWidth*0.13,
+                  height:62,
+                  child: TextField(
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Color(0xffD0D0D0)),
+                          borderRadius: BorderRadius.circular(8.0)
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Color(0xffD0D0D0)),
+                          borderRadius: BorderRadius.circular(8.0)
+                      ),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Color(0xffD0D0D0)),
+                          borderRadius: BorderRadius.circular(8.0)
+                      ),
+                    ),
+                    onChanged: (text){
+                      if(text.length == 1){
+                        pin1 = text;
+                        FocusScope.of(context).nextFocus();
+                      }
+                      if(text.length == 0){
+                        FocusScope.of(context).previousFocus();
+                      }
+                    },
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(1),
+                      FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                    ],
+                    textAlign: TextAlign.center,
+                  ),
+                    ),
+                      Container(
+                        width: screenWidth*0.13,
+                        height:62,
+                        child: TextField(
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Color(0xffD0D0D0)),
+                                borderRadius: BorderRadius.circular(8.0)
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Color(0xffD0D0D0)),
+                                borderRadius: BorderRadius.circular(8.0)
+                            ),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Color(0xffD0D0D0)),
+                                borderRadius: BorderRadius.circular(8.0)
+                            ),
+                          ),
+                          onChanged: (text){
+                            if(text.length == 1){
+                              pin2 = text;
+                              FocusScope.of(context).nextFocus();
+                            }
+                            if(text.length == 0){
+                              FocusScope.of(context).previousFocus();
+                            }
+                          },
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(1),
+                            FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                          ],
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      Container(
+                        width: screenWidth*0.13,
+                        height:62,
+                        child: TextField(
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Color(0xffD0D0D0)),
+                                borderRadius: BorderRadius.circular(8.0)
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Color(0xffD0D0D0)),
+                                borderRadius: BorderRadius.circular(8.0)
+                            ),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Color(0xffD0D0D0)),
+                                borderRadius: BorderRadius.circular(8.0)
+                            ),
+                          ),
+                          onChanged: (text){
+                            if(text.length == 1){
+                              pin3 = text;
+                              FocusScope.of(context).nextFocus();
+                            }
+                            if(text.length == 0){
+                              FocusScope.of(context).previousFocus();
+                            }
+                          },
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(1),
+                            FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                          ],
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      Container(
+                        width: screenWidth*0.13,
+                        height:62,
+                        child: TextField(
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Color(0xffD0D0D0)),
+                                borderRadius: BorderRadius.circular(8.0)
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Color(0xffD0D0D0)),
+                                borderRadius: BorderRadius.circular(8.0)
+                            ),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Color(0xffD0D0D0)),
+                                borderRadius: BorderRadius.circular(8.0)
+                            ),
+                          ),
+                          onChanged: (text){
+                            if(text.length == 1){
+                              pin4 = text;
+                              FocusScope.of(context).nextFocus();
+                            }
+                            if(text.length == 0){
+                              FocusScope.of(context).previousFocus();
+                            }
+                          },
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(1),
+                            FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                          ],
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      Container(
+                        width: screenWidth*0.13,
+                        height:62,
+                        child: TextField(
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Color(0xffD0D0D0)),
+                                borderRadius: BorderRadius.circular(8.0)
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Color(0xffD0D0D0)),
+                                borderRadius: BorderRadius.circular(8.0)
+                            ),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Color(0xffD0D0D0)),
+                                borderRadius: BorderRadius.circular(8.0)
+                            ),
+                          ),
+                          onChanged: (text){
+                            if(text.length == 1){
+                              pin5 = text;
+                              FocusScope.of(context).nextFocus();
+                            }
+                            if(text.length == 0){
+                              FocusScope.of(context).previousFocus();
+                            }
+                          },
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(1),
+                            FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                          ],
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      Container(
+                        width: screenWidth*0.13,
+                        height:62,
+                        child: TextField(
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Color(0xffD0D0D0)),
+                                borderRadius: BorderRadius.circular(8.0)
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Color(0xffD0D0D0)),
+                                borderRadius: BorderRadius.circular(8.0)
+                            ),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Color(0xffD0D0D0)),
+                                borderRadius: BorderRadius.circular(8.0)
+                            ),
+                          ),
+                          onChanged: (text){
+                            if(text.length == 1){
+                              pin6 = text;
+                              FocusScope.of(context).nextFocus();
+                            }
+                            if(text.length == 0){
+                              FocusScope.of(context).previousFocus();
+                            }
+                          },
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(1),
+                            FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                          ],
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                  ],),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Container(
+                    width: screenWidth,
+                    child: Column(
+                     crossAxisAlignment: CrossAxisAlignment.center,
+                      children:[
+                        Text(
+                          'รหัสมีอายุ $minutes:$seconds',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: 'PlexSansThaiRg',
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        showInvalidOTP ? Column(
+                          children: [
+                            Text(
+                              'กรุณากรอกรหัสยืนยันให้ถูกต้อง',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontFamily: 'PlexSansThaiMd',
+                                color: Colors.red,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                          ],
+                        ): showEmptyOTP ? Column(
+                          children: [
+                            Text(
+                              'กรุณากรอกรหัสยืนยัน',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontFamily: 'PlexSansThaiMd',
+                                color: Colors.red,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                          ],
+                        ): Container(),
+                        GestureDetector(
+                          onTap: () async {
+                            setState(() {
+                              secondss = 120;
+                              startTimer();
+                            });
+                            await _auth.verifyPhoneNumber(
+                              phoneNumber: '+66 ' + widget.phoneNumber,
+                              timeout: const Duration(seconds: 120),
+                              verificationCompleted: (PhoneAuthCredential credential) {},
+                              verificationFailed: (FirebaseAuthException e) {
+                                if (e.code == 'invalid-phone-number') {
+                                  print('The provided phone number is not valid.');
+                                }
+                              },
+                              codeSent: (verificationId, [forceResendingToken]) {
+                                this.verificationId = verificationId;
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => VerifyOTP(verificationId: this.verificationId, phoneNumber: widget.phoneNumber),
+                                  ),
+                                );
+                              },
+                              codeAutoRetrievalTimeout: (verificationId) {},
+                            );
+                          },
+                          child: Text(
+                            'ขอรหัสใหม่',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontFamily: 'PlexSansThaiMd',
+                              color: Color(0xff059E78),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(height: 90,),
-              Container(
+            ),
+          ),
+          Positioned(
+            top: 510,
+            left: 0,
+            right: 0,
+            child: Padding(
+              padding: EdgeInsets.only(left: screenWidth*0.04, right: screenWidth*0.04),
+              child: Container(
                 height: 54,
                 width: screenWidth,
                 child: ElevatedButton(
@@ -426,7 +467,16 @@ class _VerifyOTPState extends State<VerifyOTP> {
                         }
                       }
                     }catch (e) {
-                      print(e);
+                      if(e.toString().contains('invalid-verification')){
+                        setState(() {
+                          showInvalidOTP = true;
+                        });
+                      }
+                      else if(e.toString().contains('Unable to establish connection')){
+                        setState(() {
+                          showEmptyOTP = true;
+                        });
+                      }
                     }
                   },
                   child:
@@ -441,9 +491,9 @@ class _VerifyOTPState extends State<VerifyOTP> {
                     minimumSize: Size(screenWidth, 52),),
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

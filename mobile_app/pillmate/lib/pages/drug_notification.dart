@@ -7,6 +7,7 @@ import '../components/reusable_bottom_navigation_bar.dart';
 import 'package:ionicons/ionicons.dart';
 
 import '../models/daily_med.dart';
+import '../models/medicine.dart';
 import '../services/local_notification_service.dart';
 import '../services/sqlite_service.dart';
 import 'add_drug.dart';
@@ -22,6 +23,7 @@ class _DrugNotificationState extends State<DrugNotification> {
   bool isEdit = false;
   late SqliteService _sqliteService;
   List<DaileyMedModel> _dailyMedList = [];
+  List<DaileyMedModel> _dailyMedList1 = [];
   TextEditingController morning = TextEditingController();
   TextEditingController noon= TextEditingController();
   TextEditingController evening = TextEditingController();
@@ -29,6 +31,12 @@ class _DrugNotificationState extends State<DrugNotification> {
   bool isSwitched = false;
   FirebaseAuth _auth = FirebaseAuth.instance;
   bool? isLoggedIn = false;
+  List<MedicineModel> _drugsList = [];
+  List<MedicineModel> _morningDrugsList = [];
+  List<MedicineModel> _noonDrugsList = [];
+  List<MedicineModel> _eveningDrugsList = [];
+  List<MedicineModel> _nightDrugsList = [];
+  List<bool> _notificationList = [];
 
   @override
   void dispose() {
@@ -56,6 +64,113 @@ class _DrugNotificationState extends State<DrugNotification> {
         });
       }
     });
+  }
+
+  void addToSperateList(){
+    _morningDrugsList.clear();
+    _noonDrugsList.clear();
+    _eveningDrugsList.clear();
+    _nightDrugsList.clear();
+    final now = DateTime.now();
+    int currentHour = 8;
+    _drugsList.forEach((element) async {
+      if(element.takeMedWhen != null || element.takeMedWhen != "" ){
+        // print(element.medicationSchedule);
+        String tmp = '';
+        var listOfMed = element.medicationSchedule.split(',');
+        final dailyMed = listOfMed[0].split(' ');
+        if(dailyMed[0] == (DateTime.now().day-1).toString()){
+          tmp = element.medicationSchedule;
+          print(tmp);
+          if(
+          dailyMed.length != 1
+          ){
+            final listWhen = element.takeMedWhen.split(' ');
+            final diff = listWhen.length - dailyMed.length - 1;
+            final last = listOfMed[listOfMed.length - 1].split(' ');
+            if(last.length + dailyMed.length - 1 <= listWhen.length+1){
+              for(int i = 1; i <= dailyMed.length-1;i++){
+                for(int j = 0; j < listWhen.length;j++){
+                  if(last[last.length-1] == listWhen[j] && j != listWhen.length-1){
+                    tmp += ' ';
+                    ;                    tmp += listWhen[j+1];
+                  }
+                }
+              }
+            }
+          }
+          final tempList = tmp.split(',');
+          tmp = '';
+          for(int i = 1;i < tempList.length;i++){
+            if(i == tempList.length-1){
+              tmp+=tempList[i];
+            }else{
+              tmp+=tempList[i];
+              tmp+=',';
+            }
+          }
+          await _sqliteService.alterMedicationSchedule(element.qrcodeID, tmp);
+        }
+        if(dailyMed[0] == DateTime.now().day.toString()){
+          for(int i = 0; i < dailyMed.length;i++){
+            if(dailyMed[i] == 'เช้า'){
+              setState(() {
+                _morningDrugsList.add(element);
+              });
+            }
+            else if(dailyMed[i] == 'กลางวัน'){
+              setState(() {
+                _noonDrugsList.add(element);
+              });
+            }
+            else if(dailyMed[i] == 'เย็น'){
+              setState(() {
+                _eveningDrugsList.add(element);
+              });
+            }
+            else if(dailyMed[i] == 'ก่อนนอน'){
+              setState(() {
+                _nightDrugsList.add(element);
+              });
+            }
+          }
+        }
+      }
+    });
+
+  }
+
+  Future<void> getMedicines() async {
+    final data = await _sqliteService.getMedicines();
+    this._drugsList = data;
+    addToSperateList();
+  }
+
+  Future<void> updateScheduledNotification(int morningHour, int morningMinute,int noonHour,int noonMinute,int eveningHour,int eveningMinute,int nightHour,int nightMinute) async {
+    _notificationList.clear();
+    if(_morningDrugsList.isNotEmpty){
+      _notificationList.add(true);
+    }else{
+      _notificationList.add(false);
+    }
+    if(_noonDrugsList.isNotEmpty){
+      _notificationList.add(true);
+    }else{
+      _notificationList.add(false);
+    }
+    if(_eveningDrugsList.isNotEmpty){
+      _notificationList.add(true);
+    }else{
+      _notificationList.add(false);
+    }
+    if(_nightDrugsList.isNotEmpty){
+      _notificationList.add(true);
+    }else{
+      _notificationList.add(false);
+    }
+    if(_dailyMedList[0].isNotified == 1){
+      await LocalNotificationService.updateShowScheduleNotification(_notificationList, morningHour, morningMinute, noonHour, noonMinute, eveningHour, eveningMinute, nightHour, nightMinute);
+    }
   }
 
 
@@ -89,17 +204,17 @@ class _DrugNotificationState extends State<DrugNotification> {
       }else{
         evening.text = '${_dailyMedList[0].eveningTimeHour}:';
       }
-      if(_dailyMedList[0].noonTimeMinute < 10){
+      if(_dailyMedList[0].eveningTimeMinute < 10){
         evening.text += '0${_dailyMedList[0].eveningTimeMinute}';
       }else{
         evening.text += _dailyMedList[0].eveningTimeMinute.toString();
       }
-      if(_dailyMedList[0].eveningTimeHour < 10){
+      if(_dailyMedList[0].nightTimeHour < 10){
         night.text = '0${_dailyMedList[0].nightTimeHour}:';
       }else{
         night.text = '${_dailyMedList[0].nightTimeHour}:';
       }
-      if(_dailyMedList[0].noonTimeMinute < 10){
+      if(_dailyMedList[0].nightTimeMinute < 10){
         night.text += '0${_dailyMedList[0].nightTimeMinute}';
       }else{
         night.text += _dailyMedList[0].nightTimeMinute.toString();
@@ -115,6 +230,7 @@ class _DrugNotificationState extends State<DrugNotification> {
     getDailyMeds();
     authChangesListener();
     initIsNotified();
+    getMedicines();
   }
 
   Future<void> initIsNotified() async {
@@ -158,7 +274,7 @@ class _DrugNotificationState extends State<DrugNotification> {
         },
         ),
         actions: [
-          GestureDetector(
+          this.isEdit ? GestureDetector(
             onTap: () async {
               List<String> tmpMorning = morning.text.split(':');
               int morningHour = int.parse(tmpMorning[0]);
@@ -173,16 +289,25 @@ class _DrugNotificationState extends State<DrugNotification> {
               int nightHour = int.parse(tmpNight[0]);
               int nightMinute = int.parse(tmpNight[1]);
               await _sqliteService.updateNotificationTime(morningHour, morningMinute, noonHour, noonMinute, eveningHour, eveningMinute, nightHour, nightMinute);
+              updateScheduledNotification(morningHour, morningMinute, noonHour, noonMinute, eveningHour, eveningMinute, nightHour, nightMinute);
               setState(() {
                 this.isEdit = !isEdit;
               });
             },
             child: Padding(padding: EdgeInsets.only(top: 11, right: 9),
-                child: this.isEdit ? Text( 'บันทึก', style: TextStyle(
+                child: Text( 'บันทึก', style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'PlexSansThaiRg',
                     color: Colors.black
-                ),): Text('แก้ไข', style: TextStyle(
+                ),)),
+          ): GestureDetector(
+            onTap: () async {
+              setState(() {
+                this.isEdit = !isEdit;
+              });
+            },
+            child: Padding(padding: EdgeInsets.only(top: 11, right: 9),
+                child: Text('แก้ไข', style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'PlexSansThaiRg',
                     color: Colors.black

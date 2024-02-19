@@ -66,6 +66,8 @@ class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
         formattedDispensing = formattedDispensing.replaceAll('December', 'ธันวาคม');
         break;
     }
+    List<String> tmpDes1 = formattedDispensing.split(' ');
+    formattedDispensing = tmpDes1[0] + ' ' + tmpDes1[1] + ' ' + (int.parse(tmpDes1[2]) + 543).toString();
   }
 
   @override
