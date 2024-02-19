@@ -128,23 +128,10 @@ class _HomepageState extends State<Homepage> {
     authChangesListener();
     this._sqliteService= SqliteService();
     this._sqliteService.initializeDB();
-    this._sqliteService.createOnBoarding(new OnBoardingModel(1, 1));
     getMedicines();
     getPersons();
     setHeader();
     getDailyMeds();
-    navigateToOnBoarding();
-  }
-
-  Future<void> navigateToOnBoarding() async {
-    final data = await _sqliteService.getOnBoarding();
-    if(data.length == 0){
-      this._sqliteService.createOnBoarding(new OnBoardingModel(1, 1));
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => OnBoarding1()),
-      );
-    }
   }
 
   Future<void> scheduledNotification() async {
@@ -846,7 +833,7 @@ class _HomepageState extends State<Homepage> {
                                           Navigator.pushNamed(context, '/log-in');
                                         },
                                         child: Text(
-                                          'เช้าสู่ระบบ',
+                                          'เข้าสู่ระบบ',
                                           style: TextStyle(decoration: TextDecoration.underline,decorationColor: Color(0xff059E78), color: Color(0xff059E78)),
                                         ),
                                       ),
@@ -1077,12 +1064,12 @@ class _HomepageState extends State<Homepage> {
             shape: CircleBorder(),
             backgroundColor: Color(0xff059E78),
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => QRCodeScanner()
-              ));
               // Navigator.of(context).push(MaterialPageRoute(
-              //     builder: (context) => AddDrug()
+              //   builder: (context) => QRCodeScanner()
               // ));
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => AddDrug()
+              ));
             },
           ),
         ),

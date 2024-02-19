@@ -102,6 +102,15 @@ flutter:
     - family: PlexSansThaiSm
       fonts:
         - asset: fonts/IBMPlexSansThaiLooped-SemiBold.ttf
+    - family: LineSeedSansRg
+      fonts:
+        - asset: fonts/LINESeedSans_A_Rg.ttf
+    - family: LineSeedSansHe
+      fonts:
+        - asset: fonts/LINESeedSans_A_He.ttf
+    - family: LineSeedSansBd
+      fonts:
+        - asset: fonts/LINESeedSans_A_Bd.ttf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

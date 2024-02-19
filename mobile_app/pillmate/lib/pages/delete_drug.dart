@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -18,6 +19,8 @@ class _DeleteDrugState extends State<DeleteDrug> {
   late SqliteService _sqliteService;
   String formattedExpired = '';
   String formattedDispensing = '';
+  final _firestore = FirebaseFirestore.instance;
+  String storeName = '';
 
   @override
   void initState() {
@@ -25,6 +28,21 @@ class _DeleteDrugState extends State<DeleteDrug> {
     super.initState();
     this._sqliteService= SqliteService();
     this._sqliteService.initializeDB();
+    _getPharmacyName();
+  }
+
+  void _getPharmacyName() async {
+    _firestore.collection("pharmacies").where("pharID", isEqualTo: widget.med.pharID).get().then(
+          (querySnapshot) {
+        print("Successfully completed");
+        for (var docSnapshot in querySnapshot.docs) {
+          setState(() {
+            storeName = docSnapshot.data()['storeName'];
+          });
+        }
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
   }
 
   void formattedDate(){
@@ -35,42 +53,44 @@ class _DeleteDrugState extends State<DeleteDrug> {
     List<String> tmpExp = formattedExpired.split(' ');
     switch (tmpExp[1].toLowerCase()) {
       case 'january':
-        formattedExpired = formattedExpired.replaceAll('January', 'มกราคม');
+        formattedExpired = formattedExpired.replaceAll('January', 'ม.ค.');
         break;
       case 'february':
-        formattedExpired = formattedExpired.replaceAll('February', 'กุมภาพันธ์');
+        formattedExpired = formattedExpired.replaceAll('February', 'ก.พ.');
         break;
       case 'march':
-        formattedExpired = formattedExpired.replaceAll('March', 'มีนาคม');
+        formattedExpired = formattedExpired.replaceAll('March', 'มี.ค.');
         break;
       case 'april':
-        formattedExpired = formattedExpired.replaceAll('April', 'เมษายน');
+        formattedExpired = formattedExpired.replaceAll('April', 'เม.ย.');
         break;
       case 'may':
-        formattedExpired = formattedExpired.replaceAll('May', 'พฤษภาคม');
+        formattedExpired = formattedExpired.replaceAll('May', 'พ.ค.');
         break;
       case 'june':
-        formattedExpired = formattedExpired.replaceAll('June', 'มิถุนายน');
+        formattedExpired = formattedExpired.replaceAll('June', 'มิ.ย.');
         break;
       case 'july':
-        formattedExpired = formattedExpired.replaceAll('July', 'กรกฎาคม');
+        formattedExpired = formattedExpired.replaceAll('July', 'ก.ค.');
         break;
       case 'august':
-        formattedExpired = formattedExpired.replaceAll('August', 'สิงหาคม');
+        formattedExpired = formattedExpired.replaceAll('August', 'ส.ค.');
         break;
       case 'september':
-        formattedExpired = formattedExpired.replaceAll('September', 'กันยายน');
+        formattedExpired = formattedExpired.replaceAll('September', 'ก.ย.');
         break;
       case 'october':
-        formattedExpired = formattedExpired.replaceAll('October', 'ตุลาคม');
+        formattedExpired = formattedExpired.replaceAll('October', 'ต.ค.');
         break;
       case 'november':
-        formattedExpired = formattedExpired.replaceAll('November', 'พฤศจิกายน');
+        formattedExpired = formattedExpired.replaceAll('November', 'พ.ย.');
         break;
       case 'december':
-        formattedExpired = formattedExpired.replaceAll('December', 'ธันวาคม');
+        formattedExpired = formattedExpired.replaceAll('December', 'ธ.ค.');
         break;
     }
+    List<String> tmpExp1 = formattedExpired.split(' ');
+    formattedExpired = tmpExp1[0] + ' ' + tmpExp1[1] + ' ' + (int.parse(tmpExp1[2]) + 543).toString();
     formattedDispensing = formatter.format(des);
     List<String> tmpDes = formattedDispensing.split(' ');
     switch (tmpDes[1].toLowerCase()) {
@@ -111,6 +131,8 @@ class _DeleteDrugState extends State<DeleteDrug> {
         formattedDispensing = formattedDispensing.replaceAll('December', 'ธันวาคม');
         break;
     }
+    List<String> tmpDes1 = formattedDispensing.split(' ');
+    formattedDispensing = tmpDes1[0] + ' ' + tmpDes1[1] + ' ' + (int.parse(tmpDes1[2]) + 543).toString();
   }
 
   @override
@@ -518,7 +540,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                   Padding(
                     padding: const EdgeInsets.only(top: 4.0),
                     child: Container(
-                      width: screenWidth*0.334,
+                      width: screenWidth*0.337,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -1067,7 +1089,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                 ),
                                 Expanded(
                                   child: Text(
-                                    'ร้านขายยาเภสัชมหิดล สถานปฏิบัติการเภสัชกรรมชุมชน',
+                                    storeName,
                                     style: TextStyle(
                                         fontFamily: 'PlexSansThaiRg',
                                         fontSize: 14,

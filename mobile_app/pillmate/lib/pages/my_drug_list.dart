@@ -26,7 +26,14 @@ class _MyDrugListState extends State<MyDrugList> {
   List<MedicineModel> _inactiveDrugsList = [];
   FirebaseAuth _auth = FirebaseAuth.instance;
   bool? isLoggedIn = false;
+  String cat = '';
+  String incat = '';
   late SqliteService _sqliteService;
+  List<MedicineModel> _capsuleDrugsList = [];
+  List<MedicineModel> _tabDrugsList = [];
+  List<MedicineModel> _inactiveCapsuleDrugsList = [];
+  List<MedicineModel> _inactiveTabDrugsList = [];
+
     // {
     //   'name': 'Amoxicilin',
     //   'dosage': '1 เม็ด',
@@ -111,6 +118,34 @@ class _MyDrugListState extends State<MyDrugList> {
       this._activeDrugsList = data1;
       this._inactiveDrugsList = data2;
     });
+    _capsuleDrugsList.clear();
+    _tabDrugsList.clear();
+    _inactiveCapsuleDrugsList.clear();
+    _inactiveTabDrugsList.clear();
+    _activeDrugsList.forEach((element) {
+      if(element.typeOfMedicine == 'แคปซูล'){
+        setState(() {
+          _capsuleDrugsList.add(element);
+        });
+      }
+      else if(element.typeOfMedicine == 'เม็ด'){
+        setState(() {
+          _tabDrugsList.add(element);
+        });
+      }
+    });
+    _inactiveDrugsList.forEach((element) {
+      if(element.typeOfMedicine == 'แคปซูล'){
+        setState(() {
+          _inactiveCapsuleDrugsList.add(element);
+        });
+      }
+      else if(element.typeOfMedicine == 'เม็ด'){
+        setState(() {
+          _inactiveTabDrugsList.add(element);
+        });
+      }
+    });
   }
 
   @override
@@ -163,50 +198,102 @@ class _MyDrugListState extends State<MyDrugList> {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: [
-                            Container(
-                              width: 76,
-                              height: 29,
-                              decoration: BoxDecoration(
-                                color: Color(0xff94DDB5),
-                                borderRadius: BorderRadius.circular(20.0),
-                                border: Border.all(
-                                  color: Color(0xff059E78),
-                                  width: 1
+                            GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  cat = '';
+                                });
+                              },
+                              child: cat == '' ? Container(
+                                width: 76,
+                                height: 29,
+                                decoration: BoxDecoration(
+                                  color: Color(0xff94DDB5),
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  border: Border.all(
+                                      color: Color(0xff059E78),
+                                      width: 1
+                                  ),
                                 ),
+                                child: Center(child: Text('ทั้งหมด', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
+                              ): Container(
+                                width: 76,
+                                height: 29,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  border: Border.all(
+                                      color:Color(0xffD0D0D0),
+                                      width: 1
+                                  ),
+                                ),
+                                child: Center(child: Text('ทั้งหมด', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
                               ),
-                              child: Center(child: Text('ทั้งหมด', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
                             ),
                             SizedBox(width: 8,),
-                            Container(
-                              width: 76,
-                              height: 29,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(20.0),
-                                border: Border.all(
-                                    color: Color(0xffD0D0D0),
-                                    width: 1
+                            GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  cat = 'ยาเม็ด';
+                                });
+                              },
+                              child: cat == 'ยาเม็ด' ? Container(
+                                width: 76,
+                                height: 29,
+                                decoration: BoxDecoration(
+                                  color: Color(0xff94DDB5),
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  border: Border.all(
+                                      color: Color(0xff059E78),
+                                      width: 1
+                                  ),
                                 ),
-                              ),
-                              child: Center(
-                                child: Text('ยาเม็ด', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),),
+                                child: Center(child: Text('ยาเม็ด', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
+                              ): Container(
+                                width: 76,
+                                height: 29,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  border: Border.all(
+                                      color:Color(0xffD0D0D0),
+                                      width: 1
+                                  ),
+                                ),
+                                child: Center(child: Text('ยาเม็ด', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
                               ),
                             ),
                             SizedBox(width: 8,),
-                            Container(
-                              width: 76,
-                              height: 29,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(20.0),
-                                border: Border.all(
-                                    color: Color(0xffD0D0D0),
-                                    width: 1
+                            GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  cat = 'แคปซูล';
+                                });
+                              },
+                              child: cat == 'แคปซูล' ? Container(
+                                width: 76,
+                                height: 29,
+                                decoration: BoxDecoration(
+                                  color: Color(0xff94DDB5),
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  border: Border.all(
+                                      color: Color(0xff059E78),
+                                      width: 1
+                                  ),
                                 ),
-                              ),
-                              child: Center(
-
-                                child: Text('แคปซูล', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),),
+                                child: Center(child: Text('แคปซูล', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
+                              ): Container(
+                                width: 76,
+                                height: 29,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  border: Border.all(
+                                      color:Color(0xffD0D0D0),
+                                      width: 1
+                                  ),
+                                ),
+                                child: Center(child: Text('แคปซูล', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
                               ),
                             ),
                             SizedBox(width: 8,),
@@ -268,14 +355,28 @@ class _MyDrugListState extends State<MyDrugList> {
                     child: Container(
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04),
-                        child: ListView.builder(
+                        child: cat == '' ? ListView.builder(
                           itemCount: _activeDrugsList.length,
                           scrollDirection: Axis.vertical,
                           itemBuilder: (BuildContext context, int index) {
                             return ReusableMyDrugListCard(
                                 med: _activeDrugsList[index]);
                           },
-                        ),
+                        ): cat == 'ยาเม็ด' ? ListView.builder(
+                          itemCount: _tabDrugsList.length,
+                          scrollDirection: Axis.vertical,
+                          itemBuilder: (BuildContext context, int index) {
+                            return ReusableMyDrugListCard(
+                                med: _tabDrugsList[index]);
+                          },
+                        ): cat == 'แคปซูล' ? ListView.builder(
+                          itemCount: _capsuleDrugsList.length,
+                          scrollDirection: Axis.vertical,
+                          itemBuilder: (BuildContext context, int index) {
+                            return ReusableMyDrugListCard(
+                                med: _capsuleDrugsList[index]);
+                          },
+                        ): Container(),
                       ),
                     ),
                   ),
@@ -295,50 +396,102 @@ class _MyDrugListState extends State<MyDrugList> {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: [
-                            Container(
-                              width: 76,
-                              height: 29,
-                              decoration: BoxDecoration(
-                                color: Color(0xff94DDB5),
-                                borderRadius: BorderRadius.circular(20.0),
-                                border: Border.all(
-                                    color: Color(0xff059E78),
-                                    width: 1
+                            GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  incat = '';
+                                });
+                              },
+                              child: incat == '' ? Container(
+                                width: 76,
+                                height: 29,
+                                decoration: BoxDecoration(
+                                  color: Color(0xff94DDB5),
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  border: Border.all(
+                                      color: Color(0xff059E78),
+                                      width: 1
+                                  ),
                                 ),
+                                child: Center(child: Text('ทั้งหมด', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
+                              ): Container(
+                                width: 76,
+                                height: 29,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  border: Border.all(
+                                      color:Color(0xffD0D0D0),
+                                      width: 1
+                                  ),
+                                ),
+                                child: Center(child: Text('ทั้งหมด', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
                               ),
-                              child: Center(child: Text('ทั้งหมด', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
                             ),
                             SizedBox(width: 8,),
-                            Container(
-                              width: 76,
-                              height: 29,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(20.0),
-                                border: Border.all(
-                                    color: Color(0xffD0D0D0),
-                                    width: 1
+                            GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  incat = 'ยาเม็ด';
+                                });
+                              },
+                              child: incat == 'ยาเม็ด' ? Container(
+                                width: 76,
+                                height: 29,
+                                decoration: BoxDecoration(
+                                  color: Color(0xff94DDB5),
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  border: Border.all(
+                                      color: Color(0xff059E78),
+                                      width: 1
+                                  ),
                                 ),
-                              ),
-                              child: Center(
-                                child: Text('ยาเม็ด', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),),
+                                child: Center(child: Text('ยาเม็ด', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
+                              ): Container(
+                                width: 76,
+                                height: 29,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  border: Border.all(
+                                      color:Color(0xffD0D0D0),
+                                      width: 1
+                                  ),
+                                ),
+                                child: Center(child: Text('ยาเม็ด', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
                               ),
                             ),
                             SizedBox(width: 8,),
-                            Container(
-                              width: 76,
-                              height: 29,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(20.0),
-                                border: Border.all(
-                                    color: Color(0xffD0D0D0),
-                                    width: 1
+                            GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  incat = 'แคปซูล';
+                                });
+                              },
+                              child: incat == 'แคปซูล' ? Container(
+                                width: 76,
+                                height: 29,
+                                decoration: BoxDecoration(
+                                  color: Color(0xff94DDB5),
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  border: Border.all(
+                                      color: Color(0xff059E78),
+                                      width: 1
+                                  ),
                                 ),
-                              ),
-                              child: Center(
-
-                                child: Text('แคปซูล', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),),
+                                child: Center(child: Text('แคปซูล', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
+                              ): Container(
+                                width: 76,
+                                height: 29,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  border: Border.all(
+                                      color:Color(0xffD0D0D0),
+                                      width: 1
+                                  ),
+                                ),
+                                child: Center(child: Text('แคปซูล', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
                               ),
                             ),
                             SizedBox(width: 8,),
@@ -398,14 +551,28 @@ class _MyDrugListState extends State<MyDrugList> {
                   SizedBox(height: 9,),
                   Expanded(
                     child: Container(
-                      child: ListView.builder(
+                      child: incat == '' ? ListView.builder(
                         itemCount: _inactiveDrugsList.length,
                         scrollDirection: Axis.vertical,
                         itemBuilder: (BuildContext context, int index) {
                           return ReusableMyHistoryListCard(
                             med: _inactiveDrugsList[index], lastIndex: index ==  _inactiveDrugsList.length-1 ? true:false,);
                         },
-                      ),
+                      ): incat == 'ยาเม็ด' ? ListView.builder(
+                        itemCount: _inactiveTabDrugsList.length,
+                        scrollDirection: Axis.vertical,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ReusableMyHistoryListCard(
+                            med: _inactiveTabDrugsList[index], lastIndex: index ==  _inactiveTabDrugsList.length-1 ? true:false,);
+                        },
+                      ): incat == 'แคปซูล' ? ListView.builder(
+                        itemCount: _inactiveCapsuleDrugsList.length,
+                        scrollDirection: Axis.vertical,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ReusableMyHistoryListCard(
+                            med: _inactiveCapsuleDrugsList[index], lastIndex: index ==  _inactiveCapsuleDrugsList.length-1 ? true:false,);
+                        },
+                      ): Container(),
                     ),
                   ),
                 ],

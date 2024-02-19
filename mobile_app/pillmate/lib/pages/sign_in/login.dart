@@ -14,7 +14,10 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _auth = FirebaseAuth.instance;
   late String verificationId;
-  late String phoneNumber;
+  String phoneNumber = '';
+  bool _showInvalidPhoneNumber = false;
+  bool _showEmptyPhoneNumber = false;
+  final RegExp phoneNumberFormat = RegExp(r'^[0-9]{10}$');
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +66,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: TextField(
                       onChanged: (value){
                           phoneNumber = value!;
+                          print(phoneNumber);
                       },
                       style: TextStyle(
                         fontSize: 18,
@@ -93,7 +97,21 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  Text(
+                  _showEmptyPhoneNumber ? Text(
+                    'กรุณากรอกเบอร์โทรศัพท์',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: 'PlexSansThaiRg',
+                      color: Colors.red,
+                    ),
+                  ): _showInvalidPhoneNumber ? Text(
+                    'กรุณากรอกเบอร์โทรศัพท์ให้ครบ 10 หลัก',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: 'PlexSansThaiRg',
+                      color: Colors.red,
+                    ),
+                  ): Text(
                     'ระบุเบอร์โทรศัพท์แบบไม่ต้องเว้นช่อง',
                     style: TextStyle(
                       fontSize: 14,
@@ -118,26 +136,39 @@ class _LoginPageState extends State<LoginPage> {
                     width: screenWidth,
                     child: ElevatedButton(
                       onPressed: () async {
-                        await _auth.verifyPhoneNumber(
-                          phoneNumber: '+66 ' + phoneNumber,
-                          timeout: const Duration(seconds: 120),
-                          verificationCompleted: (PhoneAuthCredential credential) {},
-                          verificationFailed: (FirebaseAuthException e) {
-                            if (e.code == 'invalid-phone-number') {
-                              print('The provided phone number is not valid.');
-                            }
-                          },
-                          codeSent: (verificationId, [forceResendingToken]) {
-                            this.verificationId = verificationId;
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => VerifyOTP(verificationId: this.verificationId, phoneNumber: phoneNumber),
-                              ),
-                            );
-                          },
-                          codeAutoRetrievalTimeout: (verificationId) {},
-                        );
+                        if(phoneNumber == ''){
+                            setState(() {
+                              _showEmptyPhoneNumber = true;
+                              _showInvalidPhoneNumber = false;
+                            });
+                        }
+                        else if(!phoneNumberFormat.hasMatch(phoneNumber)){
+                          setState(() {
+                            _showInvalidPhoneNumber = true;
+                            _showEmptyPhoneNumber = false;
+                          });
+                        }else{
+                          await _auth.verifyPhoneNumber(
+                            phoneNumber: '+66 ' + phoneNumber,
+                            timeout: const Duration(seconds: 120),
+                            verificationCompleted: (PhoneAuthCredential credential) {},
+                            verificationFailed: (FirebaseAuthException e) {
+                              if (e.code == 'invalid-phone-number') {
+                                print('The provided phone number is not valid.');
+                              }
+                            },
+                            codeSent: (verificationId, [forceResendingToken]) {
+                              this.verificationId = verificationId;
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => VerifyOTP(verificationId: this.verificationId, phoneNumber: phoneNumber),
+                                ),
+                              );
+                            },
+                            codeAutoRetrievalTimeout: (verificationId) {},
+                          );
+                        }
                       },
                       child:
                       Text('ไปต่อ', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 18, color: Colors.white),

@@ -59,6 +59,39 @@ class LocalNotificationService{
     }
   }
 
+  static Future updateShowScheduleNotification(List<bool> notiList, int morningTimeHour, int morningTimeMinute, int noonTimeHour, int noonTimeMinute, int eveningTimeHour, int eveningTimeMinute, int nightTimeHour, int nightTimeMinute) async {
+    cancelAllNotifications();
+    print(notiList);
+    tz.initializeTimeZones();
+    final String? timeZoneName = await FlutterTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(timeZoneName!));
+    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    List<tz.TZDateTime> notiTime = [];
+    for(int i = 0; i < notiList.length;i++){
+      if(notiList[i] == true){
+        switch(i){
+          case 0: notiTime.add(tz.TZDateTime(tz.local, now.year, now.month, now.day, morningTimeHour, morningTimeMinute)); break;
+          case 1: notiTime.add(tz.TZDateTime(tz.local, now.year, now.month, now.day, noonTimeHour, noonTimeMinute)); break;
+          case 2: notiTime.add(tz.TZDateTime(tz.local, now.year, now.month, now.day, eveningTimeHour, eveningTimeMinute)); break;
+          case 3: notiTime.add(tz.TZDateTime(tz.local, now.year, now.month, now.day, nightTimeHour, nightTimeMinute)); break;
+        }
+      }
+    }
+    print("jukru: " + notiTime.toString());
+    for(int i = 0;i < notiTime.length;i++){
+      await _flutterLocalNotificationsPlugin.zonedSchedule(
+          i,
+          'Medication Notification',
+          'Morning Medication!!!',
+          notiTime[i],
+          const NotificationDetails(
+              android: AndroidNotificationDetails('your channel id', 'your channel name',
+                  channelDescription: 'your channel description')),
+          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+          uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime);
+    }
+  }
+
   static Future cancelAllNotifications() async {
     await _flutterLocalNotificationsPlugin.cancelAll();
   }

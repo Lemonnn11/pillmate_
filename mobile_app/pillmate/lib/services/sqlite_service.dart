@@ -21,9 +21,6 @@ import 'local_notification_service.dart';class SqliteService {
         await database.execute(
           "CREATE TABLE IF NOT EXISTS DAILY_MED(id INTEGER PRIMARY KEY AUTOINCREMENT, day INTEGER, amount_taken INTEGER, daily_med INTEGER, morning_time_hour INTEGER, morning_time_minute INTEGER, noon_time_hour INTEGER, noon_time_minute INTEGER, evening_time_hour INTEGER, evening_time_minute INTEGER, night_time_hour INTEGER, night_time_minute INTEGER, is_notified INTEGER);",
         );
-        await database.execute(
-          "CREATE TABLE IF NOT EXISTS ON_BOARDING(id INTEGER PRIMARY KEY AUTOINCREMENT, first_time INTEGER);",
-        );
         // await database.execute(
         //   "CREATE TABLE [IF NOT EXISTS] PERSONAL_INFO(id INTEGER PRIMARY KEY AUTOINCREMENT, dob TEXT, blood_type TEXT, gender TEXT, weight REAL, height REAL, health_condition TEXT, drug_allergies TEXT, personal_medicine TEXT); CREATE TABLE [IF NOT EXISTS] MEDICINE(id INTEGER PRIMARY KEY AUTOINCREMENT, trade_name TEXT, generic_name TEXT, form TEXT, expired_date TEXT, amount INTEGER, amount_taken INTEGER, quantity REAL, dossage_per_take TEXT, time_of_med TEXT,take_med_when TEXT, time_period_for_med TEXT, condition_of_use TEXT, additional_advice TEXT, adverseDrugReaction TEXT, dispensing_date TEXT, saved_date TEXT, pharmacy TEXT);",
         // );
@@ -43,16 +40,6 @@ import 'local_notification_service.dart';class SqliteService {
     int res = 0;
     final Database db = await initializeDB();
     res = await db.insert('MEDICINE', medicine.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
-    return res;
-  }
-
-  Future<int> createOnBoarding(OnBoardingModel onBoardingModel) async {
-    int res = 0;
-    final Database db = await initializeDB();
-    List<OnBoardingModel> tmp = await getOnBoarding();
-    if(tmp.length == 0){
-      res = await db.insert('ON_BOARDING', onBoardingModel.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
-    }
     return res;
   }
 
@@ -110,12 +97,6 @@ import 'local_notification_service.dart';class SqliteService {
     final db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.query('MEDICINE');
     return queryResult.map((e) => MedicineModel.fromMap(e)).toList();
-  }
-
-  Future<List<OnBoardingModel>> getOnBoarding() async {
-    final db = await initializeDB();
-    final List<Map<String, Object?>> queryResult = await db.query('ON_BOARDING');
-    return queryResult.map((e) => OnBoardingModel.fromMap(e)).toList();
   }
 
   Future<List<MedicineModel>> getActiveMedicine() async{
