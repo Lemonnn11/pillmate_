@@ -27,8 +27,8 @@ export const Login = () => {
     }
 
     return(
-        <div style={{height:'90vh', width: '100vw'}}>
-            <div style={{marginLeft:'4%', marginRight:'4%', marginTop:'3%', height:'100%'}}>
+        <div className='d-flex justify-content-between' style={{height:'90vh', width: '100vw'}}>
+            <div style={{marginLeft:'10%', marginRight:'4%', marginTop:'5%', height:'100%'}}>
                 <div>
                 <img src={process.env.PUBLIC_URL + '/images/Logo.png'} style={{width:'186px', height:'32px'}}/>
                 </div>
@@ -74,7 +74,7 @@ export const Login = () => {
                         </div>
                     </button>
                 </form>
-                <div className="d-flex align-items-end gap-2" style={{height:'45%'}}>
+                <div className="d-flex align-items-end gap-2" style={{height:'42%'}}>
                     <div style={{fontFamily: 'LINESeedSansENRegular', fontSize: '16px'}}>
                         Don’t have an account?
                     </div>
@@ -82,6 +82,9 @@ export const Login = () => {
                         Sign up
                     </div>
                 </div>
+            </div>
+            <div className='d-flex justify-content-end align-items-end' style={{backgroundColor: '#059E78', height: '100vh', width: '50vw'}}>
+                <img src={process.env.PUBLIC_URL + '/images/login_right.png'} style={{width: '42VW', height: '90vh'}}/>
             </div>
         </div>
     );

@@ -1064,12 +1064,12 @@ class _HomepageState extends State<Homepage> {
             shape: CircleBorder(),
             backgroundColor: Color(0xff059E78),
             onPressed: () {
-              // Navigator.of(context).push(MaterialPageRoute(
-              //   builder: (context) => QRCodeScanner()
-              // ));
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => AddDrug()
+                builder: (context) => QRCodeScanner()
               ));
+              // Navigator.of(context).push(MaterialPageRoute(
+              //     builder: (context) => AddDrug()
+              // ));
             },
           ),
         ),

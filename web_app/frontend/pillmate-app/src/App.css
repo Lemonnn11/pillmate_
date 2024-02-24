@@ -56,3 +56,7 @@
   background-color: white;
   width: 100vw;
 }
+
+.sign-up-bg{
+  background: radial-gradient(circle, rgba(0,169,128,1) 0%, rgba(112,207,184,1) 0%, rgba(150,220,203,1) 11%, rgba(243,251,249,1) 38%);
+}

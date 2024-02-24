@@ -39,7 +39,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = (props) => {
     };
 
     return(
-        <div style={{height:'90vh', width: '30vw'}}>
+        <div style={{height:'80vh', width: '30vw'}}>
             <div style={{marginLeft:'4%', marginTop:'3%', height:'100%'}}>
                 <div>
                 <img src={process.env.PUBLIC_URL + '/images/Logo.png'} style={{width:'186px', height:'32px'}}/>

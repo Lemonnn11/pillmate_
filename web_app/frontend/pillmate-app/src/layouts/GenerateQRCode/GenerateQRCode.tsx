@@ -10,7 +10,7 @@ import { ImageComponent } from './components/ImageComponen';
 import { ReturnUnit } from './components/ReturnUnit';
 import{getAuth, onAuthStateChanged} from 'firebase/auth';
 import { useHistory, useLocation } from 'react-router-dom';
-import { log } from 'console';
+import { log, time } from 'console';
 
 
 export const GenerateQRCode = () => {
@@ -42,7 +42,15 @@ export const GenerateQRCode = () => {
     const [category, setCategory] = useState('');
     const location = useLocation();
     const [ modalShow, setModalShow ] = useState(false);
-    const [ pharID, setPharID] = useState(''); 
+    const [ pharID, setPharID] = useState('');
+    const [ takeMedWhenDisabled, setTakeMedWhenDisabled ] = useState(false);
+    const [ everyDisabled, setEveryDisabled ] = useState(false);
+    const date = new Date()
+    const result = date.toLocaleDateString('th-TH', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    }) 
     
     useEffect(() => {
         if (location.state) {
@@ -55,6 +63,8 @@ export const GenerateQRCode = () => {
           console.error('Data is not available in location state.');
         }
       }, [location.state]);
+
+    
 
     useEffect(() => {
         authCheck();
@@ -156,26 +166,26 @@ export const GenerateQRCode = () => {
 
                 console.log('pharID: ' + profile.displayName!);
             
-            const qrCode: QRCodeModel = new QRCodeModel('', profile.displayName!, parseInt(dosagePerTake), parseInt(timePerDay), takeMedWhen, every, timeOfTaken, gmtsDate.toISOString(), gmtsLocalDate.toISOString(), conditionOfUse, addtionalAdvice, parseInt(amountOfMeds), 250, adverseDrugReaction, dosageForm, genericName, tradeName);
-            console.log(JSON.stringify(qrCode));
+                const qrCode: QRCodeModel = new QRCodeModel('', profile.displayName!, parseInt(dosagePerTake), parseInt(timePerDay), takeMedWhen, every, timeOfTaken, gmtsDate.toISOString(), gmtsLocalDate.toISOString(), conditionOfUse, addtionalAdvice, parseInt(amountOfMeds), 250, adverseDrugReaction, dosageForm, genericName, tradeName);
+                console.log(JSON.stringify(qrCode));
 
-            const request = {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(qrCode)
-            };
+                const request = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(qrCode)
+                };
 
-            const create = await fetch(url, request);
-            if (!create) {
-                throw new Error('Error found');
-            }else{
-                const response = await create.json()
-                console.log(response["id"])
-                setImageID(response["id"])
-                setModalShow(true);
-            }
+                const create = await fetch(url, request);
+                if (!create) {
+                    throw new Error('Error found');
+                }else{
+                    const response = await create.json()
+                    console.log(response["id"])
+                    setImageID(response["id"])
+                    setModalShow(true);
+                }
             });
             }
             
@@ -198,13 +208,13 @@ export const GenerateQRCode = () => {
                             <div ref={componentRef} >
                                 <ImageComponent imageID={imageID}  />
                             </div>
-                            <div style={{marginLeft: '9.5%'}}>
+                            <div style={{marginLeft: '9.5%', width: '100%'}}>
                             <div className='d-flex gap-1'>
                                 <div style={{fontFamily: "LINESeedSansTHBold"}}>
                                     วันที่จ่าย:
                                 </div>
                                 <div>
-                                    12 มกราคม 2566
+                                    {result}
                                 </div>
                             </div>
                             <div className='gap-1'>
@@ -231,7 +241,7 @@ export const GenerateQRCode = () => {
                                 Drug Summary
                             </div>
                             <div>
-                                Paracetamol
+                                {genericName}
                             </div>
                             <div className="mt-2" style={{fontFamily: "LINESeedSansTHBold"}}>
                                 รายละเอียด
@@ -239,24 +249,24 @@ export const GenerateQRCode = () => {
                             <hr style={{width:'100%'}}/>
                             <div className='d-flex gap-1'>
                             <div style={{fontFamily: "LINESeedSansTHBold"}}>
-                                Paracetamol
+                                {genericName}
                             </div>
                             <div>
-                                (จำนวน 10 เม็ด)
+                                จำนวน {amountOfMeds} เม็ด
                             </div>
                             </div>
                             <div>
-                                รับประทานยาหลังอาหารทันที ครั้งละ 1 เม็ด
+                                รับประทานยาหลังอาหารทันที ครั้งละ {dosagePerTake} เม็ด
                             </div>
                             <div>
-                                วันละ 2 ครั้ง เช้า เย็น
+                                วันละ {timePerDay} ครั้ง เช้า เย็น
                             </div>
                             <div className='d-flex gap-1 mt-3'>
                                 <div style={{fontFamily: "LINESeedSansTHBold"}}>
                                     วันหมดอายุ:
                                 </div>
                                 <div>
-                                24 เมษายน 2567
+                                 {expiredDate}
                                 </div>
                             </div>
                             <div >
@@ -264,7 +274,7 @@ export const GenerateQRCode = () => {
                                     ข้อบ่งใช้
                                 </div>
                                 <div>
-                                    ลดคลื่นไส้อาเจียน
+                                    {conditionOfUse}
                                 </div>
                             </div>
                             <div >
@@ -272,7 +282,7 @@ export const GenerateQRCode = () => {
                                     คำแนะนำเพิ่มเติม
                                 </div>
                                 <div>
-                                    ยานี้อาจระคายเคืองกระเพาะอาหาร ให้รับประทานหลังอาหารทันที
+                                    {addtionalAdvice}
                                 </div>
                             </div>
                         </div>

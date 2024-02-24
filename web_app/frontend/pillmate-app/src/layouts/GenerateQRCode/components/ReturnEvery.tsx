@@ -9,7 +9,8 @@ export const ReturnEvery: React.FC<ReturnEveryProps> = (props) => {
         '4',
         '6',
         '8',
-        '12'
+        '12',
+        '...'
       ];
     return (
         <ul className="dropdown-menu">

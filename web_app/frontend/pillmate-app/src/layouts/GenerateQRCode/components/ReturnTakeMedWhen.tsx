@@ -11,7 +11,8 @@ export const ReturnTakemedWhen: React.FC<ReturnTakemedWhenProps> = (props) => {
         'ก่อนอาหาร',
         'หลังอาหารทันที',
         'เวลา',
-        'พร้อมอาหาร'
+        'พร้อมอาหาร',
+        '...'
       ];
     return (
         <ul className="dropdown-menu">
