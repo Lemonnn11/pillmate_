@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pillmate/models/medicine.dart';
 
+import '../pages/drug_information.dart';
+
 class ReusableNotificationCard extends StatelessWidget {
   final Widget image;
   final MedicineModel medicineModel;
@@ -98,24 +100,29 @@ class ReusableNotificationCard extends StatelessWidget {
                     ],
                   ),
 
-                  Padding(
-                    padding: EdgeInsets.only(right: screenWidth*0.013),
-                    child: Column(
-                      children: [
-                        Icon(
-                          Ionicons.chevron_forward_outline,
-                          color: Color(0xff059E78),
-                        ),
-                        SizedBox(height: 2,),
-                        Text(
-                          'เพิ่มเติม',
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontFamily: 'PlexSansThaiRg',
-                              color: Color(0xff059E78)
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => DrugInformation(med: medicineModel)));
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(right: screenWidth*0.013),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Ionicons.chevron_forward_outline,
+                            color: Color(0xff059E78),
                           ),
-                        ),
-                      ],
+                          SizedBox(height: 2,),
+                          Text(
+                            'เพิ่มเติม',
+                            style: TextStyle(
+                                fontSize: 12,
+                                fontFamily: 'PlexSansThaiRg',
+                                color: Color(0xff059E78)
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
