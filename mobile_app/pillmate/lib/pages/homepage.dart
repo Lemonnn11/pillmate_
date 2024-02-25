@@ -48,6 +48,7 @@ class _HomepageState extends State<Homepage> {
   bool haveSchedule = false;
   bool editFontsize = false;
   int change = 0;
+  bool darkMode = false;
   //
   // Future<String?> _getCurrentUser() async {
   //   try {
@@ -137,6 +138,7 @@ class _HomepageState extends State<Homepage> {
     getDailyMeds();
     createAppConfig();
     initFontSize();
+    initDarkMode();
   }
 
   Future<void> createAppConfig() async {
@@ -149,6 +151,13 @@ class _HomepageState extends State<Homepage> {
     setState(() {
       editFontsize = status;
       this.change = change;
+    });
+  }
+
+  Future<void> initDarkMode() async {
+    bool status = await _sqliteService.getDarkModeStatus();
+    setState(() {
+      darkMode = status;
     });
   }
 
@@ -380,6 +389,7 @@ class _HomepageState extends State<Homepage> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: !darkMode ? Colors.white: kBlackDarkModeBg,
       body: SingleChildScrollView(
         child: Stack(children: <Widget>[
           Stack(
@@ -391,17 +401,21 @@ class _HomepageState extends State<Homepage> {
                   children: [
                     Container(
                       height: 240,
-                      decoration: BoxDecoration(
+                      decoration: !darkMode ? BoxDecoration(
                         borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(20.0),
                             bottomRight: Radius.circular(20.0)),
-                        gradient: LinearGradient(colors: [
+                        gradient:  LinearGradient(colors: [
                           kLightGreen,
                           kTeal,
                           kTeal,
                         ],
-        
                             begin: Alignment.topLeft, end: Alignment.bottomRight),
+                      ): BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(20.0),
+                            bottomRight: Radius.circular(20.0)),
+                        color: kGreenDarkMode
                       ),
                       child: Stack(
                         children: [
@@ -463,7 +477,7 @@ class _HomepageState extends State<Homepage> {
                                 width: screenWidth,
                                 height: 83,
                                 decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: !darkMode ? Colors.white: kBlackDarkMode,
                                     borderRadius: BorderRadius.circular(6.0),
                                     boxShadow: [
                                       BoxShadow(
@@ -487,13 +501,13 @@ class _HomepageState extends State<Homepage> {
                                                   style: TextStyle(
                                                     fontSize: 15,
                                                     fontFamily: 'PlexSansThaiMd',
-                                                    color: Colors.black,
+                                                    color: !darkMode ? Colors.black: Colors.white,
                                                   ),),
                                                 Text(isLoggedIn! ? amoungMedTaken.toString() + ' จาก ' + dailyActiveMed.toString() + ' ของวันนี้': '0 จาก 0 ของวันนี้',
                                                   style: TextStyle(
                                                     fontSize: editFontsize ?  12 + change.toDouble() : 12,
                                                     fontFamily: 'PlexSansThaiRg',
-                                                    color: Colors.black,
+                                                    color: !darkMode ? Colors.black: Colors.white,
                                                   ),),
                                                 SizedBox(
                                                   height: screenHeight*0.007,
@@ -574,7 +588,7 @@ class _HomepageState extends State<Homepage> {
                             height: 65,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(6.0),
-                                color: Colors.white,
+                                color: !darkMode ? Colors.white: kBlackDarkMode,
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.grey.withOpacity(0.5),
@@ -594,7 +608,8 @@ class _HomepageState extends State<Homepage> {
                                         'สแกนยา',
                                         style: TextStyle(
                                             fontSize: editFontsize ?  16 + change.toDouble() : 16,
-                                            fontFamily: 'PlexSansThaiRg'
+                                            fontFamily: 'PlexSansThaiRg',
+                                            color: !darkMode ? Colors.black: Colors.white,
                                         ),
                                       )
                                     ],
@@ -627,7 +642,7 @@ class _HomepageState extends State<Homepage> {
                             height: 65,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(6.0),
-                                color: Colors.white,
+                                color: !darkMode ? Colors.white: kBlackDarkMode,
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.grey.withOpacity(0.5),
@@ -647,7 +662,8 @@ class _HomepageState extends State<Homepage> {
                                         'ยาของฉัน',
                                         style: TextStyle(
                                             fontSize: editFontsize ?  16 + change.toDouble() : 16,
-                                            fontFamily: 'PlexSansThaiRg'
+                                            fontFamily: 'PlexSansThaiRg',
+                                          color: !darkMode ? Colors.black: Colors.white,
                                         ),
                                       )
                                     ],
@@ -691,7 +707,7 @@ class _HomepageState extends State<Homepage> {
                               style: TextStyle(
                                   fontSize: editFontsize ?  18 + change.toDouble() : 18,
                                   fontFamily: 'PlexSansThaiMd',
-                                  color: Color(0xff047E60)
+                                  color: !darkMode ? Color(0xff047E60): kGreenDarkMode,
                               ),
                             ),
                           ),
@@ -714,14 +730,14 @@ class _HomepageState extends State<Homepage> {
                                   style: TextStyle(
                                       fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiMd',
-                                      color: Color(0xff121212)
+                                      color: !darkMode ? Color(0xff121212): kGreenDarkMode,
                                   ),
                                 ): Text(
                                   'ทั้งหมด',
                                   style: TextStyle(
                                       fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiRg',
-                                      color: Color(0xff121212)
+                                      color: !darkMode ? Color(0xff121212): Colors.white,
                                   ),
                                 )
                             ),
@@ -738,14 +754,14 @@ class _HomepageState extends State<Homepage> {
                                   style: TextStyle(
                                       fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiMd',
-                                      color: Color(0xff121212)
+                                      color: !darkMode ? Color(0xff121212): kGreenDarkMode,
                                   ),
                                 ):Text(
                                   'เช้า',
                                   style: TextStyle(
                                       fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiRg',
-                                      color: Color(0xff121212)
+                                      color: !darkMode ? Color(0xff121212): Colors.white,
                                   ),
                                 ),
                               )
@@ -762,14 +778,14 @@ class _HomepageState extends State<Homepage> {
                                   style: TextStyle(
                                       fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiMd',
-                                      color: Color(0xff121212)
+                                      color: !darkMode ? Color(0xff121212): kGreenDarkMode,
                                   ),
                                 ):Text(
                                   'กลางวัน',
                                   style: TextStyle(
                                       fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiRg',
-                                      color: Color(0xff121212)
+                                      color: !darkMode ? Color(0xff121212): Colors.white,
                                   ),
                                 )
                             ),
@@ -786,14 +802,14 @@ class _HomepageState extends State<Homepage> {
                                   style: TextStyle(
                                       fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiMd',
-                                      color: Color(0xff121212)
+                                      color: !darkMode ? Color(0xff121212): kGreenDarkMode,
                                   ),
                                 ): Text(
                                   'เย็น',
                                   style: TextStyle(
                                       fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiRg',
-                                      color: Color(0xff121212)
+                                      color:  !darkMode ? Color(0xff121212): Colors.white,
                                   ),
                                 )
                             ),
@@ -810,14 +826,14 @@ class _HomepageState extends State<Homepage> {
                                   style: TextStyle(
                                       fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiMd',
-                                      color: Color(0xff121212)
+                                      color: !darkMode ? Color(0xff121212): kGreenDarkMode,
                                   ),
                                 ):Text(
                                   'ก่อนนอน',
                                   style: TextStyle(
                                       fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiRg',
-                                      color: Color(0xff121212)
+                                      color:!darkMode ? Color(0xff121212): Colors.white,
                                   ),
                                 )
                             ),
@@ -833,7 +849,7 @@ class _HomepageState extends State<Homepage> {
                       Container(
                         width: screenWidth,
                         height: screenHeight*0.0025,
-                        color: Color(0xff059E78),
+                        color: !darkMode ? Color(0xff059E78): kLightGreenDarkMode,
                       ),
                       Column(
                         children: [
@@ -849,6 +865,7 @@ class _HomepageState extends State<Homepage> {
                                         'ไม่พบข้อมูล กรุณา',
                                         style: TextStyle(
                                           fontSize: editFontsize ?  14 + change.toDouble() : 14,
+                                          color: !darkMode ? Colors.black: Colors.white
                                         ),
                                     ),
                                     Padding(
@@ -860,7 +877,7 @@ class _HomepageState extends State<Homepage> {
                                         child: Text(
                                           'เข้าสู่ระบบ',
 
-                                          style: TextStyle(fontSize: editFontsize ?  14 + change.toDouble() : 14,decoration: TextDecoration.underline,decorationColor: Color(0xff059E78), color: Color(0xff059E78)),
+                                          style: TextStyle(fontSize: editFontsize ?  14 + change.toDouble() : 14,decoration: TextDecoration.underline,decorationColor: !darkMode ? Color(0xff059E78): kGreenDarkMode, color: !darkMode ? Color(0xff059E78): kGreenDarkMode),
                                         ),
                                       ),
                                     ),
