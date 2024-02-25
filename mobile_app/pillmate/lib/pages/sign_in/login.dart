@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pillmate/pages/sign_in/verify_otp.dart';
 
+import '../../services/sqlite_service.dart';
+
 class LoginPage extends StatefulWidget {
 
   const LoginPage({super.key});
@@ -18,6 +20,28 @@ class _LoginPageState extends State<LoginPage> {
   bool _showInvalidPhoneNumber = false;
   bool _showEmptyPhoneNumber = false;
   final RegExp phoneNumberFormat = RegExp(r'^[0-9]{10}$');
+  bool editFontsize = false;
+  int change = 0;
+  late SqliteService _sqliteService;
+
+  Future<void> initFontSize() async {
+    bool status = await _sqliteService.getEditFontSizeStatus();
+    int change = await _sqliteService.getFontSizeChange();
+    setState(() {
+      editFontsize = status;
+      this.change = change;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    this._sqliteService= SqliteService();
+    this._sqliteService.initializeDB();
+    initFontSize();
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -55,12 +79,12 @@ class _LoginPageState extends State<LoginPage> {
                   Text(
                     'กรอกเบอร์โทรศัพท์ 10 หลัก เพื่อเข้าสู่ระบบ',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: editFontsize ?  16 + change.toDouble() : 16,
                       fontFamily: 'PlexSansThaiMd',
                       color: Color(0xff3F3F3F),
                     ),
                   ),
-                  SizedBox(height: 30,),
+                  SizedBox(height: 20,),
                   Container(
                     height: 60,
                     child: TextField(
@@ -69,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                           print(phoneNumber);
                       },
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: editFontsize ?  18 + change.toDouble() : 18,
                         fontFamily: 'PlexSansThaiRg',
                         color: Colors.black,
                       ),
@@ -78,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                         contentPadding: EdgeInsets.only(top: 20, left: 15),
                         hintText: '0812345678',
                         hintStyle: TextStyle(
-                            fontSize: 18,
+                            fontSize: editFontsize ?  18 + change.toDouble() : 18,
                             fontFamily: 'PlexSansThaiRg',
                             color: Color(0XFF717171)
                         ),
@@ -100,33 +124,33 @@ class _LoginPageState extends State<LoginPage> {
                   _showEmptyPhoneNumber ? Text(
                     'กรุณากรอกเบอร์โทรศัพท์',
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: editFontsize ?  14 + change.toDouble() : 14,
                       fontFamily: 'PlexSansThaiRg',
                       color: Colors.red,
                     ),
                   ): _showInvalidPhoneNumber ? Text(
                     'กรุณากรอกเบอร์โทรศัพท์ให้ครบ 10 หลัก',
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: editFontsize ?  14 + change.toDouble() : 14,
                       fontFamily: 'PlexSansThaiRg',
                       color: Colors.red,
                     ),
                   ): Text(
                     'ระบุเบอร์โทรศัพท์แบบไม่ต้องเว้นช่อง',
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: editFontsize ?  14 + change.toDouble() : 14,
                       fontFamily: 'PlexSansThaiRg',
                       color: Color(0xff3F3F3F),
                     ),
                   ),
-                  SizedBox(height: 90,),
+                  SizedBox(height: 70,),
                   Center(
                     child: TextButton(
                       onPressed: ()  {
                         Navigator.pop(context);
                       },
                       child:
-                      Text('ภายหลัง', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 18, color: Colors.grey[800]),
+                      Text('ภายหลัง', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: editFontsize ?  18 + change.toDouble() : 18, color: Colors.grey[800]),
                       ),
                     ),
                   ),
@@ -171,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
                         }
                       },
                       child:
-                      Text('ไปต่อ', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 18, color: Colors.white),
+                      Text('ไปต่อ', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: editFontsize ?  18 + change.toDouble() : 18, color: Colors.white),
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xff059E78),

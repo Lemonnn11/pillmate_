@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pillmate/pages/appearance.dart';
 import 'package:pillmate/pages/drug_notification.dart';
+import 'package:pillmate/pages/font_size.dart';
 import 'package:pillmate/pages/homepage.dart';
 import 'package:pillmate/pages/on_boarding_1.dart';
 import 'package:pillmate/pages/search_pharmacy.dart';
@@ -35,6 +36,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      builder: (context, child) {
+        final mediaQueryData = MediaQuery.of(context);
+        final scale = mediaQueryData.textScaleFactor.clamp(1.0, 1.3);
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaleFactor: scale),
+          child: child!,
+        );
+      },
       theme: ThemeData(
 
       ),
@@ -50,6 +59,7 @@ class MyApp extends StatelessWidget {
         '/welcome': (context) => WelcomePage(),
         '/search-pharmacy': (context) => SearchPharmacy(),
         '/appearance': (context) => Appearance(),
+        '/font-size': (context) => FontSize(),
         '/on-boarding-1': (context) => OnBoarding1(),
       },
     );

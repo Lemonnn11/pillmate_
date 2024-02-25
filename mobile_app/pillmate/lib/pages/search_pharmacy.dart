@@ -14,6 +14,7 @@ import 'package:http/http.dart' as http;
 import 'package:pillmate/pages/qr_code_scanner.dart';
 
 import '../components/reusable_bottom_navigation_bar.dart';
+import '../services/sqlite_service.dart';
 import 'add_drug.dart';
 
 class SearchPharmacy extends StatefulWidget {
@@ -33,15 +34,31 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
   String address = '';
   bool? isLoggedIn = false;
   LatLng? _currLocation = null;
+  bool editFontsize = false;
+  int change = 0;
+  late SqliteService _sqliteService;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    this._sqliteService= SqliteService();
+    this._sqliteService.initializeDB();
     _getPharmaciesInfo();
     getCurrentLocation();
     _resultList = _pharList;
     authChangesListener();
+    initFontSize();
+
+  }
+
+  Future<void> initFontSize() async {
+    bool status = await _sqliteService.getEditFontSizeStatus();
+    int change = await _sqliteService.getFontSizeChange();
+    setState(() {
+      editFontsize = status;
+      this.change = change;
+    });
   }
 
   void convertLatLngToAddress(double lat, double lng) async {
@@ -192,7 +209,7 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
                   Text(
                     'ตำแหน่งของคุณ',
                     style: TextStyle(
-                        fontSize: 12,
+                        fontSize: editFontsize ?  12 + change.toDouble() : 12,
                         fontFamily: 'PlexSansThaiRg',
                         color: Color(0xff2C2C2C)
                     ),
@@ -203,7 +220,7 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
                       address,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                          fontSize: 16,
+                          fontSize: editFontsize ?  16 + change.toDouble() : 16,
                           fontFamily: 'PlexSansThaiMd',
                           color: Color(0xff047E60)
                       ),
@@ -238,7 +255,7 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
                       searchPharmacy(value);
                   },
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: editFontsize ?  18 + change.toDouble() : 18,
                     fontFamily: 'PlexSansThaiRg',
                     color: Colors.black,
                   ),
@@ -248,7 +265,7 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
                     contentPadding: EdgeInsets.only( left: 15),
                     hintText: 'ค้นหาร้านยาที่ให้บริการ',
                     hintStyle: TextStyle(
-                        fontSize: 14,
+                        fontSize: editFontsize ?  14 + change.toDouble() : 14,
                         fontFamily: 'PlexSansThaiRg',
                         color: Color(0XFF2C2C2C)
                     ),
@@ -283,7 +300,11 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
                   itemCount: _resultList.length,
                   scrollDirection: Axis.vertical,
                   itemBuilder: (BuildContext context, int index) {
-                    return ReusablePharmacyItem(pharmacy: _resultList[index],);
+                    return ReusablePharmacyItem(
+                      pharmacy: _resultList[index],
+                      editFontsize:editFontsize,
+                      change: change,
+                    );
                   },
                 ),
               ),
@@ -302,7 +323,7 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
                 Image.asset('icons/qrcode-scan.png', width: 22, height: 22,) ,
                 Text('สแกน', style: TextStyle(
                     color: Colors.white,
-                    fontSize: 10
+                    fontSize: editFontsize ?  10 + change.toDouble() : 10
                 ),)
               ],
             ),

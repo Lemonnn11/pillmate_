@@ -33,6 +33,8 @@ class _MyDrugListState extends State<MyDrugList> {
   List<MedicineModel> _tabDrugsList = [];
   List<MedicineModel> _inactiveCapsuleDrugsList = [];
   List<MedicineModel> _inactiveTabDrugsList = [];
+  bool editFontsize = false;
+  int change = 0;
 
     // {
     //   'name': 'Amoxicilin',
@@ -90,6 +92,16 @@ class _MyDrugListState extends State<MyDrugList> {
     this._sqliteService.initializeDB();
     getMedicines();
     authChangesListener();
+    initFontSize();
+  }
+
+  Future<void> initFontSize() async {
+    bool status = await _sqliteService.getEditFontSizeStatus();
+    int change = await _sqliteService.getFontSizeChange();
+    setState(() {
+      editFontsize = status;
+      this.change = change;
+    });
   }
 
   void authChangesListener(){
@@ -165,8 +177,8 @@ class _MyDrugListState extends State<MyDrugList> {
             labelColor: Color(0xff047E60),
             unselectedLabelColor: Colors.black,
             tabs: [
-              Tab(child: Text('ยาของฉัน', style: TextStyle(fontFamily: 'PlexSansThaiRg', fontSize: 18),),),
-              Tab(child: Text('ประวัติการกินยา', style: TextStyle(fontFamily: 'PlexSansThaiRg', fontSize: 18),),)
+              Tab(child: Text('ยาของฉัน', style: TextStyle(fontFamily: 'PlexSansThaiRg', fontSize: editFontsize ?  18 + change.toDouble() : 18),),),
+              Tab(child: Text('ประวัติการกินยา', style: TextStyle(fontFamily: 'PlexSansThaiRg', fontSize: editFontsize ?  18 + change.toDouble() : 18),),)
             ],
           ),
           title: Padding(
@@ -215,7 +227,7 @@ class _MyDrugListState extends State<MyDrugList> {
                                       width: 1
                                   ),
                                 ),
-                                child: Center(child: Text('ทั้งหมด', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
+                                child: Center(child: Text('ทั้งหมด', style: TextStyle(fontSize: editFontsize ?  14 + change.toDouble() : 14, fontFamily: 'PlexSansThaiRg'),)),
                               ): Container(
                                 width: 76,
                                 height: 29,
@@ -227,7 +239,7 @@ class _MyDrugListState extends State<MyDrugList> {
                                       width: 1
                                   ),
                                 ),
-                                child: Center(child: Text('ทั้งหมด', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
+                                child: Center(child: Text('ทั้งหมด', style: TextStyle(fontSize: editFontsize ?  14 + change.toDouble() : 14, fontFamily: 'PlexSansThaiRg'),)),
                               ),
                             ),
                             SizedBox(width: 8,),
@@ -248,7 +260,7 @@ class _MyDrugListState extends State<MyDrugList> {
                                       width: 1
                                   ),
                                 ),
-                                child: Center(child: Text('ยาเม็ด', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
+                                child: Center(child: Text('ยาเม็ด', style: TextStyle(fontSize: editFontsize ?  14 + change.toDouble() : 14, fontFamily: 'PlexSansThaiRg'),)),
                               ): Container(
                                 width: 76,
                                 height: 29,
@@ -260,7 +272,7 @@ class _MyDrugListState extends State<MyDrugList> {
                                       width: 1
                                   ),
                                 ),
-                                child: Center(child: Text('ยาเม็ด', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
+                                child: Center(child: Text('ยาเม็ด', style: TextStyle(fontSize: editFontsize ?  14 + change.toDouble() : 14, fontFamily: 'PlexSansThaiRg'),)),
                               ),
                             ),
                             SizedBox(width: 8,),
@@ -281,7 +293,7 @@ class _MyDrugListState extends State<MyDrugList> {
                                       width: 1
                                   ),
                                 ),
-                                child: Center(child: Text('แคปซูล', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
+                                child: Center(child: Text('แคปซูล', style: TextStyle(fontSize: editFontsize ?  14 + change.toDouble() : 14, fontFamily: 'PlexSansThaiRg'),)),
                               ): Container(
                                 width: 76,
                                 height: 29,
@@ -293,7 +305,7 @@ class _MyDrugListState extends State<MyDrugList> {
                                       width: 1
                                   ),
                                 ),
-                                child: Center(child: Text('แคปซูล', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
+                                child: Center(child: Text('แคปซูล', style: TextStyle(fontSize: editFontsize ?  14 + change.toDouble() : 14, fontFamily: 'PlexSansThaiRg'),)),
                               ),
                             ),
                             SizedBox(width: 8,),
@@ -309,7 +321,7 @@ class _MyDrugListState extends State<MyDrugList> {
                                 ),
                               ),
                               child: Center(
-                                child: Text('ยาน้ำ', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),),
+                                child: Text('ยาน้ำ', style: TextStyle(fontSize: editFontsize ?  14 + change.toDouble() : 14, fontFamily: 'PlexSansThaiRg'),),
                               ),
                             ),
                             SizedBox(width: 8,),
@@ -325,7 +337,7 @@ class _MyDrugListState extends State<MyDrugList> {
                                 ),
                               ),
                               child: Center(
-                                child: Text('ยาภายนอก', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),),
+                                child: Text('ยาภายนอก', style: TextStyle(fontSize: editFontsize ?  14 + change.toDouble() : 14, fontFamily: 'PlexSansThaiRg'),),
                               ),
                             ),
                             SizedBox(width: 8,),
@@ -341,7 +353,7 @@ class _MyDrugListState extends State<MyDrugList> {
                                 ),
                               ),
                               child: Center(
-                                child: Text('ยาหยอดตา', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),),
+                                child: Text('ยาหยอดตา', style: TextStyle(fontSize: editFontsize ?  14 + change.toDouble() : 14, fontFamily: 'PlexSansThaiRg'),),
                               ),
                             ),
                             SizedBox(width: 8,),
@@ -360,6 +372,8 @@ class _MyDrugListState extends State<MyDrugList> {
                           scrollDirection: Axis.vertical,
                           itemBuilder: (BuildContext context, int index) {
                             return ReusableMyDrugListCard(
+                              editFontSize: editFontsize,
+                                change: change,
                                 med: _activeDrugsList[index]);
                           },
                         ): cat == 'ยาเม็ด' ? ListView.builder(
@@ -367,6 +381,8 @@ class _MyDrugListState extends State<MyDrugList> {
                           scrollDirection: Axis.vertical,
                           itemBuilder: (BuildContext context, int index) {
                             return ReusableMyDrugListCard(
+                                editFontSize: editFontsize,
+                                change: change,
                                 med: _tabDrugsList[index]);
                           },
                         ): cat == 'แคปซูล' ? ListView.builder(
@@ -374,6 +390,8 @@ class _MyDrugListState extends State<MyDrugList> {
                           scrollDirection: Axis.vertical,
                           itemBuilder: (BuildContext context, int index) {
                             return ReusableMyDrugListCard(
+                                editFontSize: editFontsize,
+                                change: change,
                                 med: _capsuleDrugsList[index]);
                           },
                         ): Container(),
@@ -413,7 +431,7 @@ class _MyDrugListState extends State<MyDrugList> {
                                       width: 1
                                   ),
                                 ),
-                                child: Center(child: Text('ทั้งหมด', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
+                                child: Center(child: Text('ทั้งหมด', style: TextStyle(fontSize: editFontsize ?  14 + change.toDouble() : 14, fontFamily: 'PlexSansThaiRg'),)),
                               ): Container(
                                 width: 76,
                                 height: 29,
@@ -425,7 +443,7 @@ class _MyDrugListState extends State<MyDrugList> {
                                       width: 1
                                   ),
                                 ),
-                                child: Center(child: Text('ทั้งหมด', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
+                                child: Center(child: Text('ทั้งหมด', style: TextStyle(fontSize: editFontsize ?  14 + change.toDouble() : 14, fontFamily: 'PlexSansThaiRg'),)),
                               ),
                             ),
                             SizedBox(width: 8,),
@@ -446,7 +464,7 @@ class _MyDrugListState extends State<MyDrugList> {
                                       width: 1
                                   ),
                                 ),
-                                child: Center(child: Text('ยาเม็ด', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
+                                child: Center(child: Text('ยาเม็ด', style: TextStyle(fontSize: editFontsize ?  14 + change.toDouble() : 14, fontFamily: 'PlexSansThaiRg'),)),
                               ): Container(
                                 width: 76,
                                 height: 29,
@@ -458,7 +476,7 @@ class _MyDrugListState extends State<MyDrugList> {
                                       width: 1
                                   ),
                                 ),
-                                child: Center(child: Text('ยาเม็ด', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
+                                child: Center(child: Text('ยาเม็ด', style: TextStyle(fontSize: editFontsize ?  14 + change.toDouble() : 14, fontFamily: 'PlexSansThaiRg'),)),
                               ),
                             ),
                             SizedBox(width: 8,),
@@ -479,7 +497,7 @@ class _MyDrugListState extends State<MyDrugList> {
                                       width: 1
                                   ),
                                 ),
-                                child: Center(child: Text('แคปซูล', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
+                                child: Center(child: Text('แคปซูล', style: TextStyle(fontSize: editFontsize ?  14 + change.toDouble() : 14, fontFamily: 'PlexSansThaiRg'),)),
                               ): Container(
                                 width: 76,
                                 height: 29,
@@ -491,7 +509,7 @@ class _MyDrugListState extends State<MyDrugList> {
                                       width: 1
                                   ),
                                 ),
-                                child: Center(child: Text('แคปซูล', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),)),
+                                child: Center(child: Text('แคปซูล', style: TextStyle(fontSize: editFontsize ?  14 + change.toDouble() : 14, fontFamily: 'PlexSansThaiRg'),)),
                               ),
                             ),
                             SizedBox(width: 8,),
@@ -507,7 +525,7 @@ class _MyDrugListState extends State<MyDrugList> {
                                 ),
                               ),
                               child: Center(
-                                child: Text('ยาน้ำ', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),),
+                                child: Text('ยาน้ำ', style: TextStyle(fontSize: editFontsize ?  14 + change.toDouble() : 14, fontFamily: 'PlexSansThaiRg'),),
                               ),
                             ),
                             SizedBox(width: 8,),
@@ -523,7 +541,7 @@ class _MyDrugListState extends State<MyDrugList> {
                                 ),
                               ),
                               child: Center(
-                                child: Text('ยาภายนอก', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),),
+                                child: Text('ยาภายนอก', style: TextStyle(fontSize: editFontsize ?  14 + change.toDouble() : 14, fontFamily: 'PlexSansThaiRg'),),
                               ),
                             ),
                             SizedBox(width: 8,),
@@ -539,7 +557,7 @@ class _MyDrugListState extends State<MyDrugList> {
                                 ),
                               ),
                               child: Center(
-                                child: Text('ยาหยอดตา', style: TextStyle(fontSize: 14, fontFamily: 'PlexSansThaiRg'),),
+                                child: Text('ยาหยอดตา', style: TextStyle(fontSize: editFontsize ?  14 + change.toDouble() : 14, fontFamily: 'PlexSansThaiRg'),),
                               ),
                             ),
                             SizedBox(width: 8,),
@@ -556,6 +574,8 @@ class _MyDrugListState extends State<MyDrugList> {
                         scrollDirection: Axis.vertical,
                         itemBuilder: (BuildContext context, int index) {
                           return ReusableMyHistoryListCard(
+                            editFontSize: editFontsize,
+                            change: change,
                             med: _inactiveDrugsList[index], lastIndex: index ==  _inactiveDrugsList.length-1 ? true:false,);
                         },
                       ): incat == 'ยาเม็ด' ? ListView.builder(
@@ -563,6 +583,8 @@ class _MyDrugListState extends State<MyDrugList> {
                         scrollDirection: Axis.vertical,
                         itemBuilder: (BuildContext context, int index) {
                           return ReusableMyHistoryListCard(
+                            editFontSize: editFontsize,
+                            change: change,
                             med: _inactiveTabDrugsList[index], lastIndex: index ==  _inactiveTabDrugsList.length-1 ? true:false,);
                         },
                       ): incat == 'แคปซูล' ? ListView.builder(
@@ -570,6 +592,8 @@ class _MyDrugListState extends State<MyDrugList> {
                         scrollDirection: Axis.vertical,
                         itemBuilder: (BuildContext context, int index) {
                           return ReusableMyHistoryListCard(
+                            editFontSize: editFontsize,
+                            change: change,
                             med: _inactiveCapsuleDrugsList[index], lastIndex: index ==  _inactiveCapsuleDrugsList.length-1 ? true:false,);
                         },
                       ): Container(),
@@ -591,7 +615,7 @@ class _MyDrugListState extends State<MyDrugList> {
                   Image.asset('icons/qrcode-scan.png', width: 22, height: 22,) ,
                   Text('สแกน', style: TextStyle(
                       color: Colors.white,
-                      fontSize: 10
+                      fontSize: editFontsize ?  10 + change.toDouble() : 10
                   ),)
                 ],
               ),

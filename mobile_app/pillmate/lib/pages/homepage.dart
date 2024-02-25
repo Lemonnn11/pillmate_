@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pillmate/constants/constants.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pillmate/models/app_config.dart';
 import 'package:pillmate/models/daily_med.dart';
 import 'package:pillmate/models/medicine.dart';
 import 'package:pillmate/models/on_boarding.dart';
@@ -45,6 +46,8 @@ class _HomepageState extends State<Homepage> {
   List<MedicineModel> _nightDrugsList = [];
   List<bool> _notificationList = [];
   bool haveSchedule = false;
+  bool editFontsize = false;
+  int change = 0;
   //
   // Future<String?> _getCurrentUser() async {
   //   try {
@@ -132,6 +135,21 @@ class _HomepageState extends State<Homepage> {
     getPersons();
     setHeader();
     getDailyMeds();
+    createAppConfig();
+    initFontSize();
+  }
+
+  Future<void> createAppConfig() async {
+    await _sqliteService.createAppConfigItem(new AppConfigModel(1, 0, 0, 0));
+  }
+
+  Future<void> initFontSize() async {
+    bool status = await _sqliteService.getEditFontSizeStatus();
+    int change = await _sqliteService.getFontSizeChange();
+    setState(() {
+      editFontsize = status;
+      this.change = change;
+    });
   }
 
   Future<void> scheduledNotification() async {
@@ -165,7 +183,7 @@ class _HomepageState extends State<Homepage> {
   }
 
   Future<void> getMedicines() async {
-    final data = await _sqliteService.getMedicines();
+    final data = await _sqliteService.getActiveMedicine();
     this._drugsList = data;
     addToSperateList();
   }
@@ -367,12 +385,12 @@ class _HomepageState extends State<Homepage> {
           Stack(
             children: [
               Container(
-                height: 280,
+                height: 285,
                 width: screenWidth,
                 child: Column(
                   children: [
                     Container(
-                      height: 235,
+                      height: 240,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(20.0),
@@ -402,7 +420,7 @@ class _HomepageState extends State<Homepage> {
                                       children: [
                                         Text(isLoggedIn! ? name == '' ? 'สวัสดี, ยินดีต้อนรับ': 'สวัสดี, คุณ' + name: 'สวัสดี, ยินดีต้อนรับ',
                                           style: TextStyle(
-                                            fontSize: 14,
+                                            fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                             fontFamily: 'PlexSansThaiMd',
                                             color: Colors.black,
                                           ),),
@@ -411,7 +429,7 @@ class _HomepageState extends State<Homepage> {
                                         ),
                                         Text(date,
                                           style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                             fontFamily: 'PlexSansThaiRg',
                                             color: Colors.black,
                                           ),)
@@ -432,82 +450,86 @@ class _HomepageState extends State<Homepage> {
                                     )
                                   ],
                                 ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Container(
-                                  width: screenWidth,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(6.0),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.5),
-                                          spreadRadius: 0.8,
-                                          blurRadius: 0.8,
-                                        ),]
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 7, horizontal: screenWidth*0.0425),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text('ความคืบหน้าการกินยาของคุณวันนี้',
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontFamily: 'PlexSansThaiMd',
-                                                      color: Colors.black,
-                                                    ),),
-                                                  Text(isLoggedIn! ? amoungMedTaken.toString() + ' จาก ' + dailyActiveMed.toString() + ' ของวันนี้': '0 จาก 0 ของวันนี้',
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontFamily: 'PlexSansThaiRg',
-                                                      color: Colors.black,
-                                                    ),),
-                                                  SizedBox(
-                                                    height: screenHeight*0.007,
-        
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.only(bottom: 4),
-                                                    child: Container(
-                                                      width: screenWidth*0.6,
-                                                      height: 9,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius: BorderRadius.circular(6.0)
-                                                      ),
-                                                      child: ClipRRect(
-                                                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                        child: LinearProgressIndicator(
-                                                          value: isLoggedIn! ? 0.0: dailyActiveMed == 0  ? 0.0: (amoungMedTaken/dailyActiveMed),
-                                                          backgroundColor: Color(0xffdddddd),
-                                                          valueColor: AlwaysStoppedAnimation<Color>(Color(0xffED6B81)),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  )
-                                                ]
-                                            ),
-                                            Column(
-                                              children: [
-                                                Container(
-                                                  width: screenWidth*0.20,
-                                                  child: Image.asset('images/yellowShape.png'),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
                               ],
+                            ),
+                          ),
+                          Positioned(
+                            top: 110,
+                            left: 0,
+                            right: 0,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.0425),
+                              child: Container(
+                                width: screenWidth,
+                                height: 83,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(6.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 0.8,
+                                        blurRadius: 0.8,
+                                      ),]
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: screenWidth*0.0425),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text('ความคืบหน้าการกินยาของคุณวันนี้',
+                                                  style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontFamily: 'PlexSansThaiMd',
+                                                    color: Colors.black,
+                                                  ),),
+                                                Text(isLoggedIn! ? amoungMedTaken.toString() + ' จาก ' + dailyActiveMed.toString() + ' ของวันนี้': '0 จาก 0 ของวันนี้',
+                                                  style: TextStyle(
+                                                    fontSize: editFontsize ?  12 + change.toDouble() : 12,
+                                                    fontFamily: 'PlexSansThaiRg',
+                                                    color: Colors.black,
+                                                  ),),
+                                                SizedBox(
+                                                  height: screenHeight*0.007,
+
+                                                ),
+                                                Container(
+                                                  width: screenWidth*0.6,
+                                                  height: 9,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(6.0)
+                                                  ),
+                                                  child: ClipRRect(
+                                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                    child: LinearProgressIndicator(
+                                                      value: isLoggedIn! ? 0.0: dailyActiveMed == 0  ? 0.0: (amoungMedTaken/dailyActiveMed),
+                                                      backgroundColor: Color(0xffdddddd),
+                                                      valueColor: AlwaysStoppedAnimation<Color>(Color(0xffED6B81)),
+                                                    ),
+                                                  ),
+                                                )
+                                              ]
+                                          ),
+                                          Column(
+                                            children: [
+                                              Container(
+                                                width: screenWidth*0.20,
+                                                child: Image.asset('images/yellowShape.png'),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                           Positioned(
@@ -536,7 +558,7 @@ class _HomepageState extends State<Homepage> {
                 ),
               ),
               Positioned(
-                  top: 200,
+                  top: 205,
                   child:  Padding(
                     padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04),
                     child: Row(
@@ -571,7 +593,7 @@ class _HomepageState extends State<Homepage> {
                                       Text(
                                         'สแกนยา',
                                         style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                             fontFamily: 'PlexSansThaiRg'
                                         ),
                                       )
@@ -624,7 +646,7 @@ class _HomepageState extends State<Homepage> {
                                       Text(
                                         'ยาของฉัน',
                                         style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                             fontFamily: 'PlexSansThaiRg'
                                         ),
                                       )
@@ -649,7 +671,7 @@ class _HomepageState extends State<Homepage> {
           ),
           Positioned(
             child: Padding(
-              padding: EdgeInsets.only(top: 260.0),
+              padding: EdgeInsets.only(top: 265.0),
               child: Container(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: screenHeight*0.008),
@@ -667,7 +689,7 @@ class _HomepageState extends State<Homepage> {
                             child: Text(
                               'ตารางการทานยา',
                               style: TextStyle(
-                                  fontSize: 18,
+                                  fontSize: editFontsize ?  18 + change.toDouble() : 18,
                                   fontFamily: 'PlexSansThaiMd',
                                   color: Color(0xff047E60)
                               ),
@@ -690,14 +712,14 @@ class _HomepageState extends State<Homepage> {
                                 child: cat == '' ? Text(
                                   'ทั้งหมด',
                                   style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiMd',
                                       color: Color(0xff121212)
                                   ),
                                 ): Text(
                                   'ทั้งหมด',
                                   style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiRg',
                                       color: Color(0xff121212)
                                   ),
@@ -714,14 +736,14 @@ class _HomepageState extends State<Homepage> {
                                 child: cat == 'เช้า' ? Text(
                                   'เช้า',
                                   style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiMd',
                                       color: Color(0xff121212)
                                   ),
                                 ):Text(
                                   'เช้า',
                                   style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiRg',
                                       color: Color(0xff121212)
                                   ),
@@ -738,14 +760,14 @@ class _HomepageState extends State<Homepage> {
                                 child:  cat == 'กลางวัน' ? Text(
                                   'กลางวัน',
                                   style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiMd',
                                       color: Color(0xff121212)
                                   ),
                                 ):Text(
                                   'กลางวัน',
                                   style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiRg',
                                       color: Color(0xff121212)
                                   ),
@@ -762,14 +784,14 @@ class _HomepageState extends State<Homepage> {
                                 child: cat == 'เย็น' ? Text(
                                   'เย็น',
                                   style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiMd',
                                       color: Color(0xff121212)
                                   ),
                                 ): Text(
                                   'เย็น',
                                   style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiRg',
                                       color: Color(0xff121212)
                                   ),
@@ -786,14 +808,14 @@ class _HomepageState extends State<Homepage> {
                                 child:  cat == 'ก่อนนอน'? Text(
                                   'ก่อนนอน',
                                   style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiMd',
                                       color: Color(0xff121212)
                                   ),
                                 ):Text(
                                   'ก่อนนอน',
                                   style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiRg',
                                       color: Color(0xff121212)
                                   ),
@@ -824,7 +846,10 @@ class _HomepageState extends State<Homepage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                        'ไม่พบข้อมูล กรุณา'
+                                        'ไม่พบข้อมูล กรุณา',
+                                        style: TextStyle(
+                                          fontSize: editFontsize ?  14 + change.toDouble() : 14,
+                                        ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(bottom: 2),
@@ -834,7 +859,8 @@ class _HomepageState extends State<Homepage> {
                                         },
                                         child: Text(
                                           'เข้าสู่ระบบ',
-                                          style: TextStyle(decoration: TextDecoration.underline,decorationColor: Color(0xff059E78), color: Color(0xff059E78)),
+
+                                          style: TextStyle(fontSize: editFontsize ?  14 + change.toDouble() : 14,decoration: TextDecoration.underline,decorationColor: Color(0xff059E78), color: Color(0xff059E78)),
                                         ),
                                       ),
                                     ),
@@ -855,7 +881,7 @@ class _HomepageState extends State<Homepage> {
                                         Text(
                                           'เช้า',
                                           style: TextStyle(
-                                              fontSize: 16,
+                                              fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                               fontFamily: 'PlexSansThaiRg',
                                               color: Color(0xff121212)
                                           ),
@@ -868,7 +894,7 @@ class _HomepageState extends State<Homepage> {
                                         Text(
                                           '09:00',
                                           style: TextStyle(
-                                              fontSize: 14,
+                                              fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                               fontFamily: 'PlexSansThaiMd',
                                               color: Color(0xff121212)
                                           ),
@@ -883,6 +909,8 @@ class _HomepageState extends State<Homepage> {
                                             medicineModel: drug,
                                             callback: onClickedFromChild,
                                             when: 'เช้า',
+                                            editFontsize: editFontsize,
+                                            change: change,
                                           );
                                         }).toList(),
                                       ),
@@ -899,7 +927,7 @@ class _HomepageState extends State<Homepage> {
                                         Text(
                                           'กลางวัน',
                                           style: TextStyle(
-                                              fontSize: 16,
+                                              fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                               fontFamily: 'PlexSansThaiRg',
                                               color: Color(0xff121212)
                                           ),
@@ -912,7 +940,7 @@ class _HomepageState extends State<Homepage> {
                                         Text(
                                           '12:00',
                                           style: TextStyle(
-                                              fontSize: 14,
+                                              fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                               fontFamily: 'PlexSansThaiMd',
                                               color: Color(0xff121212)
                                           ),
@@ -927,6 +955,8 @@ class _HomepageState extends State<Homepage> {
                                             medicineModel: drug,
                                             callback: onClickedFromChild,
                                             when: 'กลางวัน',
+                                            editFontsize: editFontsize,
+                                            change: change,
                                           );
                                         }).toList(),
                                       ),
@@ -943,7 +973,7 @@ class _HomepageState extends State<Homepage> {
                                         Text(
                                           'เย็น',
                                           style: TextStyle(
-                                              fontSize: 16,
+                                              fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                               fontFamily: 'PlexSansThaiRg',
                                               color: Color(0xff121212)
                                           ),
@@ -956,7 +986,7 @@ class _HomepageState extends State<Homepage> {
                                         Text(
                                           '17:00',
                                           style: TextStyle(
-                                              fontSize: 14,
+                                              fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                               fontFamily: 'PlexSansThaiMd',
                                               color: Color(0xff121212)
                                           ),
@@ -971,6 +1001,8 @@ class _HomepageState extends State<Homepage> {
                                             medicineModel: drug,
                                             callback: onClickedFromChild,
                                             when: 'เย็น',
+                                            editFontsize: editFontsize,
+                                            change: change,
                                           );
                                         }).toList(),
                                       ),
@@ -987,7 +1019,7 @@ class _HomepageState extends State<Homepage> {
                                         Text(
                                           'ก่อนนอน',
                                           style: TextStyle(
-                                              fontSize: 16,
+                                              fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                               fontFamily: 'PlexSansThaiRg',
                                               color: Color(0xff121212)
                                           ),
@@ -1000,7 +1032,7 @@ class _HomepageState extends State<Homepage> {
                                         Text(
                                           '21:00',
                                           style: TextStyle(
-                                              fontSize: 14,
+                                              fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                               fontFamily: 'PlexSansThaiMd',
                                               color: Color(0xff121212)
                                           ),
@@ -1015,6 +1047,8 @@ class _HomepageState extends State<Homepage> {
                                             medicineModel: drug,
                                             callback: onClickedFromChild,
                                             when: 'ก่อนนอน',
+                                            editFontsize: editFontsize,
+                                            change: change,
                                           );
                                         }).toList(),
                                       ),
@@ -1029,7 +1063,10 @@ class _HomepageState extends State<Homepage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                        'คุณยังไม่มีตารางการทานยาในวันนี้'
+                                        'คุณยังไม่มีตารางการทานยาในวันนี้',
+                                      style: TextStyle(
+                                        fontSize: editFontsize ?  14 + change.toDouble() : 14
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -1057,7 +1094,7 @@ class _HomepageState extends State<Homepage> {
                 Image.asset('icons/qrcode-scan.png', width: 22, height: 22,) ,
                 Text('สแกน', style: TextStyle(
                     color: Colors.white,
-                    fontSize: 10
+                    fontSize: editFontsize ?  10 + change.toDouble() : 10
                 ),)
               ],
             ),

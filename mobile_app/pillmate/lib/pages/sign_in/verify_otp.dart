@@ -34,6 +34,8 @@ class _VerifyOTPState extends State<VerifyOTP> {
   Duration duration = Duration();
   Timer? timer;
   int secondss = 120;
+  bool editFontsize = false;
+  int change = 0;
 
   void startTimer(){
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
@@ -57,11 +59,21 @@ class _VerifyOTPState extends State<VerifyOTP> {
     this._sqliteService= SqliteService();
     this._sqliteService.initializeDB();
     getPersons();
+    initFontSize();
   }
 
   Future<void> getPersons() async {
     final data = await _sqliteService.getPersonalInfo();
     this._personList = data;
+  }
+
+  Future<void> initFontSize() async {
+    bool status = await _sqliteService.getEditFontSizeStatus();
+    int change = await _sqliteService.getFontSizeChange();
+    setState(() {
+      editFontsize = status;
+      this.change = change;
+    });
   }
 
   @override
@@ -103,7 +115,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                 Text(
                   'กรุณากรอกรหัส OTP 6 หลักที่ส่งไปยัง ${widget.phoneNumber}',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: editFontsize ?  16 + change.toDouble() : 16,
                     fontFamily: 'PlexSansThaiMd',
                     color: Color(0xff3F3F3F),
                   ),
@@ -364,7 +376,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                         Text(
                           'รหัสมีอายุ $minutes:$seconds',
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: editFontsize ?  14 + change.toDouble() : 14,
                             fontFamily: 'PlexSansThaiRg',
                             color: Colors.black,
                           ),
@@ -377,7 +389,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                             Text(
                               'กรุณากรอกรหัสยืนยันให้ถูกต้อง',
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                 fontFamily: 'PlexSansThaiMd',
                                 color: Colors.red,
                               ),
@@ -391,7 +403,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                             Text(
                               'กรุณากรอกรหัสยืนยัน',
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                 fontFamily: 'PlexSansThaiMd',
                                 color: Colors.red,
                               ),
@@ -445,7 +457,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
             ),
           ),
           Positioned(
-            top: 510,
+            top: 500,
             left: 0,
             right: 0,
             child: Padding(

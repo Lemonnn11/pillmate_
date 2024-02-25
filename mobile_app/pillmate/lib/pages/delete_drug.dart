@@ -21,6 +21,8 @@ class _DeleteDrugState extends State<DeleteDrug> {
   String formattedDispensing = '';
   final _firestore = FirebaseFirestore.instance;
   String storeName = '';
+  bool editFontsize = false;
+  int change = 0;
 
   @override
   void initState() {
@@ -29,6 +31,16 @@ class _DeleteDrugState extends State<DeleteDrug> {
     this._sqliteService= SqliteService();
     this._sqliteService.initializeDB();
     _getPharmacyName();
+    initFontSize();
+  }
+
+  Future<void> initFontSize() async {
+    bool status = await _sqliteService.getEditFontSizeStatus();
+    int change = await _sqliteService.getFontSizeChange();
+    setState(() {
+      editFontsize = status;
+      this.change = change;
+    });
   }
 
   void _getPharmacyName() async {
@@ -195,12 +207,12 @@ class _DeleteDrugState extends State<DeleteDrug> {
                         children: [
                           Text('รูปแบบยา: ',
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: editFontsize ?  14 + change.toDouble() : 14,
                               fontFamily: 'PlexSansThaiRg',
                             ),),
                           Text(widget.med.typeOfMedicine,
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: editFontsize ?  14 + change.toDouble() : 14,
                               fontFamily: 'PlexSansThaiRg',
                             ),),
                         ],
@@ -210,12 +222,12 @@ class _DeleteDrugState extends State<DeleteDrug> {
                         children: [
                           Text('ปริมาณ: ',
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: editFontsize ?  14 + change.toDouble() : 14,
                               fontFamily: 'PlexSansThaiRg',
                             ),),
                           Text(widget.med.quantity.toString(),
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: editFontsize ?  14 + change.toDouble() : 14,
                               fontFamily: 'PlexSansThaiRg',
                             ),),
                         ],
@@ -225,12 +237,12 @@ class _DeleteDrugState extends State<DeleteDrug> {
                         children: [
                           Text('วันหมดอายุ: ',
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: editFontsize ?  14 + change.toDouble() : 14,
                               fontFamily: 'PlexSansThaiRg',
                             ),),
                           Text(formattedExpired,
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: editFontsize ?  14 + change.toDouble() : 14,
                               fontFamily: 'PlexSansThaiRg',
                             ),),
                         ],
@@ -248,7 +260,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                       children: [
                         Text('จำนวนยาที่ต้องทาน',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: editFontsize ?  16 + change.toDouble() : 16,
                             fontFamily: 'PlexSansThaiMd',
                           ),)
                       ],
@@ -259,7 +271,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                       children: [
                         Text(widget.med.amountOfMeds.toString() + ' '+ widget.med.typeOfMedicine,
                           style: TextStyle(
-                              fontSize: 16,
+                              fontSize: editFontsize ?  16 + change.toDouble() : 16,
                               fontFamily: 'PlexSansThaiRg'
                           ),)
                       ],
@@ -286,7 +298,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                             'รับประทานครั้งละ',
                             style: TextStyle(
                               fontFamily: 'PlexSansThaiMd',
-                              fontSize: 16,
+                              fontSize: editFontsize ?  16 + change.toDouble() : 16,
                             ),
                           ),
                         ),
@@ -306,7 +318,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                               children: [
                                 Text(widget.med.dosagePerTake.toString(),
                                   style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: editFontsize ?  18 + change.toDouble() : 18,
                                       fontFamily: 'PlexSansThaiRg'
                                   ),),
                                 Text(widget.med.typeOfMedicine,
@@ -353,12 +365,12 @@ class _DeleteDrugState extends State<DeleteDrug> {
                               children: [
                                 Text(widget.med.timePerDay.toString(),
                                   style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: editFontsize ?  18 + change.toDouble() : 18,
                                       fontFamily: 'PlexSansThaiRg'
                                   ),),
                                 Text('ครั้ง',
                                   style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiRg',
                                       color: Color(0xff8B8B8B)
                                   ),),
@@ -384,7 +396,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                             'รับประทาน',
                             style: TextStyle(
                               fontFamily: 'PlexSansThaiMd',
-                              fontSize: 16,
+                              fontSize: editFontsize ?  16 + change.toDouble() : 16,
                             ),
                           ),
                         ),
@@ -404,7 +416,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                               children: [
                                 Text(widget.med.timeOfMed,
                                   style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: editFontsize ?  18 + change.toDouble() : 18,
                                       fontFamily: 'PlexSansThaiRg'
                                   ),),
                               ],
@@ -426,7 +438,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                             'ทุกๆ',
                             style: TextStyle(
                               fontFamily: 'PlexSansThaiMd',
-                              fontSize: 16,
+                              fontSize: editFontsize ?  16 + change.toDouble() : 16,
                             ),
                           ),
                         ),
@@ -446,12 +458,12 @@ class _DeleteDrugState extends State<DeleteDrug> {
                               children: [
                                 Text(widget.med.timePeriodForMed.toString(),
                                   style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: editFontsize ?  18 + change.toDouble() : 18,
                                       fontFamily: 'PlexSansThaiRg'
                                   ),),
                                 Text('ชั่วโมง',
                                   style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiRg',
                                       color: Color(0xff8B8B8B)
                                   ),),
@@ -498,7 +510,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                             'ช่วงเวลา',
                             style: TextStyle(
                               fontFamily: 'PlexSansThaiMd',
-                              fontSize: 16,
+                              fontSize: editFontsize ?  16 + change.toDouble() : 16,
                             ),
                           ),
                         ),
@@ -514,7 +526,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                 )
                             ),
                             child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.06),
+                              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.045),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
@@ -524,7 +536,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                   ),
                                   Text('เช้า',
                                     style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: editFontsize ?  18 + change.toDouble() : 18,
                                         fontFamily: 'PlexSansThaiRg'
                                     ),),
                                 ],
@@ -554,7 +566,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                 )
                             ),
                             child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.05),
+                              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.03),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
@@ -564,7 +576,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                   ),
                                   Text('กลางวัน',
                                     style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: editFontsize ?  18 + change.toDouble() : 18,
                                         fontFamily: 'PlexSansThaiRg'
                                     ),),
                                 ],
@@ -594,7 +606,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                 )
                             ),
                             child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.06),
+                              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.045),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
@@ -604,7 +616,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                   ),
                                   Text('เย็น',
                                     style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: editFontsize ?  18 + change.toDouble() : 18,
                                         fontFamily: 'PlexSansThaiRg'
                                     ),),
                                 ],
@@ -633,7 +645,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                 )
                             ),
                             child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.06),
+                              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.045),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
@@ -643,7 +655,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                   ),
                                   Text('ก่อนนอน',
                                     style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: editFontsize ?  18 + change.toDouble() : 18,
                                         fontFamily: 'PlexSansThaiRg'
                                     ),),
                                 ],
@@ -671,7 +683,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                             'การแจ้งเตือน',
                             style: TextStyle(
                               fontFamily: 'PlexSansThaiMd',
-                              fontSize: 16,
+                              fontSize: editFontsize ?  16 + change.toDouble() : 16,
                             ),
                           ),
                         ),
@@ -700,12 +712,12 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                   ),
                                   Text('09:00',
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                         fontFamily: 'PlexSansThaiRg'
                                     ),),
                                   Text('น.',
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                         fontFamily: 'PlexSansThaiRg',
                                         color: Color(0xff8B8B8B)
                                     ),),
@@ -748,12 +760,12 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                   ),
                                   Text('12:00',
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                         fontFamily: 'PlexSansThaiRg'
                                     ),),
                                   Text('น.',
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                         fontFamily: 'PlexSansThaiRg',
                                         color: Color(0xff8B8B8B)
                                     ),),
@@ -796,12 +808,12 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                   ),
                                   Text('17:00',
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                         fontFamily: 'PlexSansThaiRg'
                                     ),),
                                   Text('น.',
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                         fontFamily: 'PlexSansThaiRg',
                                         color: Color(0xff8B8B8B)
                                     ),),
@@ -843,12 +855,12 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                   ),
                                   Text('21:00',
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                         fontFamily: 'PlexSansThaiRg'
                                     ),),
                                   Text('น.',
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                         fontFamily: 'PlexSansThaiRg',
                                         color: Color(0xff8B8B8B)
                                     ),),
@@ -883,7 +895,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                         'ข้อบ่งใช้',
                         style: TextStyle(
                             fontFamily: 'PlexSansThaiSm',
-                            fontSize: 16,
+                            fontSize: editFontsize ?  16 + change.toDouble() : 16,
                             color: Colors.black
                         ),
                       ),
@@ -907,7 +919,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                   widget.med.conditionOfUse,
                                   style: TextStyle(
                                       fontFamily: 'PlexSansThaiRg',
-                                      fontSize: 14,
+                                      fontSize:  editFontsize ?  14 + change.toDouble() : 14,
                                       color: Colors.black
                                   ),
                                 ),
@@ -916,7 +928,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                   'อ่านข้อมูลเพิ่มเติม',
                                   style: TextStyle(
                                       fontFamily: 'PlexSansThaiRg',
-                                      fontSize: 14,
+                                      fontSize:  editFontsize ?  14 + change.toDouble() : 14,
                                       color: Colors.black,
                                       decoration: TextDecoration.underline
                                   ),
@@ -950,7 +962,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                         'คำแนะนำเพิ่มเติม',
                         style: TextStyle(
                             fontFamily: 'PlexSansThaiSm',
-                            fontSize: 16,
+                            fontSize: editFontsize ?  16 + change.toDouble() : 16,
                             color: Colors.black
                         ),
                       ),
@@ -975,7 +987,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                     widget.med.additionalAdvice,
                                     style: TextStyle(
                                         fontFamily: 'PlexSansThaiRg',
-                                        fontSize: 14,
+                                        fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                         color: Colors.black
                                     ),
                                   ),
@@ -1008,7 +1020,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                         'อาการไม่พึงประสงค์',
                         style: TextStyle(
                             fontFamily: 'PlexSansThaiSm',
-                            fontSize: 16,
+                            fontSize: editFontsize ?  16 + change.toDouble() : 16,
                             color: Colors.black
                         ),
                       ),
@@ -1035,7 +1047,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                     widget.med.adverseDrugReaction,
                                     style: TextStyle(
                                         fontFamily: 'PlexSansThaiRg',
-                                        fontSize: 14,
+                                        fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                         color: Colors.black
                                     ),
                                   ),
@@ -1067,7 +1079,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                         'ข้อมูลการจ่ายยา',
                         style: TextStyle(
                             fontFamily: 'PlexSansThaiSm',
-                            fontSize: 16,
+                            fontSize: editFontsize ?  16 + change.toDouble() : 16,
                             color: Colors.black
                         ),
                       ),
@@ -1083,7 +1095,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                   'ร้านยา: ',
                                   style: TextStyle(
                                       fontFamily: 'PlexSansThaiSm',
-                                      fontSize: 14,
+                                      fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                       color: Colors.black
                                   ),
                                 ),
@@ -1092,7 +1104,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                     storeName,
                                     style: TextStyle(
                                         fontFamily: 'PlexSansThaiRg',
-                                        fontSize: 14,
+                                        fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                         color: Colors.black
                                     ),
                                   ),
@@ -1107,7 +1119,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                   'วันที่จ่าย: ',
                                   style: TextStyle(
                                       fontFamily: 'PlexSansThaiSm',
-                                      fontSize: 14,
+                                      fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                       color: Colors.black
                                   ),
                                 ),
@@ -1116,7 +1128,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                     formattedDispensing,
                                     style: TextStyle(
                                         fontFamily: 'PlexSansThaiRg',
-                                        fontSize: 14,
+                                        fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                         color: Colors.black
                                     ),
                                   ),
@@ -1167,6 +1179,9 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                         ),
                                         Text(
                                           'คุณสามารถดูข้อมูลยาของคุณได้ที่หน้า “ยาของฉัน”',
+                                          style: TextStyle(
+                                            fontSize: editFontsize ?  14 + change.toDouble() : 14,
+                                          ),
                                         ),
                                         SizedBox(
                                           height: 15,
@@ -1188,7 +1203,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                                     Navigator.pop(context);
                                                   },
                                                   child:
-                                                  Text('ยกเลิก', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 17, color: Colors.black),
+                                                  Text('ยกเลิก', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: editFontsize ?  17 + change.toDouble() : 17, color: Colors.black),
                                                   ),
                                                   style: ElevatedButton.styleFrom(
                                                     backgroundColor: Color(0xffECECEC),
@@ -1209,7 +1224,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                                     Navigator.pushNamed(context, '/my-drug-list');
                                                   },
                                                   child:
-                                                  Text('ลบข้อมูล', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 17, color: Colors.white),
+                                                  Text('ลบข้อมูล', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: editFontsize ?  17 + change.toDouble() : 17, color: Colors.white),
                                                   ),
                                                   style: ElevatedButton.styleFrom(
                                                     backgroundColor: Color(0xffE2514F),
@@ -1232,7 +1247,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                         );
                       },
                       child:
-                      Text('ลบข้อมูล', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 18, color: Colors.white),
+                      Text('ลบข้อมูล', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: editFontsize ?  18 + change.toDouble() : 18, color: Colors.white),
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xffE2514F),

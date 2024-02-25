@@ -12,6 +12,8 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 
+import '../services/sqlite_service.dart';
+
 class GoogleMapPage extends StatefulWidget {
   final Map<String, String> pharmacy;
   const GoogleMapPage({super.key, required this.pharmacy});
@@ -31,17 +33,33 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   Map<PolylineId, Polyline> polylines = {};
   late LocationData initLocation;
   String distance = "";
+  bool editFontsize = false;
+  int change = 0;
+  late SqliteService _sqliteService;
 
   @override
   void initState() {
     super.initState();
     getCurrentLocation();
+    this._sqliteService= SqliteService();
+    this._sqliteService.initializeDB();
     phar = LatLng(double.parse(widget.pharmacy['latitude']!), double.parse(widget.pharmacy['longitude']!));
     // getCurrentLocation().then((_) =>
     //     getPolyPoints().then((coordinates) =>
     //     print("test: " + coordinates.toString())
     //     // generatePolyLineFromPoints(coordinates)
     // ));
+
+    initFontSize();
+  }
+
+  Future<void> initFontSize() async {
+    bool status = await _sqliteService.getEditFontSizeStatus();
+    int change = await _sqliteService.getFontSizeChange();
+    setState(() {
+      editFontsize = status;
+      this.change = change;
+    });
   }
 
   Future<void> getCurrentLocation() async {
@@ -217,7 +235,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                             child: Text(
                               widget.pharmacy['storeName']!,
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                 fontFamily: 'PlexSansThaiMd',
                               ),
 
@@ -239,7 +257,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                       Text(
                         '${widget.pharmacy['province']} ${widget.pharmacy['city']!}',
                         style: TextStyle(
-                            fontSize: 12,
+                            fontSize: editFontsize ?  12 + change.toDouble() : 12,
                             fontFamily: 'PlexSansThaiRg',
                             color: Color(0xff8B8B8B)
                         ),
@@ -248,7 +266,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                       Text(
                         'เบอร์โทร: ' + widget.pharmacy['phoneNumber']!,
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: editFontsize ?  14 + change.toDouble() : 14,
                           fontFamily: 'PlexSansThaiRg',
                         ),
                       ),
@@ -258,7 +276,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                           Text(
                             'เปิดอยู่',
                             style: TextStyle(
-                                fontSize: 14,
+                                fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                 fontFamily: 'PlexSansThaiMd',
                                 color: Color(0xff059E78)
                             ),
@@ -267,7 +285,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                           Text(
                             widget.pharmacy['serviceTime']!,
                             style: TextStyle(
-                                fontSize: 14,
+                                fontSize:  editFontsize ?  14 + change.toDouble() : 14,
                                 fontFamily: 'PlexSansThaiRg',
                                 color: Color(0xff121212)
                             ),

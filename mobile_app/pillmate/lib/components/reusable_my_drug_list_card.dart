@@ -7,7 +7,9 @@ import 'package:pillmate/pages/drug_information.dart';
 
 class ReusableMyDrugListCard extends StatefulWidget {
   final MedicineModel med;
-  const ReusableMyDrugListCard({super.key, required this.med});
+  final bool editFontSize;
+  final int change;
+  const ReusableMyDrugListCard({super.key, required this.med, required this.editFontSize, required this.change});
 
   @override
   State<ReusableMyDrugListCard> createState() => _ReusableMyDrugListCardState();
@@ -103,7 +105,7 @@ class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
                           Text(
                             widget.med.genericName,
                             style: TextStyle(
-                                fontSize: 16,
+                                fontSize: widget.editFontSize ?  16 + widget.change.toDouble() : 16,
                                 fontFamily: 'PlexSansThaiMd',
                                 color: Color(0xff121212)
                             ),
@@ -122,7 +124,7 @@ class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
                                   child: Text(
                                     widget.med.dosagePerTake.toString(),
                                     style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: widget.editFontSize ?  14 + widget.change.toDouble() : 14,
                                         fontFamily: 'PlexSansThaiRg',
                                         color: Color(0xff121212)
                                     ),
@@ -142,7 +144,7 @@ class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
                                   child: Text(
                                     widget.med.takeMedWhen,
                                     style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: widget.editFontSize ?  14 + widget.change.toDouble() : 14,
                                         fontFamily: 'PlexSansThaiRg',
                                         color: Color(0xff121212)
                                     ),
@@ -172,7 +174,7 @@ class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
                               SizedBox(width: screenWidth*0.015,),
                               Text(widget.med.amountTaken.toString() + '/' + widget.med.amountOfMeds.toString(),
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: widget.editFontSize ?  14 + widget.change.toDouble() : 14,
                                   fontWeight: FontWeight.w700,
                                 ),)
                             ],
@@ -198,7 +200,7 @@ class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
                           Text(
                             'เพิ่มเติม',
                             style: TextStyle(
-                                fontSize: 12,
+                                fontSize: widget.editFontSize ?  12 + widget.change.toDouble() : 12,
                                 fontFamily: 'PlexSansThaiRg',
                                 color: Colors.black
                             ),
@@ -226,7 +228,7 @@ class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
                           'วันที่จ่าย: ',
                           style: TextStyle(
                               fontFamily: 'PlexSansThaiSm',
-                              fontSize: 14,
+                              fontSize: widget.editFontSize ?  14 + widget.change.toDouble() : 14,
                               color: Colors.white
                           ),
                         ),
@@ -234,7 +236,7 @@ class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
                           formattedDispensing,
                           style: TextStyle(
                               fontFamily: 'PlexSansThaiRg',
-                              fontSize: 14,
+                              fontSize: widget.editFontSize ?  14 + widget.change.toDouble() : 14,
                               color: Colors.white
                           ),
                         ),
@@ -247,7 +249,7 @@ class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
                           'ร้านยา: ',
                           style: TextStyle(
                               fontFamily: 'PlexSansThaiSm',
-                              fontSize: 14,
+                              fontSize: widget.editFontSize ?  14 + widget.change.toDouble() : 14,
                               color: Colors.white
                           ),
                         ),
@@ -256,7 +258,7 @@ class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
                             'ร้านขายยาเภสัชมหิดล สถานปฏิบัติการเภสัชกรรมชุมชน',
                             style: TextStyle(
                                 fontFamily: 'PlexSansThaiRg',
-                                fontSize: 14,
+                                fontSize: widget.editFontSize ?  14 + widget.change.toDouble() : 14,
                                 color: Colors.white
                             ),
                           ),
