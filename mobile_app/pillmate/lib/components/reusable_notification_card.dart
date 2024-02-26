@@ -103,8 +103,7 @@ class ReusableNotificationCard extends StatelessWidget {
                   ),
 
                   GestureDetector(
-                    onTap: ()
-                    {
+                    onTap: (){
                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => DrugInformation(med: medicineModel)));
                     },
                     child: Padding(
@@ -119,7 +118,7 @@ class ReusableNotificationCard extends StatelessWidget {
                           Text(
                             'เพิ่มเติม',
                             style: TextStyle(
-                                fontSize: editFontsize ?  12 + change.toDouble() : 12,
+                                fontSize: 12,
                                 fontFamily: 'PlexSansThaiRg',
                                 color: Color(0xff059E78)
                             ),
