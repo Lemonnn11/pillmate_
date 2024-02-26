@@ -4,7 +4,9 @@ import 'package:pillmate/pages/google_map.dart';
 
 class ReusablePharmacyItem extends StatelessWidget {
   final Map<String, String> pharmacy;
-  const ReusablePharmacyItem({super.key, required this.pharmacy});
+  final bool editFontsize;
+  final int change;
+  const ReusablePharmacyItem({super.key, required this.pharmacy, required this.editFontsize, required this.change});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class ReusablePharmacyItem extends StatelessWidget {
                     Text(
                       pharmacy['storeName']!,
                       style: TextStyle(
-                          fontSize: 13,
+                          fontSize: editFontsize ?  13 + change.toDouble() : 13,
                           fontFamily: 'PlexSansThaiRg'
                       ),
                     ),
@@ -38,7 +40,7 @@ class ReusablePharmacyItem extends StatelessWidget {
                     Text(
                       pharmacy['province']! + ', ' + pharmacy['city']!,
                       style: TextStyle(
-                          fontSize: 11.5,
+                          fontSize: editFontsize ?  11.5 + change.toDouble() : 11.5,
                           fontFamily: 'PlexSansThaiRg',
                           color: Color(0xff8B8B8B)
                       ),
@@ -47,7 +49,7 @@ class ReusablePharmacyItem extends StatelessWidget {
                     Text(
                       'เปิดอยู่ ' + pharmacy['serviceTime']!,
                       style: TextStyle(
-                          fontSize: 11.5,
+                          fontSize: editFontsize ?  11.5 + change.toDouble() : 11.5,
                           fontFamily: 'PlexSansThaiRg'
                       ),
                     ),
@@ -73,7 +75,7 @@ class ReusablePharmacyItem extends StatelessWidget {
                       Text(
                         'เส้นทาง',
                         style: TextStyle(
-                            fontSize: 12,
+                            fontSize: editFontsize ?  12 + change.toDouble() : 12,
                             fontFamily: 'PlexSansThaiRg'
                         ),
                       ),

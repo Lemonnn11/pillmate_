@@ -10,9 +10,11 @@ class ReusableNotificationCard extends StatelessWidget {
   final Widget image;
   final MedicineModel medicineModel;
   final String when;
+  final bool editFontsize;
+  final int change;
   final Function(bool, String, int, String, String) callback;
 
-  const ReusableNotificationCard({super.key, required this.image, required this.medicineModel, required this.callback, required this.when, });
+  const ReusableNotificationCard({super.key, required this.image, required this.medicineModel, required this.callback, required this.when, required this.editFontsize, required this.change, });
 
 
   @override
@@ -48,7 +50,7 @@ class ReusableNotificationCard extends StatelessWidget {
                           Text(
                             medicineModel.genericName,
                             style: TextStyle(
-                                fontSize: 16,
+                                fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                 fontFamily: 'PlexSansThaiMd',
                                 color: Color(0xff121212)
                             ),
@@ -66,7 +68,7 @@ class ReusableNotificationCard extends StatelessWidget {
                                   child: Text(
                                     medicineModel.dosagePerTake.toString(),
                                     style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                         fontFamily: 'PlexSansThaiRg',
                                         color: Color(0xff121212)
                                     ),
@@ -86,7 +88,7 @@ class ReusableNotificationCard extends StatelessWidget {
                                   child: Text(
                                     medicineModel.takeMedWhen,
                                     style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                         fontFamily: 'PlexSansThaiRg',
                                         color: Color(0xff121212)
                                     ),
@@ -176,7 +178,7 @@ class ReusableNotificationCard extends StatelessWidget {
                     'ทานแล้ว',
                     style: TextStyle(
                         fontFamily: 'PlexSansThaiMd',
-                        fontSize: 18,
+                        fontSize: editFontsize ?  18 + change.toDouble() : 18,
                         color: Colors.white
                     ),
                   ),

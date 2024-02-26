@@ -8,8 +8,10 @@ import '../models/medicine.dart';
 class ReusableMyHistoryListCard extends StatelessWidget {
   final MedicineModel med;
   final bool lastIndex;
+  final bool editFontSize;
+  final int change;
 
-  ReusableMyHistoryListCard ({super.key, required this.lastIndex, required this.med});
+  ReusableMyHistoryListCard ({super.key, required this.lastIndex, required this.med, required this.editFontSize, required this.change});
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +51,7 @@ class ReusableMyHistoryListCard extends StatelessWidget {
                           Text(
                             '18 มกราคม 66, 09:00 น.',
                             style: TextStyle(
-                                fontSize: 14,
+                                fontSize: editFontSize ?  14 + change.toDouble() : 14,
                                 fontFamily: 'PlexSansThaiRg',
                                 color: Color(0xff575757)
                             ),
@@ -57,7 +59,7 @@ class ReusableMyHistoryListCard extends StatelessWidget {
                           Text(
                             med.genericName,
                             style: TextStyle(
-                                fontSize: 16,
+                                fontSize: editFontSize ?  16 + change.toDouble() : 16,
                                 fontFamily: 'PlexSansThaiSm',
                                 color: Color(0xff121212)
                             ),
@@ -77,7 +79,7 @@ class ReusableMyHistoryListCard extends StatelessWidget {
                                   child: Text(
                                     med.dosagePerTake.toString(),
                                     style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: editFontSize ?  14 + change.toDouble() : 14,
                                         fontFamily: 'PlexSansThaiRg',
                                         color: Color(0xff121212)
                                     ),
@@ -97,7 +99,7 @@ class ReusableMyHistoryListCard extends StatelessWidget {
                                   child: Text(
                                     med.takeMedWhen,
                                     style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: editFontSize ?  14 + change.toDouble() : 14,
                                         fontFamily: 'PlexSansThaiRg',
                                         color: Color(0xff121212)
                                     ),
@@ -117,7 +119,7 @@ class ReusableMyHistoryListCard extends StatelessWidget {
                     child: Text(
                       med.amountOfMeds.toString(),
                       style: TextStyle(
-                          fontSize: 14,
+                          fontSize: editFontSize ?  14 + change.toDouble() : 14,
                           fontFamily: 'PlexSansThaiMd',
                           color: Colors.black
                       ),

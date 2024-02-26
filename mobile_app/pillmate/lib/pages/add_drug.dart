@@ -27,6 +27,8 @@ class _AddDrugState extends State<AddDrug> {
   bool isActived = true;
   final _firestore = FirebaseFirestore.instance;
   String storeName = '';
+  bool editFontsize = false;
+  int change = 0;
 
 
   void _getPharmacyName() async {
@@ -54,6 +56,16 @@ class _AddDrugState extends State<AddDrug> {
     formattedDate();
     formattedType();
     _getPharmacyName();
+    initFontSize();
+  }
+
+  Future<void> initFontSize() async {
+    bool status = await _sqliteService.getEditFontSizeStatus();
+    int change = await _sqliteService.getFontSizeChange();
+    setState(() {
+      editFontsize = status;
+      this.change = change;
+    });
   }
   
   void formattedType(){
@@ -219,12 +231,12 @@ class _AddDrugState extends State<AddDrug> {
                         children: [
                           Text('รูปแบบยา: ',
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: editFontsize ?  14 + change.toDouble() : 14,
                               fontFamily: 'PlexSansThaiRg',
                             ),),
                           Text(data['typeOfMedicine'],
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: editFontsize ?  14 + change.toDouble() : 14,
                               fontFamily: 'PlexSansThaiRg',
                             ),),
                         ],
@@ -234,12 +246,12 @@ class _AddDrugState extends State<AddDrug> {
                         children: [
                           Text('ปริมาณ: ',
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: editFontsize ?  14 + change.toDouble() : 14,
                               fontFamily: 'PlexSansThaiRg',
                             ),),
                           Text(data['quantity'].toString(),
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: editFontsize ?  14 + change.toDouble() : 14,
                               fontFamily: 'PlexSansThaiRg',
                             ),),
                         ],
@@ -249,12 +261,12 @@ class _AddDrugState extends State<AddDrug> {
                           children: [
                             Text('วันหมดอายุ: ',
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                 fontFamily: 'PlexSansThaiRg',
                               ),),
                             Text(formattedExpired,
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                 fontFamily: 'PlexSansThaiRg',
                               ),),
                           ],
@@ -272,7 +284,7 @@ class _AddDrugState extends State<AddDrug> {
                       children: [
                         Text('จำนวนยาที่ต้องทาน',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: editFontsize ?  16 + change.toDouble() : 16,
                             fontFamily: 'PlexSansThaiMd',
                           ),)
                       ],
@@ -283,7 +295,7 @@ class _AddDrugState extends State<AddDrug> {
                       children: [
                         Text(data['amountOfMeds'].toString() + ' '+ data['typeOfMedicine'],
                           style: TextStyle(
-                              fontSize: 16,
+                              fontSize: editFontsize ?  16 + change.toDouble() : 16,
                               fontFamily: 'PlexSansThaiRg'
                           ),)
                       ],
@@ -310,7 +322,7 @@ class _AddDrugState extends State<AddDrug> {
                             'รับประทานครั้งละ',
                             style: TextStyle(
                               fontFamily: 'PlexSansThaiMd',
-                              fontSize: 16,
+                              fontSize: editFontsize ?  16 + change.toDouble() : 16,
                             ),
                           ),
                         ),
@@ -330,12 +342,12 @@ class _AddDrugState extends State<AddDrug> {
                               children: [
                                 Text(data['dosagePerTake'].toString(),
                                   style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: editFontsize ?  18 + change.toDouble() : 18,
                                       fontFamily: 'PlexSansThaiRg'
                                   ),),
                                 Text(data['typeOfMedicine'],
                                   style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiRg',
                                       color: Color(0xff8B8B8B)
                                   ),),
@@ -357,7 +369,7 @@ class _AddDrugState extends State<AddDrug> {
                             'วันละ',
                             style: TextStyle(
                               fontFamily: 'PlexSansThaiMd',
-                              fontSize: 16,
+                              fontSize: editFontsize ?  16 + change.toDouble() : 16,
                             ),
                           ),
                         ),
@@ -377,12 +389,12 @@ class _AddDrugState extends State<AddDrug> {
                               children: [
                                 Text(data['timePerDay'].toString(),
                                   style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: editFontsize ?  18 + change.toDouble() : 18,
                                       fontFamily: 'PlexSansThaiRg'
                                   ),),
                                 Text('ครั้ง',
                                   style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiRg',
                                       color: Color(0xff8B8B8B)
                                   ),),
@@ -408,7 +420,7 @@ class _AddDrugState extends State<AddDrug> {
                             'รับประทาน',
                             style: TextStyle(
                               fontFamily: 'PlexSansThaiMd',
-                              fontSize: 16,
+                              fontSize: editFontsize ?  16 + change.toDouble() : 16,
                             ),
                           ),
                         ),
@@ -428,7 +440,7 @@ class _AddDrugState extends State<AddDrug> {
                               children: [
                                 Text(data['timeOfMed'],
                                   style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: editFontsize ?  18 + change.toDouble() : 18,
                                       fontFamily: 'PlexSansThaiRg'
                                   ),),
                               ],
@@ -450,7 +462,7 @@ class _AddDrugState extends State<AddDrug> {
                             'ทุกๆ',
                             style: TextStyle(
                               fontFamily: 'PlexSansThaiMd',
-                              fontSize: 16,
+                              fontSize: editFontsize ?  16 + change.toDouble() : 16,
                             ),
                           ),
                         ),
@@ -470,12 +482,12 @@ class _AddDrugState extends State<AddDrug> {
                               children: [
                                 Text(data['timePeriodForMed'].toString(),
                                   style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: editFontsize ?  18 + change.toDouble() : 18,
                                       fontFamily: 'PlexSansThaiRg'
                                   ),),
                                 Text('ชั่วโมง',
                                   style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiRg',
                                       color: Color(0xff8B8B8B)
                                   ),),
@@ -522,7 +534,7 @@ class _AddDrugState extends State<AddDrug> {
                             'ช่วงเวลา',
                             style: TextStyle(
                               fontFamily: 'PlexSansThaiMd',
-                              fontSize: 16,
+                              fontSize: editFontsize ?  16 + change.toDouble() : 16,
                             ),
                           ),
                         ),
@@ -538,7 +550,7 @@ class _AddDrugState extends State<AddDrug> {
                                 )
                             ),
                             child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.06),
+                              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.045),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
@@ -548,7 +560,7 @@ class _AddDrugState extends State<AddDrug> {
                                   ),
                                   Text('เช้า',
                                     style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: editFontsize ?  18 + change.toDouble() : 18,
                                         fontFamily: 'PlexSansThaiRg'
                                     ),),
                                 ],
@@ -578,7 +590,7 @@ class _AddDrugState extends State<AddDrug> {
                                 )
                             ),
                             child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.05),
+                              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.03),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
@@ -588,7 +600,7 @@ class _AddDrugState extends State<AddDrug> {
                                   ),
                                   Text('กลางวัน',
                                     style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: editFontsize ?  18 + change.toDouble() : 18,
                                         fontFamily: 'PlexSansThaiRg'
                                     ),),
                                 ],
@@ -618,7 +630,7 @@ class _AddDrugState extends State<AddDrug> {
                                 )
                             ),
                             child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.06),
+                              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.045),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
@@ -628,7 +640,7 @@ class _AddDrugState extends State<AddDrug> {
                                   ),
                                   Text('เย็น',
                                     style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: editFontsize ?  18 + change.toDouble() : 18,
                                         fontFamily: 'PlexSansThaiRg'
                                     ),),
                                 ],
@@ -657,7 +669,7 @@ class _AddDrugState extends State<AddDrug> {
                                 )
                             ),
                             child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.06),
+                              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.045),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
@@ -667,7 +679,7 @@ class _AddDrugState extends State<AddDrug> {
                                   ),
                                   Text('ก่อนนอน',
                                     style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: editFontsize ?  18 + change.toDouble() : 18,
                                         fontFamily: 'PlexSansThaiRg'
                                     ),),
                                 ],
@@ -695,7 +707,7 @@ class _AddDrugState extends State<AddDrug> {
                             'การแจ้งเตือน',
                             style: TextStyle(
                               fontFamily: 'PlexSansThaiMd',
-                              fontSize: 16,
+                              fontSize: editFontsize ?  16 + change.toDouble() : 16,
                             ),
                           ),
                         ),
@@ -724,12 +736,12 @@ class _AddDrugState extends State<AddDrug> {
                                   ),
                                   Text('09:00',
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                         fontFamily: 'PlexSansThaiRg'
                                     ),),
                                   Text('น.',
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                         fontFamily: 'PlexSansThaiRg',
                                         color: Color(0xff8B8B8B)
                                     ),),
@@ -772,12 +784,12 @@ class _AddDrugState extends State<AddDrug> {
                                   ),
                                   Text('12:00',
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                         fontFamily: 'PlexSansThaiRg'
                                     ),),
                                   Text('น.',
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                         fontFamily: 'PlexSansThaiRg',
                                         color: Color(0xff8B8B8B)
                                     ),),
@@ -820,12 +832,12 @@ class _AddDrugState extends State<AddDrug> {
                                   ),
                                   Text('17:00',
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                         fontFamily: 'PlexSansThaiRg'
                                     ),),
                                   Text('น.',
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                         fontFamily: 'PlexSansThaiRg',
                                         color: Color(0xff8B8B8B)
                                     ),),
@@ -867,12 +879,12 @@ class _AddDrugState extends State<AddDrug> {
                                   ),
                                   Text('21:00',
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                         fontFamily: 'PlexSansThaiRg'
                                     ),),
                                   Text('น.',
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                         fontFamily: 'PlexSansThaiRg',
                                         color: Color(0xff8B8B8B)
                                     ),),
@@ -907,7 +919,7 @@ class _AddDrugState extends State<AddDrug> {
                         'ข้อบ่งใช้',
                         style: TextStyle(
                             fontFamily: 'PlexSansThaiSm',
-                            fontSize: 16,
+                            fontSize: editFontsize ?  16 + change.toDouble() : 16,
                             color: Colors.black
                         ),
                       ),
@@ -931,7 +943,7 @@ class _AddDrugState extends State<AddDrug> {
                                   data['conditionOfUse'],
                                   style: TextStyle(
                                       fontFamily: 'PlexSansThaiRg',
-                                      fontSize: 14,
+                                      fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                       color: Colors.black
                                   ),
                                 ),
@@ -940,7 +952,7 @@ class _AddDrugState extends State<AddDrug> {
                                   'อ่านข้อมูลเพิ่มเติม',
                                   style: TextStyle(
                                       fontFamily: 'PlexSansThaiRg',
-                                      fontSize: 14,
+                                      fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                       color: Colors.black,
                                       decoration: TextDecoration.underline
                                   ),
@@ -974,7 +986,7 @@ class _AddDrugState extends State<AddDrug> {
                         'คำแนะนำเพิ่มเติม',
                         style: TextStyle(
                             fontFamily: 'PlexSansThaiSm',
-                            fontSize: 16,
+                            fontSize: editFontsize ?  16 + change.toDouble() : 16,
                             color: Colors.black
                         ),
                       ),
@@ -999,7 +1011,7 @@ class _AddDrugState extends State<AddDrug> {
                                     data['additionalAdvice'],
                                     style: TextStyle(
                                         fontFamily: 'PlexSansThaiRg',
-                                        fontSize: 14,
+                                        fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                         color: Colors.black
                                     ),
                                   ),
@@ -1032,7 +1044,7 @@ class _AddDrugState extends State<AddDrug> {
                         'อาการไม่พึงประสงค์',
                         style: TextStyle(
                             fontFamily: 'PlexSansThaiSm',
-                            fontSize: 16,
+                            fontSize: editFontsize ?  16 + change.toDouble() : 16,
                             color: Colors.black
                         ),
                       ),
@@ -1059,7 +1071,7 @@ class _AddDrugState extends State<AddDrug> {
                                     data['adverseDrugReaction'],
                                     style: TextStyle(
                                         fontFamily: 'PlexSansThaiRg',
-                                        fontSize: 14,
+                                        fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                         color: Colors.black
                                     ),
                                   ),
@@ -1091,7 +1103,7 @@ class _AddDrugState extends State<AddDrug> {
                         'ข้อมูลการจ่ายยา',
                         style: TextStyle(
                             fontFamily: 'PlexSansThaiSm',
-                            fontSize: 16,
+                            fontSize: editFontsize ?  16 + change.toDouble() : 16,
                             color: Colors.black
                         ),
                       ),
@@ -1107,7 +1119,7 @@ class _AddDrugState extends State<AddDrug> {
                                   'ร้านยา: ',
                                   style: TextStyle(
                                       fontFamily: 'PlexSansThaiSm',
-                                      fontSize: 14,
+                                      fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                       color: Colors.black
                                   ),
                                 ),
@@ -1116,7 +1128,7 @@ class _AddDrugState extends State<AddDrug> {
                                     storeName,
                                     style: TextStyle(
                                         fontFamily: 'PlexSansThaiRg',
-                                        fontSize: 14,
+                                        fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                         color: Colors.black
                                     ),
                                   ),
@@ -1131,7 +1143,7 @@ class _AddDrugState extends State<AddDrug> {
                                   'วันที่จ่าย: ',
                                   style: TextStyle(
                                       fontFamily: 'PlexSansThaiSm',
-                                      fontSize: 14,
+                                      fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                       color: Colors.black
                                   ),
                                 ),
@@ -1140,7 +1152,7 @@ class _AddDrugState extends State<AddDrug> {
                                     formattedDispensing,
                                     style: TextStyle(
                                         fontFamily: 'PlexSansThaiRg',
-                                        fontSize: 14,
+                                        fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                         color: Colors.black
                                     ),
                                   ),
@@ -1390,6 +1402,9 @@ class _AddDrugState extends State<AddDrug> {
                                          ),
                                          Text(
                                            'คุณสามารถดูข้อมูลยาของคุณได้ที่หน้า “ยาของฉัน”',
+                                           style: TextStyle(
+                                             fontSize: editFontsize ?  14 + change.toDouble() : 14,
+                                           ),
                                          ),
                                          SizedBox(
                                            height: 15,
@@ -1413,7 +1428,7 @@ class _AddDrugState extends State<AddDrug> {
                                                   'วันที่จ่าย: ',
                                                   style: TextStyle(
                                                       fontFamily: 'PlexSansThaiSm',
-                                                      fontSize: 14,
+                                                      fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                                       color: Colors.black
                                                   ),
                                                 ),
@@ -1422,7 +1437,7 @@ class _AddDrugState extends State<AddDrug> {
                                                     '12 มกราคม 2566',
                                                     style: TextStyle(
                                                         fontFamily: 'PlexSansThaiRg',
-                                                        fontSize: 14,
+                                                        fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                                         color: Colors.black
                                                     ),
                                                   ),
@@ -1437,7 +1452,7 @@ class _AddDrugState extends State<AddDrug> {
                                                   'ร้านยา: ',
                                                   style: TextStyle(
                                                       fontFamily: 'PlexSansThaiSm',
-                                                      fontSize: 14,
+                                                      fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                                       color: Colors.black
                                                   ),
                                                 ),
@@ -1446,7 +1461,7 @@ class _AddDrugState extends State<AddDrug> {
                                                     'ร้านขายยาเภสัชมหิดล สถานปฏิบัติการเภสัชกรรมชุมชน',
                                                     style: TextStyle(
                                                         fontFamily: 'PlexSansThaiRg',
-                                                        fontSize: 14,
+                                                        fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                                         color: Colors.black
                                                     ),
                                                   ),
@@ -1461,7 +1476,7 @@ class _AddDrugState extends State<AddDrug> {
                                                   'เบอร์โทรติดต่อ: ',
                                                   style: TextStyle(
                                                       fontFamily: 'PlexSansThaiSm',
-                                                      fontSize: 14,
+                                                      fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                                       color: Colors.black
                                                   ),
                                                 ),
@@ -1470,7 +1485,7 @@ class _AddDrugState extends State<AddDrug> {
                                                     '094-941-1828',
                                                     style: TextStyle(
                                                         fontFamily: 'PlexSansThaiRg',
-                                                        fontSize: 14,
+                                                        fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                                         color: Colors.black
                                                     ),
                                                   ),
@@ -1489,7 +1504,7 @@ class _AddDrugState extends State<AddDrug> {
                                                       Navigator.pushNamed(context, '/homepage');
                                                     },
                                                     child:
-                                                    Text('กลับหน้าหลัก', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 17, color: Colors.black),
+                                                    Text('กลับหน้าหลัก', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: editFontsize ?  17 + change.toDouble() : 17, color: Colors.black),
                                                     ),
                                                     style: ElevatedButton.styleFrom(
                                                       backgroundColor: Color(0xffECECEC),
@@ -1510,7 +1525,7 @@ class _AddDrugState extends State<AddDrug> {
                                                       Navigator.pushNamed(context, '/my-drug-list');
                                                     },
                                                     child:
-                                                    Text('ยาของฉัน', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 17, color: Colors.white),
+                                                    Text('ยาของฉัน', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: editFontsize ?  17 + change.toDouble() : 17, color: Colors.white),
                                                     ),
                                                     style: ElevatedButton.styleFrom(
                                                       backgroundColor: Color(0xff059E78),
@@ -1536,7 +1551,7 @@ class _AddDrugState extends State<AddDrug> {
                         });
                       },
                       child:
-                      Text('เพิ่มข้อมูลยา', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 18, color: Colors.white),
+                      Text('เพิ่มข้อมูลยา', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: editFontsize ?  18 + change.toDouble() : 18, color: Colors.white),
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xff059E78),
@@ -1554,7 +1569,7 @@ class _AddDrugState extends State<AddDrug> {
                     child: ElevatedButton(
 
                       child:
-                      Text('เพิ่มข้อมูลยาเรีบยร้อย', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 18, color: Colors.white),
+                      Text('เพิ่มข้อมูลยาเรีบยร้อย', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: editFontsize ?  18 + change.toDouble() : 18, color: Colors.white),
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xff059E78),
