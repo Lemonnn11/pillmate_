@@ -53,8 +53,8 @@ class _AddDrugState extends State<AddDrug> {
     print(data);
     this._sqliteService= SqliteService();
     this._sqliteService.initializeDB();
-    formattedDate();
-    formattedType();
+    formattedDate(data['expiredDate'], data['date']);
+    formattedType(data['typeOfMedicine'].toString());
     _getPharmacyName();
     initFontSize();
   }
@@ -68,20 +68,20 @@ class _AddDrugState extends State<AddDrug> {
     });
   }
   
-  void formattedType(){
-    switch(data['typeOfMedicine'].toString()){
+  void formattedType(String typeOfMedicine){
+    switch(typeOfMedicine){
       case 'Tablet':
-        data['typeOfMedicine'] = data['typeOfMedicine'].toString().replaceAll('Tablet', 'เม็ด');
+        typeOfMedicine = typeOfMedicine.replaceAll('Tablet', 'เม็ด');
         break;
       case 'Capsule':
-        data['typeOfMedicine'] = data['typeOfMedicine'].toString().replaceAll('Capsule', 'แคปซูล');
+        typeOfMedicine = typeOfMedicine.replaceAll('Capsule', 'แคปซูล');
         break;
     }
   }
 
-  void formattedDate(){
-    DateTime exp = DateTime.parse(data['expiredDate']);
-    DateTime des = DateTime.parse(data['expiredDate']);
+  void formattedDate(String expiredDate, String dispensingDate){
+    DateTime exp = DateTime.parse(expiredDate);
+    DateTime des = DateTime.parse(dispensingDate);
     final formatter = new DateFormat('d MMMM y');
     formattedExpired = formatter.format(exp);
     List<String> tmpExp = formattedExpired.split(' ');
