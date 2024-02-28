@@ -7,7 +7,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 import '../models/personal_information.dart';
-import 'local_notification_service.dart';class SqliteService {
+import 'local_notification_service.dart';
+class SqliteService {
   Future<Database> initializeDB() async {
     String path = await getDatabasesPath();
     return openDatabase(
