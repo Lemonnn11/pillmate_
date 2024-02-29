@@ -8,6 +8,8 @@ import { ReturnProvince } from './ReturnProvince';
 import { ReturnDistrict } from './ReturnDistrict';
 import { ReturnSubdistrict } from './ReturnSubdistrict';
 import PharmacyModel from '../../../models/Pharmacy';
+import { IoIosArrowBack } from "react-icons/io";
+import { log } from 'console';
 
 
 export interface AddressInfoProps {
@@ -28,7 +30,29 @@ export const AddressInfo: React.FC<AddressInfoProps> = (props) => {
     const [ districtList, setDistrictList ] = useState<string[]>([]);
     const [ subdistrictList, setSubdistrictList ] = useState<string[]>([]);
     const districts = _thailand as District[];
+    const [ showRequiredSubdistrict, setShowRequiredSubdistrict] = useState(false);
+    const [ showRequiredDistrict, setShowRequiredDistrict] = useState(false);
+    const [ showRequiredProvince, setShowRequiredProvince] = useState(false);
 
+    useEffect(() => {
+
+        if(props.pharmacy?.storeName !== '' && props.pharmacy?.address !== '' ){
+            const tmp = props.pharmacy?.address.split(', ')
+
+            setPharmacyName(props.pharmacy?.storeName!);
+            if(tmp !== undefined){
+                setAddressLine1(tmp[0]);
+                setSubDistrict(tmp[1]);
+                setDistrict(tmp[2]);
+                
+                const tmpp = tmp[3].split(' ');
+                console.log(tmpp);
+                
+                setProvince(tmpp[0]);
+                setZipcode(tmpp[1]);
+            }
+        }
+    });
     
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -39,17 +63,27 @@ export const AddressInfo: React.FC<AddressInfoProps> = (props) => {
             // const pharmacy: PharmacyModel = new PharmacyModel("", pharmacyName, addressLine1+addressLine2+", "+subDistrict+", " + district + ", " + province + " " + zipcode, );
             const pharmacy1: PharmacyModel = new PharmacyModel();
             pharmacy1.setEmail(props.pharmacy!.email);
-            pharmacy1.setStoreName(pharmacyName);
+            pharmacy1.setStoreName(pharmacyName!);
             pharmacy1.setAddress(addressLine1+addressLine2+", "+subDistrict+", " + district + ", " + province + " " + zipcode);
             pharmacy1.setProvince(district);
-            pharmacy1.setCity(province);
+            pharmacy1.setCity(province!);
             pharmacy1.setLatitude("13.77765254802144");
             pharmacy1.setLongitude("100.52532826905029");
             const pharmacy = await getLatLngFromGoogleAPI(pharmacy1);
             props.handlePharmacy(pharmacy);
-        }
 
-        props.handleStep(2);
+            props.handleStep(2);
+        }else{
+            if(subDistrict === 'ตำบล/แขวง'){
+                setShowRequiredSubdistrict(true);
+            }
+            if(district === 'อำเภอ/เขต'){
+                setShowRequiredDistrict(true);
+            }
+            if(province === 'จังหวัด'){
+                setShowRequiredProvince(true);
+            }
+        }
     };
 
     async function getLatLngFromGoogleAPI(pharmacy: PharmacyModel)  {
@@ -87,6 +121,7 @@ export const AddressInfo: React.FC<AddressInfoProps> = (props) => {
             }
         }
         setSubdistrictList(tmpList);
+        setShowRequiredDistrict(false);
     }
 
     const handleSubdistrict = (value: string) => {
@@ -96,6 +131,7 @@ export const AddressInfo: React.FC<AddressInfoProps> = (props) => {
                 setZipcode(districts[i].zipcode!.toString());
             }
         }
+        setShowRequiredSubdistrict(false);
     }
 
     const handleProvince = (value: string) => {
@@ -107,10 +143,14 @@ export const AddressInfo: React.FC<AddressInfoProps> = (props) => {
             }
         }
         setDistrictList(tmpList);
+        setShowRequiredProvince(false);
         console.log(districtList);
     }
 
-
+    const handleGoBack = () => {
+        console.log('clicked');
+        props.handleStep(0);
+    }
 
     return(
         <div style={{height:'80vh', width: '30vw'}}>
@@ -118,9 +158,15 @@ export const AddressInfo: React.FC<AddressInfoProps> = (props) => {
                 <div>
                 <img src={process.env.PUBLIC_URL + '/images/Logo.png'} style={{width:'186px', height:'32px'}}/>
                 </div>
-                <div className='mt-5' style={{fontSize: '24px', fontFamily: "LINESeedSansTHBold"}}>
-                    Address Information
+                <div className='d-flex justify-content-start mt-5' style={{gap: '8px'}}>
+                    <div className='d-flex align-items-center' onClick={handleGoBack}>
+                        <IoIosArrowBack size={32} color='#059E78'/>
+                    </div>
+                    <div className='d-flex align-items-center' style={{fontSize: '24px', fontFamily: "LINESeedSansTHBold"}}>
+                        Address Information
+                    </div>
                 </div>
+                
                 <div className='mt-3' style={{fontSize: '14px', fontFamily: "LINESeedSansTHRegular"}}>
                     Please signup to continue to Pillmate
                 </div>
@@ -173,10 +219,13 @@ export const AddressInfo: React.FC<AddressInfoProps> = (props) => {
                                     <div style={{fontSize: '16px', color: '#000000'}}>
                                         Province 
                                     </div>
+                                    { showRequiredProvince ? <div style={{fontSize: '16px', color: 'red'}}>
+                                        *
+                                    </div>: <div></div>}
                                 </div>
                             </label>
                             <div className='dropdown'>
-                                <button className='btn' type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style={{backgroundColor: 'white', width: '11vw', height:'49px', border: '1px solid #DFDFDF'}}>
+                                <button className='btn ' type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style={ showRequiredProvince ? {backgroundColor: '#FFEDED', width: '11vw', height:'49px', border: '1px solid #FF0000'}: {backgroundColor: 'white', width: '11vw', height:'49px', border: '1px solid #DFDFDF'}}>
                                         <div className='d-flex justify-content-between'>
                                        {province}
                                         <IoIosArrowDown size={14} color='#2C2C2C' className='mt-1'/>
@@ -191,10 +240,13 @@ export const AddressInfo: React.FC<AddressInfoProps> = (props) => {
                                     <div style={{fontSize: '16px', color: '#000000'}}>
                                         District
                                     </div>
+                                    { showRequiredDistrict ? <div style={{fontSize: '16px', color: 'red'}}>
+                                        *
+                                    </div>: <div></div>}
                                 </div>
                             </label>
                             <div className='dropdown'>
-                                <button className='btn' type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style={{backgroundColor: 'white', width: '11vw', height:'49px', border: '1px solid #DFDFDF'}}>
+                                <button className='btn' type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style={ showRequiredDistrict ? {backgroundColor: '#FFEDED', width: '11vw', height:'49px', border: '1px solid #FF0000'}: {backgroundColor: 'white', width: '11vw', height:'49px', border: '1px solid #DFDFDF'}}>
                                         <div className='d-flex justify-content-between'>
                                         {district}
                                         <IoIosArrowDown size={14} color='#2C2C2C' className='mt-1'/>
@@ -212,10 +264,13 @@ export const AddressInfo: React.FC<AddressInfoProps> = (props) => {
                                          
                                         Subdistrict 
                                     </div>
+                                    { showRequiredSubdistrict ? <div style={{fontSize: '16px', color: 'red'}}>
+                                        *
+                                    </div>: <div></div>}
                                 </div>
                             </label>
                             <div className='dropdown'>
-                                <button className='btn' type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style={{backgroundColor: 'white', width: '11vw', height:'49px', border: '1px solid #DFDFDF'}}>
+                                <button className='btn' type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style={ showRequiredSubdistrict ? {backgroundColor: '#FFEDED', width: '11vw', height:'49px', border: '1px solid #FF0000'}: {backgroundColor: 'white', width: '11vw', height:'49px', border: '1px solid #DFDFDF'}}>
                                         <div className='d-flex justify-content-between'>
                                         {subDistrict}
                                         <IoIosArrowDown size={14} color='#2C2C2C' className='mt-1'/>

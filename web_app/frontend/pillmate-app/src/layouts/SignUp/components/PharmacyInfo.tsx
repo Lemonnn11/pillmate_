@@ -7,8 +7,11 @@ import { ReturnTime } from './ReturnTime';
 import PharmacyModel from '../../../models/Pharmacy';
 import { getAuth, updateProfile } from 'firebase/auth';
 import { log } from 'console';
+import { IoIosArrowBack } from "react-icons/io";
 
 export interface PharmacyInfoProps{
+    handleStep: (value: number) => void;
+    handlePharmacy: (pharmacy: PharmacyModel) => void;
     pharmacy?: PharmacyModel;
 }
 
@@ -20,6 +23,10 @@ export const PharmacyInfo: React.FC<PharmacyInfoProps> = (props) => {
     const [ openedHour, setOpenedHour ] = useState('เวลา');
     const [ closedHour, setClosedHour ] = useState('เวลา');
     const auth = getAuth();
+    const [ showRequiredOpenedDate, setShowRequiredOpenedDate] = useState(false);
+    const [ showRequiredOpenedHour, setShowRequiredOpenedHour] = useState(false);
+    const [ showRequiredClosedDate, setShowRequiredClosedDate] = useState(false);
+    const [ showRequiredClosedHour, setShowRequiredClosedHour] = useState(false);
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -31,6 +38,7 @@ export const PharmacyInfo: React.FC<PharmacyInfoProps> = (props) => {
             props.pharmacy?.setServiceDate(openedDate + ' - ' + closedDate);
             props.pharmacy?.setServiceTime(openedHour + ' - ' + closedHour);
             console.log(JSON.stringify(props.pharmacy));
+            props.handlePharmacy(props.pharmacy!);
 
             const request = {
                 method: "POST",
@@ -64,25 +72,47 @@ export const PharmacyInfo: React.FC<PharmacyInfoProps> = (props) => {
                   });
                 history.push("/");
             }
+        }else{
+            if(openedDate === 'วัน'){
+                setShowRequiredOpenedDate(true)
+            }
+            if(openedHour === 'เวลา'){
+                setShowRequiredOpenedHour(true)
+            }
+            if(closedDate === 'วัน'){
+                setShowRequiredClosedDate(true)
+            }
+            if(closedHour === 'เวลา'){
+                setShowRequiredClosedHour(true)
+            }
         }
 
     };
 
     const handleOpenedDate = (value: string) => {
         setOpenedDate(value);
+        setShowRequiredOpenedDate(false)
     }
 
     const handleClosedDate = (value: string) => {
         setClosedDate(value);
+        setShowRequiredClosedDate(false)
     }
 
 
     const handleOpenedHour = (value: string) => {
         setOpenedHour(value);
+        setShowRequiredOpenedHour(false)
     }
 
     const handleClosedHour = (value: string) => {
         setClosedHour(value);
+        setShowRequiredClosedHour(false)
+    }
+
+    const handleGoBack = () => {
+        console.log('clicked');
+        props.handleStep(1);
     }
 
     return(
@@ -91,8 +121,13 @@ export const PharmacyInfo: React.FC<PharmacyInfoProps> = (props) => {
                 <div>
                 <img src={process.env.PUBLIC_URL + '/images/Logo.png'} style={{width:'186px', height:'32px'}}/>
                 </div>
-                <div className='mt-5' style={{fontSize: '24px', fontFamily: "LINESeedSansTHBold"}}>
+                <div className='d-flex justify-content-start mt-5' style={{gap: '8px'}}>
+                    <div className='d-flex align-items-center' onClick={handleGoBack}>
+                        <IoIosArrowBack size={32} color='#059E78'/>
+                    </div>
+                    <div className='d-flex align-items-center' style={{fontSize: '24px', fontFamily: "LINESeedSansTHBold"}}>
                     Last Step!
+                    </div>
                 </div>
                 <div className='mt-3' style={{fontSize: '14px', fontFamily: "LINESeedSansTHRegular"}}>
                     please fill the pharmacy information.
@@ -131,10 +166,13 @@ export const PharmacyInfo: React.FC<PharmacyInfoProps> = (props) => {
                                     <div style={{fontSize: '14px', color: '#000000'}}>
                                         Opened date
                                     </div>
+                                    { showRequiredOpenedDate ? <div style={{fontSize: '16px', color: 'red'}}>
+                                        *
+                                    </div>: <div></div>}
                                 </div>
                             </label>
                             <div className='dropdown'>
-                                <button className='btn' type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style={{backgroundColor: 'white', width: '11vw', height:'49px', border: '1px solid #DFDFDF'}}>
+                                <button className='btn' type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style={ showRequiredOpenedDate ? {backgroundColor: '#FFEDED', width: '11vw', height:'49px', border: '1px solid #FF0000'}: {backgroundColor: 'white', width: '11vw', height:'49px', border: '1px solid #DFDFDF'}}>
                                         <div className='d-flex justify-content-between'>
                                        {openedDate}
                                         <IoIosArrowDown size={14} color='#2C2C2C' className='mt-1'/>
@@ -149,10 +187,13 @@ export const PharmacyInfo: React.FC<PharmacyInfoProps> = (props) => {
                                     <div style={{fontSize: '14px', color: '#000000'}}>
                                         Closed date
                                     </div>
+                                    { showRequiredClosedDate ? <div style={{fontSize: '16px', color: 'red'}}>
+                                        *
+                                    </div>: <div></div>}
                                 </div>
                             </label>
                             <div className='dropdown'>
-                                <button className='btn' type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style={{backgroundColor: 'white', width: '11vw', height:'49px', border: '1px solid #DFDFDF'}}>
+                                <button className='btn' type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style={ showRequiredClosedDate ? {backgroundColor: '#FFEDED', width: '11vw', height:'49px', border: '1px solid #FF0000'}: {backgroundColor: 'white', width: '11vw', height:'49px', border: '1px solid #DFDFDF'}}>
                                         <div className='d-flex justify-content-between'>
                                         {closedDate}
                                         <IoIosArrowDown size={14} color='#2C2C2C' className='mt-1'/>
@@ -166,6 +207,7 @@ export const PharmacyInfo: React.FC<PharmacyInfoProps> = (props) => {
                         <div style={{fontSize: '16px', color: '#000000', fontFamily: 'LINESeedSansENRegular'}}>
                             Service time
                         </div>
+                        
                     </div>
                     <div className='d-flex justify-content-between'>
                         <div className='mt-2'>
@@ -174,10 +216,13 @@ export const PharmacyInfo: React.FC<PharmacyInfoProps> = (props) => {
                                     <div style={{fontSize: '14px', color: '#000000'}}>
                                         Opened hour
                                     </div>
+                                    { showRequiredOpenedHour ? <div style={{fontSize: '16px', color: 'red'}}>
+                                        *
+                                    </div>: <div></div>}
                                 </div>
                             </label>
                             <div className='dropdown'>
-                                <button className='btn' type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style={{backgroundColor: 'white', width: '11vw', height:'49px', border: '1px solid #DFDFDF'}}>
+                                <button className='btn' type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style={ showRequiredOpenedHour ? {backgroundColor: '#FFEDED', width: '11vw', height:'49px', border: '1px solid #FF0000'}: {backgroundColor: 'white', width: '11vw', height:'49px', border: '1px solid #DFDFDF'}}>
                                         <div className='d-flex justify-content-between'>
                                        {openedHour}
                                         <IoIosArrowDown size={14} color='#2C2C2C' className='mt-1'/>
@@ -192,10 +237,13 @@ export const PharmacyInfo: React.FC<PharmacyInfoProps> = (props) => {
                                     <div style={{fontSize: '14px', color: '#000000'}}>
                                         Closed hour
                                     </div>
+                                    { showRequiredClosedDate ? <div style={{fontSize: '16px', color: 'red'}}>
+                                        *
+                                    </div>: <div></div>}
                                 </div>
                             </label>
                             <div className='dropdown'>
-                                <button className='btn' type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style={{backgroundColor: 'white', width: '11vw', height:'49px', border: '1px solid #DFDFDF'}}>
+                                <button className='btn' type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style={ showRequiredClosedHour ? {backgroundColor: '#FFEDED', width: '11vw', height:'49px', border: '1px solid #FF0000'}: {backgroundColor: 'white', width: '11vw', height:'49px', border: '1px solid #DFDFDF'}}>
                                         <div className='d-flex justify-content-between'>
                                         {closedHour}
                                         <IoIosArrowDown size={14} color='#2C2C2C' className='mt-1'/>
