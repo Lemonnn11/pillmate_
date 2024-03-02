@@ -75,13 +75,14 @@ public class CreatePharmacyIntegrationTest {
                 "",
                 "ร้านขายยาเภสัชมหิดล สถานปฏิบัติการเภสัชกรรมชุมชน",
                 "447 Thanon Si Ayutthaya, Thung Phaya Thai, Ratchathewi, Bangkok 10400",
-                "ราชเทวี",
-                "กรุงเทพมหานคร",
                 "13.77765254802144",
                 "100.52532826905029",
                 "0968123561",
                 "8:00 - 17:00",
-                "Mon - Fri"
+                "Mon - Sun",
+                "ราชเทวี",
+                "กรุงเทพมหานคร",
+                "lemonn123@gmail.com"
         );
 
         HttpEntity<String> entity = new HttpEntity<>(objectMapper.writeValueAsString(pharmacy), headers);

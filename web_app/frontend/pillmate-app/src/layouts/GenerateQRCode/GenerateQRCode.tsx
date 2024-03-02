@@ -92,6 +92,7 @@ export const GenerateQRCode = () => {
 
     const handleUnit = (value: string) => {
         setUnit(value);
+        setDosageClick(!dosageClick);
     }
 
     const handleMorning = () => {
@@ -399,24 +400,25 @@ export const GenerateQRCode = () => {
                                 <div className='d-flex'>
                                     {dosageClick ? <input type="text" onClick={handleDosageClick} onBlur={handleDosageClick} className="form-control form-control-clicked" placeholder='จำนวน' name="dosagePerTake" required onChange={e => setDosagePerTake(e.target.value)} value={dosagePerTake} style={{width: '9vw', height: '46px', borderRight: 'none', borderTopRightRadius: '0px', borderBottomRightRadius: '0px'}}/>:
                                     <input type="text" onClick={handleDosageClick} onBlur={handleDosageClick} className="form-control" placeholder='จำนวน' name="dosagePerTake" required onChange={e => setDosagePerTake(e.target.value)} value={dosagePerTake} style={{width: '9vw', height: '46px', borderRight: 'none', borderTopRightRadius: '0px', borderBottomRightRadius: '0px'}}/>}
-                                    { dosageClick ? 
+                                    
+                                    {/* <div className="dropdown">
+                                        <button className="btn onclicked-button" onClick={handleDosageClick} type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" style={{backgroundColor: 'white', width: '5vw', height: '46px', borderTopLeftRadius: '0px', borderBottomLeftRadius: '0px'}}>
+                                        <div className='d-flex justify-content-between'>
+                                        {unit}
+                                        <IoIosArrowDown size={14} color='#2C2C2C' className='mt-1'/>
+                                        </div>
+                                        </button>
+                                        <ReturnUnit handleUnit={handleUnit} />
+                                    </div>: */}
                                     <div className="dropdown">
-                                        <button className="btn onclicked-button" onClick={handleDosageClick} onBlur={handleDosageClick} type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" style={{backgroundColor: 'white', width: '5vw', height: '46px', borderTopLeftRadius: '0px', borderBottomLeftRadius: '0px'}}>
+                                        <button className="btn" onClick={handleDosageClick} type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" style={dosageClick ? {borderLeft: 'none', borderColor: '#1AB48D', boxShadow: '0 0 0 0.2rem rgba(213, 236, 230, 0.75)' ,backgroundColor: 'white', width: '5vw', height: '46px', borderTopLeftRadius: '0px', borderBottomLeftRadius: '0px'}: {borderLeft: '0', borderColor: '#e2e2e2',backgroundColor: 'white', width: '5vw', height: '46px', borderTopLeftRadius: '0px', borderBottomLeftRadius: '0px'}}>
                                         <div className='d-flex justify-content-between'>
                                         {unit}
                                         <IoIosArrowDown size={14} color='#2C2C2C' className='mt-1'/>
                                         </div>
                                         </button>
-                                        {dosageClickDropdown ? <ReturnUnit handleUnit={handleUnit} />: <div/>}
-                                    </div>:<div className="dropdown">
-                                        <button className="btn border border-start-0" onClick={handleDosageClick} onBlur={handleDosageClick} type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" style={{backgroundColor: 'white', width: '5vw', height: '46px', borderTopLeftRadius: '0px', borderBottomLeftRadius: '0px'}}>
-                                        <div className='d-flex justify-content-between'>
-                                        {unit}
-                                        <IoIosArrowDown size={14} color='#2C2C2C' className='mt-1'/>
-                                        </div>
-                                        </button>
-                                        <ReturnUnit handleUnit={handleUnit}/>
-                                    </div>}
+                                        <ReturnUnit handleUnit={handleUnit} />:
+                                    </div>
                                 </div>
                             </div>
                             <div>

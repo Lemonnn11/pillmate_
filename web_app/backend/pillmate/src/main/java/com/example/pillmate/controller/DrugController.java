@@ -9,10 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/drug")
@@ -25,11 +22,11 @@ public class DrugController {
     @GetMapping("/")
     public ResponseEntity<Object> getDrugs(@RequestParam("page") int page, @RequestParam("size") int size){
         List<Drug> drugs =  drugService.getDrugs();
-        if(drugs == null){
+        if(drugs == null || drugs.equals(Collections.emptyList())){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         List<Drug> pageDrugs  = new ArrayList<>();
-        int lastPage =(int) Math.ceil((double) drugs.size() / size);
+        int lastPage = (int) Math.ceil((double) drugs.size() / size);
         if(page == lastPage - 1){
             for(int i = page*size; i < drugs.size(); i++){
                 pageDrugs.add(drugs.get(i));
@@ -75,7 +72,7 @@ public class DrugController {
     @GetMapping("/get-categories")
     public  ResponseEntity<Object> getCategories(){
         List<String> categories = drugService.getCategories();
-        if(categories == null){
+        if(categories == null || categories.equals(Collections.emptyList())){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }else{
             HashMap<String, Object> map = new HashMap<>();

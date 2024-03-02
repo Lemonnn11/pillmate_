@@ -45,7 +45,7 @@ public class PharmacyController {
             }
             else {
                 HashMap<String, String> map = new HashMap<>();
-                map.put("id", res);
+                map.put("timestamp", res);
                 return new ResponseEntity<>(map, HttpStatus.OK);
             }
         } catch (ExecutionException | InterruptedException e) {
