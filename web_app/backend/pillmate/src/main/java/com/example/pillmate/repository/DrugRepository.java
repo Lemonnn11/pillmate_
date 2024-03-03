@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 import java.io.File;
 
@@ -20,18 +21,22 @@ import java.io.File;
 public class DrugRepository {
 
     public List<Drug> getAllDrugs() {
-        File file = new File("C:\\Users\\USER\\Downloads\\drug_data.xlsx");   //creating a new file instance
+//        File file = new File("C:\\Users\\USER\\Downloads\\drug_data.xlsx");   //creating a new file instance
 
 //        ClassLoader classLoader = DrugRepository.class.getClassLoader();
 
 //        File file = new File(Objects.requireNonNull(classLoader.getResource("drug_data.xlsx")).getFile());
 
         try{
-            FileInputStream fis = new FileInputStream(file);
+            InputStream inputStream = getClass().getResourceAsStream("/drug_data.xlsx");
+            if (inputStream == null) {
+                throw new IOException("Unable to find drug_data.xlsx in resources directory");
+            }
+//            FileInputStream fis = new FileInputStream(file);
 //            FileInputStream mediletData =
 //                    new FileInputStream(file.getAbsolutePath());
 
-            XSSFWorkbook wb = new XSSFWorkbook(fis);
+            XSSFWorkbook wb = new XSSFWorkbook(inputStream);
             XSSFSheet sheet = wb.getSheetAt(0);
             Iterator<Row> itr = sheet.iterator();
 

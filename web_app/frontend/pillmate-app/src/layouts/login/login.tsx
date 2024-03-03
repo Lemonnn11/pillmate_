@@ -7,6 +7,8 @@ export const Login = () => {
     const history = useHistory();
     const [ email, setEmail ] = useState('');
     const [ password, setPassword ] = useState('');
+    const [ showIncorrect, setShowIncorrect ] = useState(false);
+    const [ showTooManyAttemps, setShowTooManyAttemps] = useState(false);
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -18,7 +20,16 @@ export const Login = () => {
             history.push("/")
           }
         } catch (error:any) {
-          console.log( error.message);
+            console.log(error.message);
+            if(error.message === 'Firebase: Error (auth/invalid-credential).'){
+                console.log(error.message);
+                setShowIncorrect(true);
+                setShowTooManyAttemps(false);
+            }
+            else if(error.message === 'Firebase: Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. (auth/too-many-requests).'){
+                setShowTooManyAttemps(true);
+                setShowIncorrect(false);
+            }
         }
     };
 
@@ -64,6 +75,13 @@ export const Login = () => {
                             </div>
                         </label>
                         <input type="password" className="form-control" name="password" required onChange={e => setPassword(e.target.value)} value={password}  style={{width: '25vw', height: '49px'}}/>
+                    </div>
+                    <div className='mt-3'>
+                        { showIncorrect ? (<div style={{color: 'red'}}>
+                            Incorrect Email or Password
+                        </div>): showTooManyAttemps ? (<div style={{color: 'red'}}>
+                            You've made too many recent attempts. Please try again later.
+                        </div>): (<div></div>)}
                     </div>
                     <div className="mt-2"style={{marginLeft:'-0.8%'}}>
                         <button type="button" className="btn btn-link" style={{color:'black'}}>Forgot my password</button>
