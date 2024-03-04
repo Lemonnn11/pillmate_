@@ -35,6 +35,7 @@ class _MyDrugListState extends State<MyDrugList> {
   List<MedicineModel> _inactiveTabDrugsList = [];
   bool editFontsize = false;
   int change = 0;
+  bool darkMode = false;
 
     // {
     //   'name': 'Amoxicilin',
@@ -93,6 +94,7 @@ class _MyDrugListState extends State<MyDrugList> {
     getMedicines();
     authChangesListener();
     initFontSize();
+    initDarkMode();
   }
 
   Future<void> initFontSize() async {
@@ -101,6 +103,13 @@ class _MyDrugListState extends State<MyDrugList> {
     setState(() {
       editFontsize = status;
       this.change = change;
+    });
+  }
+
+  Future<void> initDarkMode() async {
+    bool status = await _sqliteService.getDarkModeStatus();
+    setState(() {
+      darkMode = status;
     });
   }
 
@@ -630,7 +639,7 @@ class _MyDrugListState extends State<MyDrugList> {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: ReusableBottomNavigationBar(isLoggedIn: isLoggedIn, page: 'drugList',),
+        bottomNavigationBar: ReusableBottomNavigationBar(isLoggedIn: isLoggedIn, darkMode: darkMode,page: 'drugList',),
       ),
     );
   }

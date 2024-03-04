@@ -548,7 +548,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: ReusableBottomNavigationBar(isLoggedIn: isLoggedIn, page: 'profile'),
+      bottomNavigationBar: ReusableBottomNavigationBar(isLoggedIn: isLoggedIn, darkMode: darkMode,page: 'profile'),
     );
   }
 }

@@ -37,6 +37,7 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
   bool editFontsize = false;
   int change = 0;
   late SqliteService _sqliteService;
+  bool darkMode = false;
 
   @override
   void initState() {
@@ -49,7 +50,14 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
     _resultList = _pharList;
     authChangesListener();
     initFontSize();
+    initDarkMode();
+  }
 
+  Future<void> initDarkMode() async {
+    bool status = await _sqliteService.getDarkModeStatus();
+    setState(() {
+      darkMode = status;
+    });
   }
 
   Future<void> initFontSize() async {
@@ -338,7 +346,7 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: ReusableBottomNavigationBar(isLoggedIn: isLoggedIn, page: 'searchPharmacy',),
+      bottomNavigationBar: ReusableBottomNavigationBar(isLoggedIn: isLoggedIn, darkMode: darkMode,page: 'searchPharmacy',),
     );
   }
 }
