@@ -499,7 +499,7 @@ class _HomepageState extends State<Homepage> {
                                               children: [
                                                 Text('ความคืบหน้าการกินยาของคุณวันนี้',
                                                   style: TextStyle(
-                                                    fontSize: 15,
+                                                    fontSize: 14,
                                                     fontFamily: 'PlexSansThaiMd',
                                                     color: !darkMode ? Colors.black: Colors.white,
                                                   ),),
@@ -547,14 +547,14 @@ class _HomepageState extends State<Homepage> {
                             ),
                           ),
                           Positioned(
-                              top: 42,
+                              top: 50,
                               left: screenWidth*0.65,
                               child: Container(
                                 width: screenWidth*0.332,
                                 child: Image.asset('images/heart.png'),)),
                           Positioned(
                               left: screenWidth*0.71,
-                              top: 108,
+                              top: 115,
                               child: Container(
                                 width: screenWidth*0.035,
                                 child: Image.asset('images/Star1.png'),)),
@@ -900,20 +900,20 @@ class _HomepageState extends State<Homepage> {
                                           style: TextStyle(
                                               fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                               fontFamily: 'PlexSansThaiRg',
-                                              color: Color(0xff121212)
+                                              color:!darkMode? Color(0xff121212): Colors.white
                                           ),
                                         ),
                                         Container(
                                           width: screenWidth*0.72,
                                           height: screenHeight*0.0015,
-                                          color: Color(0xffD8D8D8),
+                                          color: !darkMode ? Color(0xffD8D8D8):Color(0xffE7E7E7) ,
                                         ),
                                         Text(
                                           '09:00',
                                           style: TextStyle(
                                               fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                               fontFamily: 'PlexSansThaiMd',
-                                              color: Color(0xff121212)
+                                              color:!darkMode? Color(0xff121212): Colors.white
                                           ),
                                         ),
                                       ],
@@ -928,6 +928,7 @@ class _HomepageState extends State<Homepage> {
                                             when: 'เช้า',
                                             editFontsize: editFontsize,
                                             change: change,
+                                            darkMode: darkMode,
                                           );
                                         }).toList(),
                                       ),
@@ -946,20 +947,20 @@ class _HomepageState extends State<Homepage> {
                                           style: TextStyle(
                                               fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                               fontFamily: 'PlexSansThaiRg',
-                                              color: Color(0xff121212)
+                                              color: !darkMode? Color(0xff121212): Colors.white
                                           ),
                                         ),
                                         Container(
                                           width: screenWidth*0.625,
                                           height: screenHeight*0.0015,
-                                          color: Color(0xffD8D8D8),
+                                          color:!darkMode ? Color(0xffD8D8D8):Color(0xffE7E7E7) ,
                                         ),
                                         Text(
                                           '12:00',
                                           style: TextStyle(
                                               fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                               fontFamily: 'PlexSansThaiMd',
-                                              color: Color(0xff121212)
+                                              color: !darkMode? Color(0xff121212): Colors.white
                                           ),
                                         ),
                                       ],
@@ -974,6 +975,7 @@ class _HomepageState extends State<Homepage> {
                                             when: 'กลางวัน',
                                             editFontsize: editFontsize,
                                             change: change,
+                                            darkMode: darkMode,
                                           );
                                         }).toList(),
                                       ),
@@ -992,20 +994,20 @@ class _HomepageState extends State<Homepage> {
                                           style: TextStyle(
                                               fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                               fontFamily: 'PlexSansThaiRg',
-                                              color: Color(0xff121212)
+                                              color: !darkMode? Color(0xff121212): Colors.white
                                           ),
                                         ),
                                         Container(
                                           width: screenWidth*0.71,
                                           height: screenHeight*0.0015,
-                                          color: Color(0xffD8D8D8),
+                                          color: !darkMode ? Color(0xffD8D8D8):Color(0xffE7E7E7) ,
                                         ),
                                         Text(
                                           '17:00',
                                           style: TextStyle(
                                               fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                               fontFamily: 'PlexSansThaiMd',
-                                              color: Color(0xff121212)
+                                              color: !darkMode? Color(0xff121212): Colors.white
                                           ),
                                         ),
                                       ],
@@ -1020,6 +1022,7 @@ class _HomepageState extends State<Homepage> {
                                             when: 'เย็น',
                                             editFontsize: editFontsize,
                                             change: change,
+                                            darkMode: darkMode,
                                           );
                                         }).toList(),
                                       ),
@@ -1038,20 +1041,20 @@ class _HomepageState extends State<Homepage> {
                                           style: TextStyle(
                                               fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                               fontFamily: 'PlexSansThaiRg',
-                                              color: Color(0xff121212)
+                                              color: !darkMode? Color(0xff121212): Colors.white
                                           ),
                                         ),
                                         Container(
                                           width: screenWidth*0.605,
                                           height: screenHeight*0.0015,
-                                          color: Color(0xffD8D8D8),
+                                          color: !darkMode ? Color(0xffD8D8D8):Color(0xffE7E7E7) ,
                                         ),
                                         Text(
                                           '21:00',
                                           style: TextStyle(
                                               fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                               fontFamily: 'PlexSansThaiMd',
-                                              color: Color(0xff121212)
+                                              color: !darkMode? Color(0xff121212): Colors.white
                                           ),
                                         ),
                                       ],
@@ -1066,6 +1069,7 @@ class _HomepageState extends State<Homepage> {
                                             when: 'ก่อนนอน',
                                             editFontsize: editFontsize,
                                             change: change,
+                                            darkMode: darkMode,
                                           );
                                         }).toList(),
                                       ),
@@ -1082,7 +1086,8 @@ class _HomepageState extends State<Homepage> {
                                     Text(
                                         'คุณยังไม่มีตารางการทานยาในวันนี้',
                                       style: TextStyle(
-                                        fontSize: editFontsize ?  14 + change.toDouble() : 14
+                                        fontSize: editFontsize ?  14 + change.toDouble() : 14,
+                                        color: !darkMode ? Colors.black: Colors.white,
                                       ),
                                     ),
                                   ],
@@ -1108,15 +1113,15 @@ class _HomepageState extends State<Homepage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset('icons/qrcode-scan.png', width: 22, height: 22,) ,
+                Image.asset(! darkMode ? 'icons/qrcode-scan.png': 'icons/qrcode-scan-black.png', width: 22, height: 22,) ,
                 Text('สแกน', style: TextStyle(
-                    color: Colors.white,
+                    color: !darkMode ? Colors.white: Colors.black,
                     fontSize: editFontsize ?  10 + change.toDouble() : 10
                 ),)
               ],
             ),
             shape: CircleBorder(),
-            backgroundColor: Color(0xff059E78),
+            backgroundColor: !darkMode ? Color(0xff059E78): Color(0xff94DDB5),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => QRCodeScanner()
@@ -1129,7 +1134,7 @@ class _HomepageState extends State<Homepage> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: ReusableBottomNavigationBar(isLoggedIn: isLoggedIn, page: 'homepage',),
+      bottomNavigationBar: ReusableBottomNavigationBar(isLoggedIn: isLoggedIn, page: 'homepage', darkMode: darkMode,),
     );
   }
 }

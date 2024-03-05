@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../constants/constants.dart';
 import '../models/medicine.dart';
 import '../services/sqlite_service.dart';
 import 'package:ionicons/ionicons.dart';
@@ -23,6 +24,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
   String storeName = '';
   bool editFontsize = false;
   int change = 0;
+  bool darkMode = false;
 
   @override
   void initState() {
@@ -32,6 +34,15 @@ class _DeleteDrugState extends State<DeleteDrug> {
     this._sqliteService.initializeDB();
     _getPharmacyName();
     initFontSize();
+    initDarkMode();
+    formattedDate();
+  }
+
+  Future<void> initDarkMode() async {
+    bool status = await _sqliteService.getDarkModeStatus();
+    setState(() {
+      darkMode = status;
+    });
   }
 
   Future<void> initFontSize() async {
@@ -152,9 +163,10 @@ class _DeleteDrugState extends State<DeleteDrug> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: !darkMode ? Colors.white: kBlackDarkModeBg,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: !darkMode ? Colors.white: kBlackDarkModeBg,
         automaticallyImplyLeading: false,
         toolbarHeight: 45,
         title: Padding(
@@ -164,12 +176,12 @@ class _DeleteDrugState extends State<DeleteDrug> {
             style: TextStyle(
                 fontSize: 20,
                 fontFamily: 'PlexSansThaiSm',
-                color: Colors.black
+                color: !darkMode ? Colors.black: Colors.white,
             ),
           ),
         ),
         leading: IconButton(
-          icon: Icon(Ionicons.chevron_back_outline, color: Colors.black,size: 30), onPressed: () {
+          icon: Icon(Ionicons.chevron_back_outline, color: !darkMode ? Colors.black: Colors.white,size: 30), onPressed: () {
           Navigator.pop(context);
         },
 
@@ -177,7 +189,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
       ),
       body: Container(
         width: screenWidth,
-        color: Colors.white,
+        color: !darkMode ? Colors.white: kBlackDarkModeBg,
         child: Padding(
           padding: EdgeInsets.only(top: 10.0, left: screenWidth*0.04, right: screenWidth*0.04),
           child: ListView(
@@ -201,7 +213,8 @@ class _DeleteDrugState extends State<DeleteDrug> {
                       Text(widget.med.genericName,
                         style: TextStyle(
                             fontSize: 20,
-                            fontFamily: 'PlexSansThaiSm'
+                            fontFamily: 'PlexSansThaiSm',
+                          color: !darkMode ? Colors.black: Colors.white,
                         ),),
                       Row(
                         children: [
@@ -209,11 +222,13 @@ class _DeleteDrugState extends State<DeleteDrug> {
                             style: TextStyle(
                               fontSize: editFontsize ?  14 + change.toDouble() : 14,
                               fontFamily: 'PlexSansThaiRg',
+                              color: !darkMode ? Colors.black: Colors.white,
                             ),),
                           Text(widget.med.typeOfMedicine,
                             style: TextStyle(
                               fontSize: editFontsize ?  14 + change.toDouble() : 14,
                               fontFamily: 'PlexSansThaiRg',
+                              color: !darkMode ? Colors.black: Colors.white,
                             ),),
                         ],
                       ),
@@ -224,11 +239,13 @@ class _DeleteDrugState extends State<DeleteDrug> {
                             style: TextStyle(
                               fontSize: editFontsize ?  14 + change.toDouble() : 14,
                               fontFamily: 'PlexSansThaiRg',
+                              color: !darkMode ? Colors.black: Colors.white,
                             ),),
                           Text(widget.med.quantity.toString(),
                             style: TextStyle(
                               fontSize: editFontsize ?  14 + change.toDouble() : 14,
                               fontFamily: 'PlexSansThaiRg',
+                              color: !darkMode ? Colors.black: Colors.white,
                             ),),
                         ],
                       ),
@@ -239,11 +256,13 @@ class _DeleteDrugState extends State<DeleteDrug> {
                             style: TextStyle(
                               fontSize: editFontsize ?  14 + change.toDouble() : 14,
                               fontFamily: 'PlexSansThaiRg',
+                              color: !darkMode ? Colors.black: Colors.white,
                             ),),
                           Text(formattedExpired,
                             style: TextStyle(
                               fontSize: editFontsize ?  14 + change.toDouble() : 14,
                               fontFamily: 'PlexSansThaiRg',
+                              color: !darkMode ? Colors.black: Colors.white,
                             ),),
                         ],
                       ),
@@ -262,6 +281,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                           style: TextStyle(
                             fontSize: editFontsize ?  16 + change.toDouble() : 16,
                             fontFamily: 'PlexSansThaiMd',
+                            color: !darkMode ? Colors.black: Colors.white,
                           ),)
                       ],
                     ),
@@ -272,7 +292,8 @@ class _DeleteDrugState extends State<DeleteDrug> {
                         Text(widget.med.amountOfMeds.toString() + ' '+ widget.med.typeOfMedicine,
                           style: TextStyle(
                               fontSize: editFontsize ?  16 + change.toDouble() : 16,
-                              fontFamily: 'PlexSansThaiRg'
+                              fontFamily: 'PlexSansThaiRg',
+                            color: !darkMode ? Colors.black: Colors.white,
                           ),)
                       ],
                     ),
@@ -299,6 +320,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                             style: TextStyle(
                               fontFamily: 'PlexSansThaiMd',
                               fontSize: editFontsize ?  16 + change.toDouble() : 16,
+                              color: !darkMode ? Colors.black: Colors.white,
                             ),
                           ),
                         ),
@@ -307,9 +329,10 @@ class _DeleteDrugState extends State<DeleteDrug> {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12.0),
                               border: Border.all(
-                                  color: Color(0xffD0D0D0),
+                                  color: !darkMode ? Color(0xffD0D0D0): kBlackDarkMode,
                                   width: 1
-                              )
+                              ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                           ),
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: screenWidth*0.08),
@@ -319,13 +342,14 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                 Text(widget.med.dosagePerTake.toString(),
                                   style: TextStyle(
                                       fontSize: editFontsize ?  18 + change.toDouble() : 18,
-                                      fontFamily: 'PlexSansThaiRg'
+                                      fontFamily: 'PlexSansThaiRg',
+                                    color: !darkMode ? Colors.black: Colors.white,
                                   ),),
                                 Text(widget.med.typeOfMedicine,
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontFamily: 'PlexSansThaiRg',
-                                      color: Color(0xff8B8B8B)
+                                      color: !darkMode ? Color(0xff8B8B8B): Colors.white,
                                   ),),
                               ],
                             ),
@@ -346,6 +370,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                             style: TextStyle(
                               fontFamily: 'PlexSansThaiMd',
                               fontSize: 16,
+                              color: !darkMode ? Colors.black: Colors.white,
                             ),
                           ),
                         ),
@@ -354,9 +379,10 @@ class _DeleteDrugState extends State<DeleteDrug> {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12.0),
                               border: Border.all(
-                                  color: Color(0xffD0D0D0),
+                                  color: !darkMode ? Color(0xffD0D0D0): kBlackDarkMode,
                                   width: 1
-                              )
+                              ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                           ),
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: screenWidth*0.08),
@@ -366,13 +392,14 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                 Text(widget.med.timePerDay.toString(),
                                   style: TextStyle(
                                       fontSize: editFontsize ?  18 + change.toDouble() : 18,
-                                      fontFamily: 'PlexSansThaiRg'
+                                      fontFamily: 'PlexSansThaiRg',
+                                    color: !darkMode ? Colors.black: Colors.white,
                                   ),),
                                 Text('ครั้ง',
                                   style: TextStyle(
                                       fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiRg',
-                                      color: Color(0xff8B8B8B)
+                                      color: !darkMode ? Color(0xff8B8B8B): Colors.white,
                                   ),),
                               ],
                             ),
@@ -397,6 +424,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                             style: TextStyle(
                               fontFamily: 'PlexSansThaiMd',
                               fontSize: editFontsize ?  16 + change.toDouble() : 16,
+                              color: !darkMode ? Colors.black: Colors.white,
                             ),
                           ),
                         ),
@@ -405,9 +433,10 @@ class _DeleteDrugState extends State<DeleteDrug> {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12.0),
                               border: Border.all(
-                                  color: Color(0xffD0D0D0),
+                                  color: !darkMode ? Color(0xffD0D0D0): kBlackDarkMode,
                                   width: 1
-                              )
+                              ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                           ),
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: screenWidth*0.08),
@@ -417,7 +446,8 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                 Text(widget.med.timeOfMed,
                                   style: TextStyle(
                                       fontSize: editFontsize ?  18 + change.toDouble() : 18,
-                                      fontFamily: 'PlexSansThaiRg'
+                                      fontFamily: 'PlexSansThaiRg',
+                                    color: !darkMode ? Colors.black: Colors.white,
                                   ),),
                               ],
                             ),
@@ -439,6 +469,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                             style: TextStyle(
                               fontFamily: 'PlexSansThaiMd',
                               fontSize: editFontsize ?  16 + change.toDouble() : 16,
+                              color: !darkMode ? Colors.black: Colors.white,
                             ),
                           ),
                         ),
@@ -447,9 +478,10 @@ class _DeleteDrugState extends State<DeleteDrug> {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12.0),
                               border: Border.all(
-                                  color: Color(0xffD0D0D0),
+                                  color: !darkMode ? Color(0xffD0D0D0): kBlackDarkMode,
                                   width: 1
-                              )
+                              ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                           ),
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: screenWidth*0.08),
@@ -459,13 +491,14 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                 Text(widget.med.timePeriodForMed.toString(),
                                   style: TextStyle(
                                       fontSize: editFontsize ?  18 + change.toDouble() : 18,
-                                      fontFamily: 'PlexSansThaiRg'
+                                      fontFamily: 'PlexSansThaiRg',
+                                    color: !darkMode ? Colors.black: Colors.white,
                                   ),),
                                 Text('ชั่วโมง',
                                   style: TextStyle(
                                       fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiRg',
-                                      color: Color(0xff8B8B8B)
+                                      color: !darkMode ? Color(0xff8B8B8B): Colors.white,
                                   ),),
                               ],
                             ),
@@ -511,6 +544,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                             style: TextStyle(
                               fontFamily: 'PlexSansThaiMd',
                               fontSize: editFontsize ?  16 + change.toDouble() : 16,
+                              color: !darkMode ? Colors.black: Colors.white,
                             ),
                           ),
                         ),
@@ -521,9 +555,10 @@ class _DeleteDrugState extends State<DeleteDrug> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.0),
                                 border: Border.all(
-                                    color: Color(0xffD0D0D0),
+                                    color: !darkMode ? Color(0xffD0D0D0): kBlackDarkMode,
                                     width: 1
-                                )
+                                ),
+                              color: !darkMode ? Colors.white: kBlackDarkMode,
                             ),
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: screenWidth*0.045),
@@ -537,7 +572,8 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                   Text('เช้า',
                                     style: TextStyle(
                                         fontSize: editFontsize ?  18 + change.toDouble() : 18,
-                                        fontFamily: 'PlexSansThaiRg'
+                                        fontFamily: 'PlexSansThaiRg',
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),),
                                 ],
                               ),
@@ -561,9 +597,10 @@ class _DeleteDrugState extends State<DeleteDrug> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.0),
                                 border: Border.all(
-                                    color: Color(0xffD0D0D0),
+                                    color: !darkMode ? Color(0xffD0D0D0): kBlackDarkMode,
                                     width: 1
-                                )
+                                ),
+                              color: !darkMode ? Colors.white: kBlackDarkMode,
                             ),
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: screenWidth*0.03),
@@ -577,7 +614,8 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                   Text('กลางวัน',
                                     style: TextStyle(
                                         fontSize: editFontsize ?  18 + change.toDouble() : 18,
-                                        fontFamily: 'PlexSansThaiRg'
+                                        fontFamily: 'PlexSansThaiRg',
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),),
                                 ],
                               ),
@@ -601,9 +639,10 @@ class _DeleteDrugState extends State<DeleteDrug> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.0),
                                 border: Border.all(
-                                    color: Color(0xffD0D0D0),
+                                    color: !darkMode ? Color(0xffD0D0D0): kBlackDarkMode,
                                     width: 1
-                                )
+                                ),
+                              color: !darkMode ? Colors.white: kBlackDarkMode,
                             ),
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: screenWidth*0.045),
@@ -617,7 +656,8 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                   Text('เย็น',
                                     style: TextStyle(
                                         fontSize: editFontsize ?  18 + change.toDouble() : 18,
-                                        fontFamily: 'PlexSansThaiRg'
+                                        fontFamily: 'PlexSansThaiRg',
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),),
                                 ],
                               ),
@@ -640,9 +680,10 @@ class _DeleteDrugState extends State<DeleteDrug> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.0),
                                 border: Border.all(
-                                    color: Color(0xffD0D0D0),
+                                    color:!darkMode ? Color(0xffD0D0D0): kBlackDarkMode,
                                     width: 1
-                                )
+                                ),
+                              color: !darkMode ? Colors.white: kBlackDarkMode,
                             ),
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: screenWidth*0.045),
@@ -656,7 +697,8 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                   Text('ก่อนนอน',
                                     style: TextStyle(
                                         fontSize: editFontsize ?  18 + change.toDouble() : 18,
-                                        fontFamily: 'PlexSansThaiRg'
+                                        fontFamily: 'PlexSansThaiRg',
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),),
                                 ],
                               ),
@@ -684,6 +726,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                             style: TextStyle(
                               fontFamily: 'PlexSansThaiMd',
                               fontSize: editFontsize ?  16 + change.toDouble() : 16,
+                              color: !darkMode ? Colors.black: Colors.white,
                             ),
                           ),
                         ),
@@ -694,9 +737,10 @@ class _DeleteDrugState extends State<DeleteDrug> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.0),
                                 border: Border.all(
-                                    color: Color(0xffD0D0D0),
+                                    color: !darkMode ? Color(0xffD0D0D0): kBlackDarkMode,
                                     width: 1
-                                )
+                                ),
+                              color: !darkMode ? Colors.white: kBlackDarkMode,
                             ),
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: screenWidth*0.03),
@@ -713,13 +757,14 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                   Text('09:00',
                                     style: TextStyle(
                                         fontSize: editFontsize ?  16 + change.toDouble() : 16,
-                                        fontFamily: 'PlexSansThaiRg'
+                                        fontFamily: 'PlexSansThaiRg',
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),),
                                   Text('น.',
                                     style: TextStyle(
                                         fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                         fontFamily: 'PlexSansThaiRg',
-                                        color: Color(0xff8B8B8B)
+                                        color: !darkMode ? Color(0xff8B8B8B): Colors.white,
                                     ),),
                                 ],
                               ),
@@ -742,9 +787,10 @@ class _DeleteDrugState extends State<DeleteDrug> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.0),
                                 border: Border.all(
-                                    color: Color(0xffD0D0D0),
+                                    color:!darkMode ? Color(0xffD0D0D0): kBlackDarkMode,
                                     width: 1
-                                )
+                                ),
+                              color: !darkMode ? Colors.white: kBlackDarkMode,
                             ),
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: screenWidth*0.03),
@@ -761,13 +807,14 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                   Text('12:00',
                                     style: TextStyle(
                                         fontSize: editFontsize ?  16 + change.toDouble() : 16,
-                                        fontFamily: 'PlexSansThaiRg'
+                                        fontFamily: 'PlexSansThaiRg',
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),),
                                   Text('น.',
                                     style: TextStyle(
                                         fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                         fontFamily: 'PlexSansThaiRg',
-                                        color: Color(0xff8B8B8B)
+                                        color: !darkMode ? Color(0xff8B8B8B): Colors.white,
                                     ),),
                                 ],
                               ),
@@ -790,9 +837,10 @@ class _DeleteDrugState extends State<DeleteDrug> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.0),
                                 border: Border.all(
-                                    color: Color(0xffD0D0D0),
+                                    color: !darkMode ? Color(0xffD0D0D0): kBlackDarkMode,
                                     width: 1
-                                )
+                                ),
+                              color: !darkMode ? Colors.white: kBlackDarkMode,
                             ),
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: screenWidth*0.03),
@@ -809,13 +857,14 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                   Text('17:00',
                                     style: TextStyle(
                                         fontSize: editFontsize ?  16 + change.toDouble() : 16,
-                                        fontFamily: 'PlexSansThaiRg'
+                                        fontFamily: 'PlexSansThaiRg',
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),),
                                   Text('น.',
                                     style: TextStyle(
                                         fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                         fontFamily: 'PlexSansThaiRg',
-                                        color: Color(0xff8B8B8B)
+                                        color: !darkMode ? Color(0xff8B8B8B): Colors.white,
                                     ),),
                                 ],
                               ),
@@ -837,9 +886,10 @@ class _DeleteDrugState extends State<DeleteDrug> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.0),
                                 border: Border.all(
-                                    color: Color(0xffD0D0D0),
+                                    color: !darkMode ? Color(0xffD0D0D0): kBlackDarkMode,
                                     width: 1
-                                )
+                                ),
+                              color: !darkMode ? Colors.white: kBlackDarkMode,
                             ),
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: screenWidth*0.03),
@@ -856,13 +906,14 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                   Text('21:00',
                                     style: TextStyle(
                                         fontSize: editFontsize ?  16 + change.toDouble() : 16,
-                                        fontFamily: 'PlexSansThaiRg'
+                                        fontFamily: 'PlexSansThaiRg',
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),),
                                   Text('น.',
                                     style: TextStyle(
                                         fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                         fontFamily: 'PlexSansThaiRg',
-                                        color: Color(0xff8B8B8B)
+                                        color: !darkMode ? Color(0xff8B8B8B): Colors.white,
                                     ),),
                                 ],
                               ),
@@ -896,7 +947,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                         style: TextStyle(
                             fontFamily: 'PlexSansThaiSm',
                             fontSize: editFontsize ?  16 + change.toDouble() : 16,
-                            color: Colors.black
+                          color: !darkMode ? Colors.black: Colors.white,
                         ),
                       ),
                       SizedBox(height: 7,),
@@ -909,7 +960,10 @@ class _DeleteDrugState extends State<DeleteDrug> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(top: 4.0),
-                                  child: Text('• '),
+                                  child: Text('• ',
+                                    style: TextStyle(
+                                      color: !darkMode ? Colors.black: Colors.white,
+                                    ),),
                                 )
                               ],
                             ),
@@ -920,7 +974,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                   style: TextStyle(
                                       fontFamily: 'PlexSansThaiRg',
                                       fontSize:  editFontsize ?  14 + change.toDouble() : 14,
-                                      color: Colors.black
+                                    color: !darkMode ? Colors.black: Colors.white,
                                   ),
                                 ),
                                 SizedBox(height: 7,),
@@ -929,9 +983,10 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                   style: TextStyle(
                                       fontFamily: 'PlexSansThaiRg',
                                       fontSize:  editFontsize ?  14 + change.toDouble() : 14,
-                                      color: Colors.black,
-                                      decoration: TextDecoration.underline
-                                  ),
+                                      color: !darkMode ? Colors.black: Colors.white,
+                                      decoration: TextDecoration.underline,
+                                    decorationColor: !darkMode ? Colors.black: Colors.white,
+                                    ),
                                 ),
                                 SizedBox(height: 5,),
                               ],
@@ -963,7 +1018,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                         style: TextStyle(
                             fontFamily: 'PlexSansThaiSm',
                             fontSize: editFontsize ?  16 + change.toDouble() : 16,
-                            color: Colors.black
+                          color: !darkMode ? Colors.black: Colors.white,
                         ),
                       ),
                       SizedBox(height: 7,),
@@ -976,7 +1031,10 @@ class _DeleteDrugState extends State<DeleteDrug> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(top: 4.0),
-                                  child: Text('• '),
+                                  child: Text('• ',
+                        style: TextStyle(
+                          color: !darkMode ? Colors.black: Colors.white,
+                        ),),
                                 )
                               ],
                             ),
@@ -988,7 +1046,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                     style: TextStyle(
                                         fontFamily: 'PlexSansThaiRg',
                                         fontSize: editFontsize ?  14 + change.toDouble() : 14,
-                                        color: Colors.black
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),
                                   ),
                                   SizedBox(height: 5,),
@@ -1021,7 +1079,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                         style: TextStyle(
                             fontFamily: 'PlexSansThaiSm',
                             fontSize: editFontsize ?  16 + change.toDouble() : 16,
-                            color: Colors.black
+                          color: !darkMode ? Colors.black: Colors.white,
                         ),
                       ),
                       SizedBox(
@@ -1036,7 +1094,10 @@ class _DeleteDrugState extends State<DeleteDrug> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(top: 4.0),
-                                  child: Text('• '),
+    child: Text('• ',
+    style: TextStyle(
+    color: !darkMode ? Colors.black: Colors.white,
+    ),),
                                 )
                               ],
                             ),
@@ -1048,7 +1109,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                     style: TextStyle(
                                         fontFamily: 'PlexSansThaiRg',
                                         fontSize: editFontsize ?  14 + change.toDouble() : 14,
-                                        color: Colors.black
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),
                                   ),
 
@@ -1080,7 +1141,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                         style: TextStyle(
                             fontFamily: 'PlexSansThaiSm',
                             fontSize: editFontsize ?  16 + change.toDouble() : 16,
-                            color: Colors.black
+                          color: !darkMode ? Colors.black: Colors.white,
                         ),
                       ),
                       Padding(
@@ -1096,7 +1157,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                   style: TextStyle(
                                       fontFamily: 'PlexSansThaiSm',
                                       fontSize: editFontsize ?  14 + change.toDouble() : 14,
-                                      color: Colors.black
+                                    color: !darkMode ? Colors.black: Colors.white,
                                   ),
                                 ),
                                 Expanded(
@@ -1105,7 +1166,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                     style: TextStyle(
                                         fontFamily: 'PlexSansThaiRg',
                                         fontSize: editFontsize ?  14 + change.toDouble() : 14,
-                                        color: Colors.black
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),
                                   ),
                                 ),
@@ -1120,7 +1181,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                   style: TextStyle(
                                       fontFamily: 'PlexSansThaiSm',
                                       fontSize: editFontsize ?  14 + change.toDouble() : 14,
-                                      color: Colors.black
+                                    color: !darkMode ? Colors.black: Colors.white,
                                   ),
                                 ),
                                 Expanded(
@@ -1129,7 +1190,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                     style: TextStyle(
                                         fontFamily: 'PlexSansThaiRg',
                                         fontSize: editFontsize ?  14 + change.toDouble() : 14,
-                                        color: Colors.black
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),
                                   ),
                                 ),
