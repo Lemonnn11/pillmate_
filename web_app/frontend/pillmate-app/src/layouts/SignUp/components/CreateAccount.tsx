@@ -107,7 +107,10 @@ export const CreateAccount: React.FC<CreateAccountProps> = (props) => {
                         </label>
                         <input type="password" className="form-control" name="cpassword" required onChange={e => setCPassword(e.target.value)} value={cpassword}  style={{width: '25vw', height: '49px'}}/>
                     </div>
-                    {alreadyUseEmail ? <div className='d-flex gap-1 align-items-end mt-2'><div><IoCloseCircleOutline color='red'/></div><div style={{color: 'red', fontSize: '14px',fontFamily:'LINESeedSansENRegular'}}>Email is already used</div></div>:pwEqual ? <div className='mt-2'><div style={{height: '24px'}}></div></div>:<div className='d-flex gap-1 align-items-end mt-2'><div><IoCloseCircleOutline color='red'/></div><div style={{color: 'red', fontSize: '14px',fontFamily:'LINESeedSansENRegular'}}>Password does not match</div></div>}
+                    {alreadyUseEmail ? 
+                    <div className='d-flex gap-1 align-items-center mt-2'><div className='d-flex align-items-center'><IoCloseCircleOutline color='red'/></div><div style={{color: 'red', fontSize: '14px',fontFamily:'LINESeedSansENRegular'}}>Email is already used</div></div>:
+                    pwEqual ? <div className='mt-2'><div style={{height: '24px'}}></div></div>
+                    :<div className='d-flex gap-1 align-items-center mt-2'><div className='d-flex align-items-center'><IoCloseCircleOutline color='red'/></div><div style={{color: 'red', fontSize: '14px',fontFamily:'LINESeedSansENRegular'}}>Password does not match</div></div>}
                     <button className="btn mt-3" type="submit" style={{ width: '25vw', backgroundColor: '#059E78', height: '49px'}}>
                         <div className='d-flex justify-content-center' style={{fontFamily: "LINESeedSansENBold", color: "white"}}>
                             Next

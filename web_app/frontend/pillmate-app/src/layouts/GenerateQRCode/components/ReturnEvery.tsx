@@ -6,10 +6,10 @@ export interface ReturnEveryProps {
 
 export const ReturnEvery: React.FC<ReturnEveryProps> = (props) => {
     const whens = [
-        '4',
-        '6',
-        '8',
-        '12',
+        '4      ชั่วโมง',
+        '6      ชั่วโมง',
+        '8      ชั่วโมง',
+        '12     ชั่วโมง',
         '...'
       ];
     return (

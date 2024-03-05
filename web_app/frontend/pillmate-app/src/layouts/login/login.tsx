@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { getAuth, signInWithEmailAndPassword} from 'firebase/auth';
 import { useHistory } from 'react-router-dom';
+import { IoCloseCircleOutline } from 'react-icons/io5';
 
 export const Login = () => {
     const auth = getAuth();
@@ -77,9 +78,7 @@ export const Login = () => {
                         <input type="password" className="form-control" name="password" required onChange={e => setPassword(e.target.value)} value={password}  style={{width: '25vw', height: '49px'}}/>
                     </div>
                     <div className='mt-3'>
-                        { showIncorrect ? (<div style={{color: 'red'}}>
-                            Incorrect Email or Password
-                        </div>): showTooManyAttemps ? (<div style={{color: 'red'}}>
+                        { showIncorrect ? (<div className='d-flex gap-1 align-items-center mt-2'><div className='d-flex align-items-center'><IoCloseCircleOutline color='red'/></div><div style={{color: 'red', fontSize: '14px',fontFamily:'LINESeedSansENRegular'}}>Incorrect Email or Password</div></div>): showTooManyAttemps ? (<div style={{color: 'red'}}>
                             You've made too many recent attempts. Please try again later.
                         </div>): (<div></div>)}
                     </div>
