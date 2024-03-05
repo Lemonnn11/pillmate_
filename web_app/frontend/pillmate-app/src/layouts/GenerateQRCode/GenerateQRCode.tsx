@@ -112,7 +112,7 @@ export const GenerateQRCode = () => {
 
     async function createQRCode(event: React.FormEvent<HTMLFormElement>){
         event.preventDefault();
-        const url = `http://localhost:8080/api/qrCode/create`;
+        const url = `http://54.174.232.218:8080/api/qrCode/create`;
 
         if(dosagePerTake !== '' && timePerDay !== '' && expiredDate !== '' && conditionOfUse !== '' && amountOfMeds !== ''){
             

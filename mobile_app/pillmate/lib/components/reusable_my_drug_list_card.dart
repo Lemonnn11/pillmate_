@@ -4,12 +4,14 @@ import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pillmate/models/medicine.dart';
 import 'package:pillmate/pages/drug_information.dart';
+import 'package:pillmate/constants/constants.dart';
 
 class ReusableMyDrugListCard extends StatefulWidget {
   final MedicineModel med;
   final bool editFontSize;
   final int change;
-  const ReusableMyDrugListCard({super.key, required this.med, required this.editFontSize, required this.change});
+  final bool darkMode;
+  const ReusableMyDrugListCard({super.key, required this.med, required this.editFontSize, required this.change, required this.darkMode});
 
   @override
   State<ReusableMyDrugListCard> createState() => _ReusableMyDrugListCardState();
@@ -80,7 +82,7 @@ class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
       child: Card(
         elevation:1.5,
         margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 12.0),
-        color: Colors.white,
+        color: !widget.darkMode ? Colors.white: Color(0xff3f3f3f),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.0)),
         child: Column(
@@ -107,7 +109,7 @@ class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
                             style: TextStyle(
                                 fontSize: widget.editFontSize ?  16 + widget.change.toDouble() : 16,
                                 fontFamily: 'PlexSansThaiMd',
-                                color: Color(0xff121212)
+                                color: !widget.darkMode? Color(0xff121212): Colors.white
                             ),
                           ),
                           SizedBox(height: 2,),
@@ -117,7 +119,7 @@ class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
                               Container(
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12),
-                                    color: Color(0xffFBEC84)
+                                    color: !widget.darkMode ? Color(0xffFBEC84): Color(0xffFFF4BB)
                                 ),
                                 child:  Padding(
                                   padding: EdgeInsets.symmetric(vertical: screenHeight*0.0005, horizontal: screenWidth*0.025),
@@ -176,6 +178,7 @@ class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
                                 style: TextStyle(
                                   fontSize: widget.editFontSize ?  14 + widget.change.toDouble() : 14,
                                   fontWeight: FontWeight.w700,
+                                  color: !widget.darkMode ? Colors.black: Colors.white,
                                 ),)
                             ],
                           )
@@ -194,7 +197,7 @@ class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
                         children: [
                           Icon(
                             Ionicons.chevron_forward_outline,
-                            color: Colors.black,
+                            color: !widget.darkMode ? Colors.black: Color(0xff94DDB5),
                           ),
                           SizedBox(height: 2,),
                           Text(
@@ -202,7 +205,7 @@ class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
                             style: TextStyle(
                                 fontSize: widget.editFontSize ?  12 + widget.change.toDouble() : 12,
                                 fontFamily: 'PlexSansThaiRg',
-                                color: Colors.black
+                                color: !widget.darkMode ? Colors.black: Color(0xff94DDB5),
                             ),
                           ),
                         ],
@@ -215,7 +218,7 @@ class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
             Container(
               width: screenWidth,
               decoration: BoxDecoration(
-                  color:  Color(0xff059E78),
+                  color:  !widget.darkMode ? Color(0xff059E78): Color(0xff94DDB5),
                   borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6.0), bottomRight:Radius.circular(6.0))
               ),
               child: Padding(
@@ -229,7 +232,7 @@ class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
                           style: TextStyle(
                               fontFamily: 'PlexSansThaiSm',
                               fontSize: widget.editFontSize ?  14 + widget.change.toDouble() : 14,
-                              color: Colors.white
+                              color: !widget.darkMode ?Colors.white: Colors.black
                           ),
                         ),
                         Text(
@@ -237,7 +240,7 @@ class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
                           style: TextStyle(
                               fontFamily: 'PlexSansThaiRg',
                               fontSize: widget.editFontSize ?  14 + widget.change.toDouble() : 14,
-                              color: Colors.white
+                              color: !widget.darkMode ?Colors.white: Colors.black
                           ),
                         ),
                       ],
@@ -250,7 +253,7 @@ class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
                           style: TextStyle(
                               fontFamily: 'PlexSansThaiSm',
                               fontSize: widget.editFontSize ?  14 + widget.change.toDouble() : 14,
-                              color: Colors.white
+                              color: !widget.darkMode ?Colors.white: Colors.black
                           ),
                         ),
                         Expanded(
@@ -259,7 +262,7 @@ class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
                             style: TextStyle(
                                 fontFamily: 'PlexSansThaiRg',
                                 fontSize: widget.editFontSize ?  14 + widget.change.toDouble() : 14,
-                                color: Colors.white
+                                color: !widget.darkMode ?Colors.white: Colors.black
                             ),
                           ),
                         ),

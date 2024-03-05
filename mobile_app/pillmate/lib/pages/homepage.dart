@@ -499,7 +499,7 @@ class _HomepageState extends State<Homepage> {
                                               children: [
                                                 Text('ความคืบหน้าการกินยาของคุณวันนี้',
                                                   style: TextStyle(
-                                                    fontSize: 15,
+                                                    fontSize: 14,
                                                     fontFamily: 'PlexSansThaiMd',
                                                     color: !darkMode ? Colors.black: Colors.white,
                                                   ),),
@@ -547,14 +547,14 @@ class _HomepageState extends State<Homepage> {
                             ),
                           ),
                           Positioned(
-                              top: 42,
+                              top: 50,
                               left: screenWidth*0.65,
                               child: Container(
                                 width: screenWidth*0.332,
                                 child: Image.asset('images/heart.png'),)),
                           Positioned(
                               left: screenWidth*0.71,
-                              top: 108,
+                              top: 115,
                               child: Container(
                                 width: screenWidth*0.035,
                                 child: Image.asset('images/Star1.png'),)),
