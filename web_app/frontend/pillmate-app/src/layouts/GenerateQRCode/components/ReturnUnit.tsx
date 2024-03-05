@@ -7,7 +7,8 @@ export interface ReturnUnitProps {
 export const ReturnUnit: React.FC<ReturnUnitProps> = (props) => {
     const units = [
         'แคปซูล',
-        'ช้อน'
+        'ช้อน',
+        'เม็ด'
       ];
     return (
         <ul className="dropdown-menu">
@@ -19,3 +20,4 @@ export const ReturnUnit: React.FC<ReturnUnitProps> = (props) => {
     </ul>
     );
 }
+

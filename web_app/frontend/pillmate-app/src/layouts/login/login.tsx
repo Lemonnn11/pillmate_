@@ -1,12 +1,15 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { getAuth, signInWithEmailAndPassword} from 'firebase/auth';
 import { useHistory } from 'react-router-dom';
+import { IoCloseCircleOutline } from 'react-icons/io5';
 
 export const Login = () => {
     const auth = getAuth();
     const history = useHistory();
     const [ email, setEmail ] = useState('');
     const [ password, setPassword ] = useState('');
+    const [ showIncorrect, setShowIncorrect ] = useState(false);
+    const [ showTooManyAttemps, setShowTooManyAttemps] = useState(false);
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -18,7 +21,16 @@ export const Login = () => {
             history.push("/")
           }
         } catch (error:any) {
-          console.log( error.message);
+            console.log(error.message);
+            if(error.message === 'Firebase: Error (auth/invalid-credential).'){
+                console.log(error.message);
+                setShowIncorrect(true);
+                setShowTooManyAttemps(false);
+            }
+            else if(error.message === 'Firebase: Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. (auth/too-many-requests).'){
+                setShowTooManyAttemps(true);
+                setShowIncorrect(false);
+            }
         }
     };
 
@@ -27,8 +39,8 @@ export const Login = () => {
     }
 
     return(
-        <div style={{height:'90vh', width: '100vw'}}>
-            <div style={{marginLeft:'4%', marginRight:'4%', marginTop:'3%', height:'100%'}}>
+        <div className='d-flex justify-content-between' style={{height:'90vh', width: '100vw'}}>
+            <div style={{marginLeft:'10%', marginRight:'4%', marginTop:'5%', height:'100%'}}>
                 <div>
                 <img src={process.env.PUBLIC_URL + '/images/Logo.png'} style={{width:'186px', height:'32px'}}/>
                 </div>
@@ -65,6 +77,11 @@ export const Login = () => {
                         </label>
                         <input type="password" className="form-control" name="password" required onChange={e => setPassword(e.target.value)} value={password}  style={{width: '25vw', height: '49px'}}/>
                     </div>
+                    <div className='mt-3'>
+                        { showIncorrect ? (<div className='d-flex gap-1 align-items-center mt-2'><div className='d-flex align-items-center'><IoCloseCircleOutline color='red'/></div><div style={{color: 'red', fontSize: '14px',fontFamily:'LINESeedSansENRegular'}}>Incorrect Email or Password</div></div>): showTooManyAttemps ? (<div style={{color: 'red'}}>
+                            You've made too many recent attempts. Please try again later.
+                        </div>): (<div></div>)}
+                    </div>
                     <div className="mt-2"style={{marginLeft:'-0.8%'}}>
                         <button type="button" className="btn btn-link" style={{color:'black'}}>Forgot my password</button>
                     </div>
@@ -74,7 +91,7 @@ export const Login = () => {
                         </div>
                     </button>
                 </form>
-                <div className="d-flex align-items-end gap-2" style={{height:'45%'}}>
+                <div className="d-flex align-items-end gap-2" style={{height:'42%'}}>
                     <div style={{fontFamily: 'LINESeedSansENRegular', fontSize: '16px'}}>
                         Don’t have an account?
                     </div>
@@ -82,6 +99,9 @@ export const Login = () => {
                         Sign up
                     </div>
                 </div>
+            </div>
+            <div className='d-flex justify-content-end align-items-end' style={{backgroundColor: '#059E78', height: '100vh', width: '50vw'}}>
+                <img src={process.env.PUBLIC_URL + '/images/login_right.png'} style={{width: '42VW', height: '90vh'}}/>
             </div>
         </div>
     );

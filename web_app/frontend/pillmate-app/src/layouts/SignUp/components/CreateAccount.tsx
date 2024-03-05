@@ -16,6 +16,8 @@ export const CreateAccount: React.FC<CreateAccountProps> = (props) => {
     const [ password, setPassword ] = useState('');
     const [ cpassword, setCPassword ] = useState('');
     const [ pwEqual, setPwEqual] = useState(true);
+    const [ wrongFormatEmail, setWrongFormatEmail ] = useState(false);
+    const [ alreadyUseEmail, setAlreadyUseEmail ] = useState(false);
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -33,13 +35,17 @@ export const CreateAccount: React.FC<CreateAccountProps> = (props) => {
                 
               } catch (error:any) {
                 console.log( error.message);
+                if(error.message === 'Firebase: Error (auth/email-already-in-use).'){
+                    setAlreadyUseEmail(true);
+                    setPwEqual(true);
+                }
               }
         }
         
     };
 
     return(
-        <div style={{height:'90vh', width: '30vw'}}>
+        <div style={{height:'80vh', width: '30vw'}}>
             <div style={{marginLeft:'4%', marginTop:'3%', height:'100%'}}>
                 <div>
                 <img src={process.env.PUBLIC_URL + '/images/Logo.png'} style={{width:'186px', height:'32px'}}/>
@@ -101,7 +107,10 @@ export const CreateAccount: React.FC<CreateAccountProps> = (props) => {
                         </label>
                         <input type="password" className="form-control" name="cpassword" required onChange={e => setCPassword(e.target.value)} value={cpassword}  style={{width: '25vw', height: '49px'}}/>
                     </div>
-                    {pwEqual ? <div className='mt-2'><div style={{height: '24px'}}></div></div>:<div className='d-flex gap-1 align-items-end mt-2'><div><IoCloseCircleOutline color='red'/></div><div style={{color: 'red', fontSize: '14px',fontFamily:'LINESeedSansENRegular'}}>Password not matching</div></div>}
+                    {alreadyUseEmail ? 
+                    <div className='d-flex gap-1 align-items-center mt-2'><div className='d-flex align-items-center'><IoCloseCircleOutline color='red'/></div><div style={{color: 'red', fontSize: '14px',fontFamily:'LINESeedSansENRegular'}}>Email is already used</div></div>:
+                    pwEqual ? <div className='mt-2'><div style={{height: '24px'}}></div></div>
+                    :<div className='d-flex gap-1 align-items-center mt-2'><div className='d-flex align-items-center'><IoCloseCircleOutline color='red'/></div><div style={{color: 'red', fontSize: '14px',fontFamily:'LINESeedSansENRegular'}}>Password does not match</div></div>}
                     <button className="btn mt-3" type="submit" style={{ width: '25vw', backgroundColor: '#059E78', height: '49px'}}>
                         <div className='d-flex justify-content-center' style={{fontFamily: "LINESeedSansENBold", color: "white"}}>
                             Next
