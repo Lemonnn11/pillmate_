@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:pillmate/models/app_config.dart';
 import 'package:pillmate/models/daily_med.dart';
 import 'package:pillmate/models/medicine.dart';
 import 'package:pillmate/models/on_boarding.dart';
@@ -6,7 +7,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 import '../models/personal_information.dart';
-import 'local_notification_service.dart';class SqliteService {
+import 'local_notification_service.dart';
+class SqliteService {
   Future<Database> initializeDB() async {
     String path = await getDatabasesPath();
     return openDatabase(
@@ -21,6 +23,9 @@ import 'local_notification_service.dart';class SqliteService {
         await database.execute(
           "CREATE TABLE IF NOT EXISTS DAILY_MED(id INTEGER PRIMARY KEY AUTOINCREMENT, day INTEGER, amount_taken INTEGER, daily_med INTEGER, morning_time_hour INTEGER, morning_time_minute INTEGER, noon_time_hour INTEGER, noon_time_minute INTEGER, evening_time_hour INTEGER, evening_time_minute INTEGER, night_time_hour INTEGER, night_time_minute INTEGER, is_notified INTEGER);",
         );
+        await database.execute(
+          "CREATE TABLE IF NOT EXISTS APP_CONFIG(id INTEGER PRIMARY KEY AUTOINCREMENT, dark_mode INTEGER, edit_font_size INTEGER, font_size_change INTEGER);",
+        );
         // await database.execute(
         //   "CREATE TABLE [IF NOT EXISTS] PERSONAL_INFO(id INTEGER PRIMARY KEY AUTOINCREMENT, dob TEXT, blood_type TEXT, gender TEXT, weight REAL, height REAL, health_condition TEXT, drug_allergies TEXT, personal_medicine TEXT); CREATE TABLE [IF NOT EXISTS] MEDICINE(id INTEGER PRIMARY KEY AUTOINCREMENT, trade_name TEXT, generic_name TEXT, form TEXT, expired_date TEXT, amount INTEGER, amount_taken INTEGER, quantity REAL, dossage_per_take TEXT, time_of_med TEXT,take_med_when TEXT, time_period_for_med TEXT, condition_of_use TEXT, additional_advice TEXT, adverseDrugReaction TEXT, dispensing_date TEXT, saved_date TEXT, pharmacy TEXT);",
         // );
@@ -33,6 +38,13 @@ import 'local_notification_service.dart';class SqliteService {
     int res = 0;
     final Database db = await initializeDB();
     res = await db.insert('PERSONAL_INFO', personalInformation.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
+    return res;
+  }
+
+  Future<int> createAppConfigItem(AppConfigModel appConfigModel) async {
+    int res = 0;
+    final Database db = await initializeDB();
+    res = await db.insert('APP_CONFIG', appConfigModel.toMap(), conflictAlgorithm: ConflictAlgorithm.ignore);
     return res;
   }
 
@@ -130,6 +142,7 @@ import 'local_notification_service.dart';class SqliteService {
     }
   }
 
+
   Future<void> increaseDailyMed(int med) async {
     final Database db = await initializeDB();
     List<DaileyMedModel> list = await getDailyMedicines();
@@ -161,12 +174,62 @@ import 'local_notification_service.dart';class SqliteService {
     await db.rawUpdate(''' UPDATE DAILY_MED SET is_notified = ? ''', [1]);
   }
 
+  Future<void> turnOffChangeFontSize() async {
+    final Database db = await initializeDB();
+    await db.rawUpdate(''' UPDATE APP_CONFIG SET edit_font_size = ? ''', [0]);
+  }
+
+  Future<void> turnOnChangeFontSize() async {
+    final Database db = await initializeDB();
+    await db.rawUpdate(''' UPDATE APP_CONFIG SET edit_font_size = ? ''', [1]);
+  }
+
+  Future<void> turnOffDarkMode() async {
+    final Database db = await initializeDB();
+    await db.rawUpdate(''' UPDATE APP_CONFIG SET dark_mode = ? ''', [0]);
+  }
+
+  Future<void> turnOnDarkMode() async {
+    final Database db = await initializeDB();
+    List<DaileyMedModel> list = await getDailyMedicines();
+    await db.rawUpdate(''' UPDATE APP_CONFIG SET dark_mode = ? ''', [1]);
+  }
+
+  Future<void> alterFontSize(int change) async {
+    final Database db = await initializeDB();
+    await db.rawUpdate(''' UPDATE APP_CONFIG SET font_size_change = ? ''', [change]);
+  }
 
   Future<List<MedicineModel>> getInactiveMedicine() async{
     final db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.query('MEDICINE',
         where: 'status = 0');
     return queryResult.map((e) => MedicineModel.fromMap(e)).toList();
+  }
+
+
+  Future<bool> getEditFontSizeStatus() async {
+    final db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.query('APP_CONFIG',
+        where: 'id = 1');
+    List<AppConfigModel> list = queryResult.map((e) => AppConfigModel.fromMap(e)).toList();
+    return list[0].editFontSize == 0 ? false: true;
+   }
+
+  Future<int> getFontSizeChange() async {
+    final db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.query('APP_CONFIG',
+        where: 'id = 1');
+    List<AppConfigModel> list = queryResult.map((e) => AppConfigModel.fromMap(e)).toList();
+    return list[0].fontSizeChange;
+  }
+
+  Future<bool> getDarkModeStatus() async {
+    final db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.query('APP_CONFIG',
+        where: 'id = 1');
+    List<AppConfigModel> list = queryResult.map((e) => AppConfigModel.fromMap(e)).toList();
+    return list[0].darkMode == 0 ? false: true;
   }
 
   Future<List<PersonalInformationModel>> getPersonalInfo() async {

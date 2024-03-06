@@ -37,6 +37,8 @@ class _DrugNotificationState extends State<DrugNotification> {
   List<MedicineModel> _eveningDrugsList = [];
   List<MedicineModel> _nightDrugsList = [];
   List<bool> _notificationList = [];
+  bool editFontsize = false;
+  int change = 0;
 
   @override
   void dispose() {
@@ -45,6 +47,15 @@ class _DrugNotificationState extends State<DrugNotification> {
     noon.dispose();
     evening.dispose();
     night.dispose();
+  }
+
+  Future<void> initFontSize() async {
+    bool status = await _sqliteService.getEditFontSizeStatus();
+    int change = await _sqliteService.getFontSizeChange();
+    setState(() {
+      editFontsize = status;
+      this.change = change;
+    });
   }
 
   void authChangesListener(){
@@ -231,6 +242,7 @@ class _DrugNotificationState extends State<DrugNotification> {
     authChangesListener();
     initIsNotified();
     getMedicines();
+    initFontSize();
   }
 
   Future<void> initIsNotified() async {
@@ -296,7 +308,7 @@ class _DrugNotificationState extends State<DrugNotification> {
             },
             child: Padding(padding: EdgeInsets.only(top: 11, right: 9),
                 child: Text( 'บันทึก', style: TextStyle(
-                    fontSize: 16,
+                    fontSize:  editFontsize ?  16 + change.toDouble() : 16,
                     fontFamily: 'PlexSansThaiRg',
                     color: Colors.black
                 ),)),
@@ -308,7 +320,7 @@ class _DrugNotificationState extends State<DrugNotification> {
             },
             child: Padding(padding: EdgeInsets.only(top: 11, right: 9),
                 child: Text('แก้ไข', style: TextStyle(
-                    fontSize: 16,
+                    fontSize:  editFontsize ?  16 + change.toDouble() : 16,
                     fontFamily: 'PlexSansThaiRg',
                     color: Colors.black
                 ),)),
@@ -327,12 +339,12 @@ class _DrugNotificationState extends State<DrugNotification> {
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 25),
                     child: Container(
-                      width: screenWidth*0.5,
+                      width: screenWidth*0.65,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('การตั้งค่าการแจ้งเตือน',style: TextStyle(fontSize: 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),),
-                          Text('เปลี่ยนเวลาการแจ้งเตือนให้เข้ากับชีวิตประจำวันของคุณ',style: TextStyle(fontSize: 13, fontFamily: 'PlexSansThaiRg', color:  Colors.black),),
+                          Text('การตั้งค่าการแจ้งเตือน',style: TextStyle(fontSize:  editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),),
+                          Text('เปลี่ยนเวลาการแจ้งเตือนให้เข้ากับชีวิตประจำวันของคุณ',style: TextStyle(fontSize:  editFontsize ?  13 + change.toDouble() : 13, fontFamily: 'PlexSansThaiRg', color:  Colors.black),),
                         ],
                       ),
                     ),
@@ -364,7 +376,7 @@ class _DrugNotificationState extends State<DrugNotification> {
                         child: Image.asset('icons/bi_sunrise-black.png'),
                       ),
                         Text('  ช่วงเช้า',
-                        style: TextStyle(fontSize: 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                        style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
                       ),
                     ],
                   ),
@@ -376,7 +388,7 @@ class _DrugNotificationState extends State<DrugNotification> {
                         contentPadding: EdgeInsets.only(top: 2, left: 15),
                         hintText: morning.text,
                         hintStyle: TextStyle(
-                            fontSize: 14,
+                            fontSize: editFontsize ?  14 + change.toDouble() : 14,
                             fontFamily: 'PlexSansThaiRg',
                             color: Colors.black
                         ),
@@ -404,7 +416,7 @@ class _DrugNotificationState extends State<DrugNotification> {
                         child: Image.asset('icons/ph_sun-black.png'),
                       ),
                       Text('  ช่วงกลางวัน',
-                        style: TextStyle(fontSize: 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                        style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
                       ),
                     ],
                   ),
@@ -416,7 +428,7 @@ class _DrugNotificationState extends State<DrugNotification> {
                         contentPadding: EdgeInsets.only(top: 2, left: 15),
                         hintText: noon.text,
                         hintStyle: TextStyle(
-                            fontSize: 14,
+                            fontSize: editFontsize ?  14 + change.toDouble() : 14,
                             fontFamily: 'PlexSansThaiRg',
                             color: Colors.black
                         ),
@@ -444,7 +456,7 @@ class _DrugNotificationState extends State<DrugNotification> {
                         child: Image.asset('icons/bi_sunset-black.png'),
                       ),
                       Text('  ช่วงเย็น',
-                        style: TextStyle(fontSize: 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                        style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
                       ),
                     ],
                   ),
@@ -456,7 +468,7 @@ class _DrugNotificationState extends State<DrugNotification> {
                         contentPadding: EdgeInsets.only(top: 2, left: 15),
                         hintText: evening.text,
                         hintStyle: TextStyle(
-                            fontSize: 14,
+                            fontSize: editFontsize ?  14 + change.toDouble() : 14,
                             fontFamily: 'PlexSansThaiRg',
                             color: Colors.black
                         ),
@@ -484,7 +496,7 @@ class _DrugNotificationState extends State<DrugNotification> {
                         child: Image.asset('icons/solar_moon-black.png'),
                       ),
                       Text('  ก่อนนอน',
-                        style: TextStyle(fontSize: 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                        style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
                       ),
                     ],
                   ),
@@ -496,7 +508,7 @@ class _DrugNotificationState extends State<DrugNotification> {
                         contentPadding: EdgeInsets.only(top: 2, left: 15),
                         hintText: night.text,
                         hintStyle: TextStyle(
-                            fontSize: 14,
+                            fontSize: editFontsize ?  14 + change.toDouble() : 14,
                             fontFamily: 'PlexSansThaiRg',
                             color: Colors.black
                         ),

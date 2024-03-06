@@ -8,7 +8,8 @@ import '../constants/constants.dart';
 class ReusableBottomNavigationBar extends StatelessWidget {
   final bool? isLoggedIn;
   final String page;
-  const ReusableBottomNavigationBar({super.key, this.isLoggedIn, required this.page});
+  final bool darkMode;
+  const ReusableBottomNavigationBar({super.key, this.isLoggedIn, required this.page, required this.darkMode});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class ReusableBottomNavigationBar extends StatelessWidget {
     return BottomAppBar(
       notchMargin: 5,
       shape: CircularNotchedRectangle(),
-      color: Colors.white,
+      color: !darkMode ? Colors.white: Color(0xff3f3f3f),
       child: Container(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -32,14 +33,14 @@ class ReusableBottomNavigationBar extends StatelessWidget {
                     },
                     child: page == 'homepage' ? BottomIcon(
                       image: Image.asset(
-                          'icons/solar_home-2-outline.png'),
+                          !darkMode ? 'icons/solar_home-2-outline.png': 'icons/solar_home-2-outline-light-green.png'),
                       label: 'โฮมเพจ',
-                      fontColor: Color(0xff059E78),
+                      fontColor: !darkMode ? Color(0xff059E78): Color(0xff94DDB5),
                     ): BottomIcon(
                       image: Image.asset(
-                          'icons/solar_home-2-outline-grey.png'),
+                          !darkMode ? 'icons/solar_home-2-outline-grey.png': 'icons/solar_home-2-outline-white.png'),
                       label: 'โฮมเพจ',
-                      fontColor: Color(0xff8B8B8B),
+                      fontColor: !darkMode ? Color(0xff8B8B8B): Colors.white,
                     ),
                   ),
                   GestureDetector(
@@ -53,14 +54,14 @@ class ReusableBottomNavigationBar extends StatelessWidget {
                     },
                     child: page == 'drugList' ? BottomIcon(
                       image: Image.asset(
-                          'icons/Vector-green.png'),
+                          !darkMode ?'icons/Vector-green.png': 'icons/healthicons_medicines-outline-light-green.png'),
                       label: 'ยาของฉัน',
-                      fontColor: Color(0xff059E78),
+                      fontColor: !darkMode ? Color(0xff059E78): Color(0xff94DDB5),
                     ): BottomIcon(
                       image: Image.asset(
-                          'icons/healthicons_medicines-outline.png'),
+                          !darkMode ? 'icons/healthicons_medicines-outline.png': 'icons/healthicons_medicines-outline-white.png'),
                       label: 'ยาของฉัน',
-                      fontColor: Color(0xff8B8B8B),
+                      fontColor: !darkMode ? Color(0xff8B8B8B): Colors.white,
                     ),
                   ),
                 ],
@@ -76,14 +77,14 @@ class ReusableBottomNavigationBar extends StatelessWidget {
                       Navigator.pushNamed(context, '/search-pharmacy');
                     },
                     child:page == 'searchPharmacy' ? BottomIcon(
-                      fontColor: Color(0xff059E78),
+                      fontColor: !darkMode ? Color(0xff059E78): Color(0xff94DDB5),
                       image: Image.asset(
-                          'icons/search-green.png'),
+                          !darkMode ? 'icons/search-green.png': 'icons/search-light-green.png'),
                       label: 'ค้นหาร้านยา',
                     ): BottomIcon(
-                      fontColor: Color(0xff8B8B8B),
+                      fontColor: !darkMode ? Color(0xff8B8B8B): Colors.white,
                       image: Image.asset(
-                          'icons/search-normal.png'),
+                          !darkMode ? 'icons/search-normal.png': 'icons/search-white.png'),
                       label: 'ค้นหาร้านยา',
                     ),
                   ),
@@ -92,14 +93,14 @@ class ReusableBottomNavigationBar extends StatelessWidget {
                       Navigator.pushNamed(context, '/profile');
                     },
                     child:page == 'profile' ?  BottomIcon(
-                      fontColor: Color(0xff059E78),
+                      fontColor: !darkMode ? Color(0xff059E78): Color(0xff94DDB5),
                       image: Image.asset(
-                          'icons/user-greenn.png'),
+                          !darkMode ? 'icons/user-greenn.png': 'icons/user-light-green.png'),
                       label: 'โปรไฟล์',
                     ): BottomIcon(
-                      fontColor: Color(0xff8B8B8B),
+                      fontColor: !darkMode ? Color(0xff8B8B8B): Colors.white,
                       image: Image.asset(
-                          'icons/user.png'),
+                          !darkMode ? 'icons/user.png': 'icons/user-white.png'),
                       label: 'โปรไฟล์',
                     ),
                   ),

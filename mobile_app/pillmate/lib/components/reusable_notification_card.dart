@@ -10,9 +10,12 @@ class ReusableNotificationCard extends StatelessWidget {
   final Widget image;
   final MedicineModel medicineModel;
   final String when;
+  final bool editFontsize;
+  final int change;
+  final bool darkMode;
   final Function(bool, String, int, String, String) callback;
 
-  const ReusableNotificationCard({super.key, required this.image, required this.medicineModel, required this.callback, required this.when, });
+  const ReusableNotificationCard({super.key, required this.image, required this.medicineModel, required this.callback, required this.when, required this.editFontsize, required this.change, required this.darkMode, });
 
 
   @override
@@ -23,7 +26,7 @@ class ReusableNotificationCard extends StatelessWidget {
       child: Card(
         elevation:1.5,
         margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 12.0),
-        color: Colors.white,
+        color: !darkMode ? Colors.white: Color(0xff3f3f3f),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(6.0)),
         child: Column(
@@ -48,9 +51,9 @@ class ReusableNotificationCard extends StatelessWidget {
                           Text(
                             medicineModel.genericName,
                             style: TextStyle(
-                                fontSize: 16,
+                                fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                 fontFamily: 'PlexSansThaiMd',
-                                color: Color(0xff121212)
+                                color: !darkMode? Color(0xff121212): Colors.white
                             ),
                           ),
                           Row(
@@ -59,16 +62,16 @@ class ReusableNotificationCard extends StatelessWidget {
                               Container(
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12),
-                                    color: Color(0xffFBEC84)
+                                    color: !darkMode? Color(0xffFBEC84): Color(0xffFFF4BB)
                                 ),
                                 child:  Padding(
                                   padding: EdgeInsets.symmetric(vertical: screenHeight*0.0005, horizontal: screenWidth*0.025),
                                   child: Text(
                                     medicineModel.dosagePerTake.toString(),
                                     style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                         fontFamily: 'PlexSansThaiRg',
-                                        color: Color(0xff121212)
+                                        color:!darkMode? Color(0xff121212): Color(0xff282828)
                                     ),
                                   ),
                                 ),
@@ -79,16 +82,16 @@ class ReusableNotificationCard extends StatelessWidget {
                               Container(
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12),
-                                    color: Color(0xffB8E7FB)
+                                    color: !darkMode? Color(0xffB8E7FB): Color(0xffD9F2FD)
                                 ),
                                 child:  Padding(
                                   padding: EdgeInsets.symmetric(vertical: screenHeight*0.0005, horizontal: screenWidth*0.025),
                                   child: Text(
                                     medicineModel.takeMedWhen,
                                     style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                         fontFamily: 'PlexSansThaiRg',
-                                        color: Color(0xff121212)
+                                        color: !darkMode? Color(0xff121212): Color(0xff282828)
                                     ),
                                   ),
                                 ),
@@ -110,7 +113,7 @@ class ReusableNotificationCard extends StatelessWidget {
                         children: [
                           Icon(
                             Ionicons.chevron_forward_outline,
-                            color: Color(0xff059E78),
+                            color: !darkMode ? Color(0xff059E78): Color(0xff94DDB5),
                           ),
                           SizedBox(height: 2,),
                           Text(
@@ -118,7 +121,7 @@ class ReusableNotificationCard extends StatelessWidget {
                             style: TextStyle(
                                 fontSize: 12,
                                 fontFamily: 'PlexSansThaiRg',
-                                color: Color(0xff059E78)
+                                color: !darkMode ? Color(0xff059E78): Color(0xff94DDB5),
                             ),
                           ),
                         ],
@@ -168,7 +171,7 @@ class ReusableNotificationCard extends StatelessWidget {
                 width: screenWidth,
                 height: screenHeight*0.05,
                 decoration: BoxDecoration(
-                    color:  Color(0xff059E78),
+                    color: !darkMode ? Color(0xff059E78): Color(0xff94DDB5),
                     borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6.0), bottomRight:Radius.circular(6.0))
                 ),
                 child: Center(
@@ -176,8 +179,8 @@ class ReusableNotificationCard extends StatelessWidget {
                     'ทานแล้ว',
                     style: TextStyle(
                         fontFamily: 'PlexSansThaiMd',
-                        fontSize: 18,
-                        color: Colors.white
+                        fontSize: editFontsize ?  18 + change.toDouble() : 18,
+                        color: !darkMode ? Colors.white: Colors.black
                     ),
                   ),
                 ),

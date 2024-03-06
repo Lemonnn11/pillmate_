@@ -24,6 +24,9 @@ class _ProfilePageState extends State<ProfilePage> {
   List<PersonalInformationModel> _personsList = [];
   String name = '';
   bool? isLoggedIn = false;
+  bool editFontsize = false;
+  int change = 0;
+  bool darkMode = false;
 
   @override
   void initState() {
@@ -32,6 +35,23 @@ class _ProfilePageState extends State<ProfilePage> {
     this._sqliteService.initializeDB();
     getPersons();
     authChangesListener();
+    initFontSize();
+    initSwitchStatus();
+  }
+  Future<void> initSwitchStatus() async {
+    bool status = await _sqliteService.getDarkModeStatus();
+    setState(() {
+      darkMode = status;
+    });
+  }
+
+  Future<void> initFontSize() async {
+    bool status = await _sqliteService.getEditFontSizeStatus();
+    int change = await _sqliteService.getFontSizeChange();
+    setState(() {
+      editFontsize = status;
+      this.change = change;
+    });
   }
 
   Future<void> getPersons() async {
@@ -92,7 +112,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       radius: 40,
                       // backgroundImage: AssetImage('images/profile-pic.png'),
                     ),
-                    Text(name,style: TextStyle(fontSize: 18, fontFamily: 'PlexSansThaiMd', color:  Colors.white),)
+                    Text(name,style: TextStyle(fontSize: editFontsize ?  18 + change.toDouble() : 18, fontFamily: 'PlexSansThaiMd', color:  Colors.white),)
                   ],
                 ),
               ),
@@ -110,7 +130,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             Text(
                               'การตั้งค่าข้อมูล',
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: editFontsize ?  18 + change.toDouble() : 18,
                                 fontFamily: 'PlexSansThaiMd',
                               ),
                             ),
@@ -145,14 +165,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                   Text(
                                     'ข้อมูลส่วนตัว',
                                     style: TextStyle(
-                                      fontSize: 15,
+                                      fontSize: editFontsize ?  15 + change.toDouble() : 15,
                                       fontFamily: 'PlexSansThaiMd',
                                     ),
                                   ),
                                   Text(
                                     'แก้ไขและเปลี่ยนแปลงข้อมูลของคุณได้ที่นี่',
                                     style: TextStyle(
-                                      fontSize: 13,
+                                      fontSize: editFontsize ?  13 + change.toDouble() : 13,
                                       fontFamily: 'PlexSansThaiRg',
                                     ),
                                   ),
@@ -191,14 +211,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                     Text(
                                       'ตั้งค่าเวลาและการแจ้งเตือน',
                                       style: TextStyle(
-                                        fontSize: 15,
+                                        fontSize: editFontsize ?  15 + change.toDouble() : 15,
                                         fontFamily: 'PlexSansThaiMd',
                                       ),
                                     ),
                                     Text(
                                       'เปลี่ยนเวลาการแจ้งเตือนให้เข้ากับชีวิตประจำวันของคุณ',
                                       style: TextStyle(
-                                        fontSize: 13,
+                                        fontSize: editFontsize ?  13 + change.toDouble() : 13,
                                         fontFamily: 'PlexSansThaiRg',
                                       ),
                                     ),
@@ -233,14 +253,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Text(
                                   'ที่ตั้งและสถานที่',
                                   style: TextStyle(
-                                    fontSize: 15,
+                                    fontSize: editFontsize ?  15 + change.toDouble() : 15,
                                     fontFamily: 'PlexSansThaiMd',
                                   ),
                                 ),
                                 Text(
                                   'ตั้งค่าสถานที่เพื่อเข้าถึงร้านยาที่ให้บริการ',
                                   style: TextStyle(
-                                    fontSize: 13,
+                                    fontSize: editFontsize ?  13 + change.toDouble() : 13,
                                     fontFamily: 'PlexSansThaiRg',
                                   ),
                                 ),
@@ -262,7 +282,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             Text(
                               'การตั้งค่าทั่วไป',
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: editFontsize ?  18 + change.toDouble() : 18,
                                 fontFamily: 'PlexSansThaiMd',
                               ),
                             ),
@@ -297,14 +317,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                   Text(
                                     'การตั้งค่าระบบ',
                                     style: TextStyle(
-                                      fontSize: 15,
+                                      fontSize: editFontsize ?  15 + change.toDouble() : 15,
                                       fontFamily: 'PlexSansThaiMd',
                                     ),
                                   ),
                                   Text(
-                                    'โหมด: สว่าง',
+                                    darkMode ? 'โหมด: มืด': 'โหมด: สว่าง',
                                     style: TextStyle(
-                                      fontSize: 13,
+                                      fontSize: editFontsize ?  13 + change.toDouble() : 13,
                                       fontFamily: 'PlexSansThaiRg',
                                     ),
                                   ),
@@ -319,39 +339,44 @@ class _ProfilePageState extends State<ProfilePage> {
                         height: 1.2,
                         color: Color(0xffE7E7E7),
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding:EdgeInsets.only(top: 2.0, right: screenWidth*0.025),
-                              child: Container(
-                                width: 24,
-                                child: Image.asset('icons/ci_font.png'),
+                      GestureDetector(
+                        onTap: (){
+                            Navigator.pushNamed(context, '/font-size');
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding:EdgeInsets.only(top: 2.0, right: screenWidth*0.025),
+                                child: Container(
+                                  width: 24,
+                                  child: Image.asset('icons/ci_font.png'),
+                                ),
                               ),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'การตั้งค่าขนาดของตัวอักษร',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontFamily: 'PlexSansThaiMd',
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'การตั้งค่าขนาดของตัวอักษร',
+                                    style: TextStyle(
+                                      fontSize: editFontsize ?  15 + change.toDouble() : 15,
+                                      fontFamily: 'PlexSansThaiMd',
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  'ปรับเปลี่ยนขนาดตัวอักษรให้เข้ากับคุณ',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontFamily: 'PlexSansThaiRg',
+                                  Text(
+                                    'ปรับเปลี่ยนขนาดตัวอักษรให้เข้ากับคุณ',
+                                    style: TextStyle(
+                                      fontSize: editFontsize ?  13 + change.toDouble() : 13,
+                                      fontFamily: 'PlexSansThaiRg',
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       Container(
@@ -378,14 +403,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Text(
                                   'การยินยอมเก็บรวบรวมข้อมูลส่วนบุคคล (PDPA)',
                                   style: TextStyle(
-                                    fontSize: 15,
+                                    fontSize: editFontsize ?  15 + change.toDouble() : 15,
                                     fontFamily: 'PlexSansThaiMd',
                                   ),
                                 ),
                                 Text(
                                   'เพื่อให้เราเก็บข้อมูลเพื่ออำนวยความสะดวกของตัวคุณ',
                                   style: TextStyle(
-                                    fontSize: 13,
+                                    fontSize: editFontsize ?  13 + change.toDouble() : 13,
                                     fontFamily: 'PlexSansThaiRg',
                                   ),
                                 ),
@@ -418,14 +443,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Text(
                                   'เงื่อนไขและข้อตกลง',
                                   style: TextStyle(
-                                    fontSize: 15,
+                                    fontSize: editFontsize ?  15 + change.toDouble() : 15,
                                     fontFamily: 'PlexSansThaiMd',
                                   ),
                                 ),
                                 Text(
                                   'เพื่อให้เราเก็บข้อมูลเพื่ออำนวยความสะดวกของตัวคุณ',
                                   style: TextStyle(
-                                    fontSize: 13,
+                                    fontSize: editFontsize ?  13 + change.toDouble() : 13,
                                     fontFamily: 'PlexSansThaiRg',
                                   ),
                                 ),
@@ -464,14 +489,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                     Text(
                                       'ออกจากระบบ',
                                       style: TextStyle(
-                                        fontSize: 15,
+                                        fontSize: editFontsize ?  15 + change.toDouble() : 15,
                                         fontFamily: 'PlexSansThaiMd',
                                       ),
                                     ),
                                     Text(
                                       'คุณสามารถเข้าสู่ระบบได้อีกครั้ง ด้วยเบอร์โทรศัพท์ของคุณ',
                                       style: TextStyle(
-                                        fontSize: 13,
+                                        fontSize: editFontsize ?  13 + change.toDouble() : 13,
                                         fontFamily: 'PlexSansThaiRg',
                                       ),
                                     ),
@@ -505,7 +530,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 Image.asset('icons/qrcode-scan.png', width: 22, height: 22,) ,
                 Text('สแกน', style: TextStyle(
                     color: Colors.white,
-                    fontSize: 10
+                    fontSize: editFontsize ?  10 + change.toDouble() : 10
                 ),)
               ],
             ),
@@ -523,7 +548,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: ReusableBottomNavigationBar(isLoggedIn: isLoggedIn, page: 'profile'),
+      bottomNavigationBar: ReusableBottomNavigationBar(isLoggedIn: isLoggedIn, darkMode: darkMode,page: 'profile'),
     );
   }
 }

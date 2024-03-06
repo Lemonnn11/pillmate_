@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
+import '../services/sqlite_service.dart';
+
 class Appearance extends StatefulWidget {
   const Appearance({super.key});
 
@@ -11,6 +13,35 @@ class Appearance extends StatefulWidget {
 
 class _AppearanceState extends State<Appearance> {
   bool isSwitched = false;
+  bool editFontsize = false;
+  int change = 0;
+  late SqliteService _sqliteService;
+
+
+  Future<void> initFontSize() async {
+    bool status = await _sqliteService.getEditFontSizeStatus();
+    int change = await _sqliteService.getFontSizeChange();
+    setState(() {
+      editFontsize = status;
+      this.change = change;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    this._sqliteService= SqliteService();
+    this._sqliteService.initializeDB();
+    initFontSize();
+    initSwitchStatus();
+  }
+
+  Future<void> initSwitchStatus() async {
+    bool status = await _sqliteService.getDarkModeStatus();
+    setState(() {
+      isSwitched = status;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +85,8 @@ class _AppearanceState extends State<Appearance> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('การตั้งค่าระบบ',style: TextStyle(fontSize: 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),),
-                          Text('โหมด: สว่าง',style: TextStyle(fontSize: 13, fontFamily: 'PlexSansThaiRg', color:  Colors.black),),
+                          Text('การตั้งค่าระบบ',style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),),
+                          Text(isSwitched ? 'โหมด: มืด': 'โหมด: สว่าง' ,style: TextStyle(fontSize: editFontsize ?  13 + change.toDouble() : 13, fontFamily: 'PlexSansThaiRg', color:  Colors.black),),
                         ],
                       ),
                     ),
@@ -66,9 +97,9 @@ class _AppearanceState extends State<Appearance> {
                         setState((){
                           this.isSwitched = value;
                           if(isSwitched){
-
+                              _sqliteService.turnOnDarkMode();
                           }else{
-
+                              _sqliteService.turnOffDarkMode();
                           }
                         });
                       }

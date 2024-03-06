@@ -13,6 +13,8 @@ class PersonalInformation extends StatefulWidget {
 
 class _PersonalInformationState extends State<PersonalInformation> {
   bool isEdit = false;
+  bool editFontsize = false;
+  int change = 0;
   late SqliteService _sqliteService;
   List<PersonalInformationModel>? p1 = null;
   TextEditingController _nameController = new TextEditingController();
@@ -31,6 +33,16 @@ class _PersonalInformationState extends State<PersonalInformation> {
     this._sqliteService= SqliteService();
     this._sqliteService.initializeDB();
     getPersonalInformation();
+    initFontSize();
+  }
+
+  Future<void> initFontSize() async {
+    bool status = await _sqliteService.getEditFontSizeStatus();
+    int change = await _sqliteService.getFontSizeChange();
+    setState(() {
+      editFontsize = status;
+      this.change = change;
+    });
   }
 
   @override
@@ -105,7 +117,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
             child: Padding(
               padding: EdgeInsets.only(top: 11, right: 9),
               child:  Text( 'บันทึก', style: TextStyle(
-                  fontSize: 16,
+                  fontSize: editFontsize ?  16 + change.toDouble() : 16,
                   fontFamily: 'PlexSansThaiRg',
                   color: Colors.black
               ),)
@@ -120,7 +132,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
           child: Padding(
           padding: EdgeInsets.only(top: 11, right: 9),
           child:  Text( 'แก้ไข', style: TextStyle(
-          fontSize: 16,
+          fontSize: editFontsize ?  16 + change.toDouble() : 16,
           fontFamily: 'PlexSansThaiRg',
           color: Colors.black
           ),)
@@ -146,7 +158,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                     padding: const EdgeInsets.only(top: 6, bottom: 8),
                     child: Text(
                       p1 == null || p1!.isEmpty ? '' : p1!.first.name,
-                      style: TextStyle(fontSize: 18, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                      style: TextStyle(fontSize: editFontsize ?  18 + change.toDouble() : 18, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
                     ),
                   )
                 ],
@@ -155,7 +167,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('วัน/เดือน/ปี เกิด',
-                    style: TextStyle(fontSize: 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                    style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
                   ),
                   SizedBox(height: 4,),
                   Container(
@@ -165,7 +177,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                           contentPadding: EdgeInsets.only(top: 2, left: 15),
                           hintText: p1 == null || p1!.isEmpty ? '': p1!.first.dob ,
                           hintStyle: TextStyle(
-                            fontSize: 14,
+                            fontSize: editFontsize ?  14 + change.toDouble() : 14,
                             fontFamily: 'PlexSansThaiRg',
                             color: Colors.black
                           ),
@@ -195,7 +207,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('กรุ๊ปเลือด',
-                          style: TextStyle(fontSize: 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                          style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
                         ),
                         SizedBox(height: 4,),
                         Container(
@@ -205,7 +217,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                               contentPadding: EdgeInsets.only(top: 2, left: 15),
                               hintText: p1 == null|| p1!.isEmpty ? '': p1!.first.bloodType,
                               hintStyle: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                   fontFamily: 'PlexSansThaiRg',
                                   color: Colors.black
                               ),
@@ -234,7 +246,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('เพศ',
-                        style: TextStyle(fontSize: 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                        style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
                       ),
                       SizedBox(height: 4,),
                       Container(
@@ -244,7 +256,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                             contentPadding: EdgeInsets.only(top: 2, left: 15),
                             hintText: p1 == null|| p1!.isEmpty ? '': p1!.first.gender,
                             hintStyle: TextStyle(
-                                fontSize: 14,
+                                fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                 fontFamily: 'PlexSansThaiRg',
                                 color: Colors.black
                             ),
@@ -276,7 +288,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('น้ำหนัก (กก.)',
-                          style: TextStyle(fontSize: 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                          style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
                         ),
                         SizedBox(height: 4,),
                         Container(
@@ -288,7 +300,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                 child: Text(
                                   'กิโลกรัม',
                                   style: TextStyle(
-                                    fontSize: 14,
+                                    fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                     fontFamily: 'PlexSansThaiRg',
                                     color: Color(0xff575757),
                                   ),
@@ -297,7 +309,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                               contentPadding: EdgeInsets.only(top: 2, left: 15),
                               hintText: p1 == null|| p1!.isEmpty ? '': p1!.first.weight.toString(),
                               hintStyle: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                   fontFamily: 'PlexSansThaiRg',
                                   color: Colors.black
                               ),
@@ -326,7 +338,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('ส่วนสูง (ซม.)',
-                        style: TextStyle(fontSize: 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                        style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
                       ),
                       SizedBox(height: 4,),
                       Container(
@@ -338,7 +350,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                               child: Text(
                                 'เซนติเมตร',
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                   fontFamily: 'PlexSansThaiRg',
                                   color: Color(0xff575757),
                                 ),
@@ -347,7 +359,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                             contentPadding: EdgeInsets.only(top: 2, left: 15),
                             hintText: p1 == null || p1!.isEmpty? '': p1!.first.height.toString(),
                             hintStyle: TextStyle(
-                                fontSize: 14,
+                                fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                 fontFamily: 'PlexSansThaiRg',
                                 color: Colors.black
                             ),
@@ -376,7 +388,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('โรคประจำตัว',
-                    style: TextStyle(fontSize: 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                    style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
                   ),
                   SizedBox(height: 4,),
                   Container(
@@ -386,7 +398,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         contentPadding: EdgeInsets.only(top: 2, left: 15),
                         hintText: p1 == null || p1!.isEmpty? '': p1!.first.healthCondition,
                         hintStyle: TextStyle(
-                            fontSize: 14,
+                            fontSize: editFontsize ?  14 + change.toDouble() : 14,
                             fontFamily: 'PlexSansThaiRg',
                             color: Colors.black
                         ),
@@ -413,7 +425,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('ยาที่แพ้',
-                    style: TextStyle(fontSize: 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                    style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
                   ),
                   SizedBox(height: 4,),
                   Container(
@@ -423,7 +435,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         contentPadding: EdgeInsets.only(top: 2, left: 15),
                         hintText: p1 == null || p1!.isEmpty? '': p1!.first.drugAllergies,
                         hintStyle: TextStyle(
-                            fontSize: 14,
+                            fontSize: editFontsize ?  14 + change.toDouble() : 14,
                             fontFamily: 'PlexSansThaiRg',
                             color: Colors.black
                         ),
@@ -450,7 +462,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('ยาที่ใช้ประจำ',
-                    style: TextStyle(fontSize: 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                    style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
                   ),
                   SizedBox(height: 4,),
                   Container(
@@ -460,7 +472,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         contentPadding: EdgeInsets.only(top: 2, left: 15),
                         hintText: p1 == null || p1!.isEmpty? '': p1!.first.personalMedicine,
                         hintStyle: TextStyle(
-                            fontSize: 14,
+                            fontSize: editFontsize ?  14 + change.toDouble() : 14,
                             fontFamily: 'PlexSansThaiRg',
                             color: Colors.black
                         ),

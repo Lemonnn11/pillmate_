@@ -24,7 +24,9 @@ class BottomIcon extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-              fontSize: 12, fontWeight: FontWeight.bold, color:fontColor, fontFamily: 'PlexSansThaiRg'),
+              fontSize: 12, fontWeight: FontWeight.bold,
+              color:fontColor,
+              fontFamily: 'PlexSansThaiRg'),
         ),
       ],
     );

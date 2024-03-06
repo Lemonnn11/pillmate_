@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pillmate/models/medicine.dart';
 
+import '../constants/constants.dart';
 import '../services/sqlite_service.dart';
 
 class AddDrug extends StatefulWidget {
@@ -27,6 +28,9 @@ class _AddDrugState extends State<AddDrug> {
   bool isActived = true;
   final _firestore = FirebaseFirestore.instance;
   String storeName = '';
+  bool editFontsize = false;
+  int change = 0;
+  bool darkMode = false;
 
 
   void _getPharmacyName() async {
@@ -51,25 +55,43 @@ class _AddDrugState extends State<AddDrug> {
     print(data);
     this._sqliteService= SqliteService();
     this._sqliteService.initializeDB();
-    formattedDate();
-    formattedType();
+    formattedDate(data['expiredDate'], data['date']);
+    formattedType(data['typeOfMedicine'].toString());
     _getPharmacyName();
+    initFontSize();
+    initDarkMode();
+  }
+
+  Future<void> initDarkMode() async {
+    bool status = await _sqliteService.getDarkModeStatus();
+    setState(() {
+      darkMode = status;
+    });
+  }
+
+  Future<void> initFontSize() async {
+    bool status = await _sqliteService.getEditFontSizeStatus();
+    int change = await _sqliteService.getFontSizeChange();
+    setState(() {
+      editFontsize = status;
+      this.change = change;
+    });
   }
   
-  void formattedType(){
-    switch(data['typeOfMedicine'].toString()){
+  void formattedType(String typeOfMedicine){
+    switch(typeOfMedicine){
       case 'Tablet':
-        data['typeOfMedicine'] = data['typeOfMedicine'].toString().replaceAll('Tablet', 'เม็ด');
+        typeOfMedicine = typeOfMedicine.replaceAll('Tablet', 'เม็ด');
         break;
       case 'Capsule':
-        data['typeOfMedicine'] = data['typeOfMedicine'].toString().replaceAll('Capsule', 'แคปซูล');
+        typeOfMedicine = typeOfMedicine.replaceAll('Capsule', 'แคปซูล');
         break;
     }
   }
 
-  void formattedDate(){
-    DateTime exp = DateTime.parse(data['expiredDate']);
-    DateTime des = DateTime.parse(data['expiredDate']);
+  void formattedDate(String expiredDate, String dispensingDate){
+    DateTime exp = DateTime.parse(expiredDate);
+    DateTime des = DateTime.parse(dispensingDate);
     final formatter = new DateFormat('d MMMM y');
     formattedExpired = formatter.format(exp);
     List<String> tmpExp = formattedExpired.split(' ');
@@ -164,9 +186,10 @@ class _AddDrugState extends State<AddDrug> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: !darkMode ? Colors.white: kBlackDarkModeBg,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: !darkMode ? Colors.white: kBlackDarkModeBg,
         automaticallyImplyLeading: false,
         toolbarHeight: 45,
         title: Padding(
@@ -176,12 +199,12 @@ class _AddDrugState extends State<AddDrug> {
             style: TextStyle(
                 fontSize: 20,
                 fontFamily: 'PlexSansThaiSm',
-                color: Colors.black
+                color: !darkMode ? Colors.black: Colors.white,
             ),
           ),
         ),
         leading: IconButton(
-          icon: Icon(Ionicons.chevron_back_outline, color: Colors.black,size: 30,), onPressed: () {
+          icon: Icon(Ionicons.chevron_back_outline, color: !darkMode ? Colors.black: Colors.white,size: 30,), onPressed: () {
           Navigator.pushNamed(context, "/homepage");
         },
 
@@ -189,7 +212,7 @@ class _AddDrugState extends State<AddDrug> {
       ),
       body: Container(
         width: screenWidth,
-        color: Colors.white,
+        color: !darkMode ? Colors.white: kBlackDarkModeBg,
         child: Padding(
           padding: EdgeInsets.only(top: 10.0, left: screenWidth*0.04, right: screenWidth*0.04),
           child: ListView(
@@ -213,19 +236,22 @@ class _AddDrugState extends State<AddDrug> {
                       Text(data['genericName'],
                         style: TextStyle(
                             fontSize: 20,
-                            fontFamily: 'PlexSansThaiSm'
+                            fontFamily: 'PlexSansThaiSm',
+                          color: !darkMode ? Colors.black: Colors.white,
                         ),),
                       Row(
                         children: [
                           Text('รูปแบบยา: ',
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: editFontsize ?  14 + change.toDouble() : 14,
                               fontFamily: 'PlexSansThaiRg',
+                              color: !darkMode ? Colors.black: Colors.white,
                             ),),
                           Text(data['typeOfMedicine'],
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: editFontsize ?  14 + change.toDouble() : 14,
                               fontFamily: 'PlexSansThaiRg',
+                              color: !darkMode ? Colors.black: Colors.white,
                             ),),
                         ],
                       ),
@@ -234,13 +260,15 @@ class _AddDrugState extends State<AddDrug> {
                         children: [
                           Text('ปริมาณ: ',
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: editFontsize ?  14 + change.toDouble() : 14,
                               fontFamily: 'PlexSansThaiRg',
+                              color: !darkMode ? Colors.black: Colors.white,
                             ),),
                           Text(data['quantity'].toString(),
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: editFontsize ?  14 + change.toDouble() : 14,
                               fontFamily: 'PlexSansThaiRg',
+                              color: !darkMode ? Colors.black: Colors.white,
                             ),),
                         ],
                       ),
@@ -249,13 +277,15 @@ class _AddDrugState extends State<AddDrug> {
                           children: [
                             Text('วันหมดอายุ: ',
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                 fontFamily: 'PlexSansThaiRg',
+                                color: !darkMode ? Colors.black: Colors.white,
                               ),),
                             Text(formattedExpired,
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                 fontFamily: 'PlexSansThaiRg',
+                                color: !darkMode ? Colors.black: Colors.white,
                               ),),
                           ],
                         ),
@@ -272,8 +302,9 @@ class _AddDrugState extends State<AddDrug> {
                       children: [
                         Text('จำนวนยาที่ต้องทาน',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: editFontsize ?  16 + change.toDouble() : 16,
                             fontFamily: 'PlexSansThaiMd',
+                            color: !darkMode ? Colors.black: Colors.white,
                           ),)
                       ],
                     ),
@@ -283,8 +314,9 @@ class _AddDrugState extends State<AddDrug> {
                       children: [
                         Text(data['amountOfMeds'].toString() + ' '+ data['typeOfMedicine'],
                           style: TextStyle(
-                              fontSize: 16,
-                              fontFamily: 'PlexSansThaiRg'
+                              fontSize: editFontsize ?  16 + change.toDouble() : 16,
+                              fontFamily: 'PlexSansThaiRg',
+                            color: !darkMode ? Colors.black: Colors.white,
                           ),)
                       ],
                     ),
@@ -310,7 +342,8 @@ class _AddDrugState extends State<AddDrug> {
                             'รับประทานครั้งละ',
                             style: TextStyle(
                               fontFamily: 'PlexSansThaiMd',
-                              fontSize: 16,
+                              fontSize: editFontsize ?  16 + change.toDouble() : 16,
+                              color: !darkMode ? Colors.black: Colors.white,
                             ),
                           ),
                         ),
@@ -319,9 +352,10 @@ class _AddDrugState extends State<AddDrug> {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12.0),
                               border: Border.all(
-                                  color: Color(0xffD0D0D0),
+                                  color: !darkMode ? Color(0xffD0D0D0): kBlackDarkMode,
                                   width: 1
-                              )
+                              ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                           ),
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: screenWidth*0.08),
@@ -330,14 +364,15 @@ class _AddDrugState extends State<AddDrug> {
                               children: [
                                 Text(data['dosagePerTake'].toString(),
                                   style: TextStyle(
-                                      fontSize: 18,
-                                      fontFamily: 'PlexSansThaiRg'
+                                      fontSize: editFontsize ?  18 + change.toDouble() : 18,
+                                      fontFamily: 'PlexSansThaiRg',
+                                    color:!darkMode ? Colors.black: Colors.white,
                                   ),),
                                 Text(data['typeOfMedicine'],
                                   style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiRg',
-                                      color: Color(0xff8B8B8B)
+                                    color: !darkMode ? Color(0xff8B8B8B): Colors.white,
                                   ),),
                               ],
                             ),
@@ -357,7 +392,8 @@ class _AddDrugState extends State<AddDrug> {
                             'วันละ',
                             style: TextStyle(
                               fontFamily: 'PlexSansThaiMd',
-                              fontSize: 16,
+                              fontSize: editFontsize ?  16 + change.toDouble() : 16,
+                              color: !darkMode ? Colors.black: Colors.white,
                             ),
                           ),
                         ),
@@ -366,9 +402,10 @@ class _AddDrugState extends State<AddDrug> {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12.0),
                               border: Border.all(
-                                  color: Color(0xffD0D0D0),
+                                  color: !darkMode ? Color(0xffD0D0D0): kBlackDarkMode,
                                   width: 1
-                              )
+                              ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                           ),
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: screenWidth*0.08),
@@ -377,14 +414,15 @@ class _AddDrugState extends State<AddDrug> {
                               children: [
                                 Text(data['timePerDay'].toString(),
                                   style: TextStyle(
-                                      fontSize: 18,
-                                      fontFamily: 'PlexSansThaiRg'
+                                      fontSize: editFontsize ?  18 + change.toDouble() : 18,
+                                      fontFamily: 'PlexSansThaiRg',
+                                    color: !darkMode ? Colors.black: Colors.white,
                                   ),),
                                 Text('ครั้ง',
                                   style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiRg',
-                                      color: Color(0xff8B8B8B)
+                                    color: !darkMode ? Color(0xff8B8B8B): Colors.white,
                                   ),),
                               ],
                             ),
@@ -408,7 +446,8 @@ class _AddDrugState extends State<AddDrug> {
                             'รับประทาน',
                             style: TextStyle(
                               fontFamily: 'PlexSansThaiMd',
-                              fontSize: 16,
+                              fontSize: editFontsize ?  16 + change.toDouble() : 16,
+                              color: !darkMode ? Colors.black: Colors.white,
                             ),
                           ),
                         ),
@@ -417,9 +456,10 @@ class _AddDrugState extends State<AddDrug> {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12.0),
                               border: Border.all(
-                                  color: Color(0xffD0D0D0),
+                                  color: !darkMode ? Color(0xffD0D0D0): kBlackDarkMode,
                                   width: 1
-                              )
+                              ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                           ),
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: screenWidth*0.08),
@@ -428,8 +468,9 @@ class _AddDrugState extends State<AddDrug> {
                               children: [
                                 Text(data['timeOfMed'],
                                   style: TextStyle(
-                                      fontSize: 18,
-                                      fontFamily: 'PlexSansThaiRg'
+                                      fontSize: editFontsize ?  18 + change.toDouble() : 18,
+                                      fontFamily: 'PlexSansThaiRg',
+                                    color: !darkMode ? Colors.black: Colors.white,
                                   ),),
                               ],
                             ),
@@ -450,7 +491,8 @@ class _AddDrugState extends State<AddDrug> {
                             'ทุกๆ',
                             style: TextStyle(
                               fontFamily: 'PlexSansThaiMd',
-                              fontSize: 16,
+                              fontSize: editFontsize ?  16 + change.toDouble() : 16,
+                              color: !darkMode ? Colors.black: Colors.white,
                             ),
                           ),
                         ),
@@ -459,9 +501,10 @@ class _AddDrugState extends State<AddDrug> {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12.0),
                               border: Border.all(
-                                  color: Color(0xffD0D0D0),
+                                  color: !darkMode ? Color(0xffD0D0D0): kBlackDarkMode,
                                   width: 1
-                              )
+                              ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                           ),
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: screenWidth*0.08),
@@ -470,14 +513,15 @@ class _AddDrugState extends State<AddDrug> {
                               children: [
                                 Text(data['timePeriodForMed'].toString(),
                                   style: TextStyle(
-                                      fontSize: 18,
-                                      fontFamily: 'PlexSansThaiRg'
+                                      fontSize: editFontsize ?  18 + change.toDouble() : 18,
+                                      fontFamily: 'PlexSansThaiRg',
+                                    color: !darkMode ? Colors.black: Colors.white,
                                   ),),
                                 Text('ชั่วโมง',
                                   style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiRg',
-                                      color: Color(0xff8B8B8B)
+                                    color: !darkMode ? Color(0xff8B8B8B): Colors.white,
                                   ),),
                               ],
                             ),
@@ -522,7 +566,8 @@ class _AddDrugState extends State<AddDrug> {
                             'ช่วงเวลา',
                             style: TextStyle(
                               fontFamily: 'PlexSansThaiMd',
-                              fontSize: 16,
+                              fontSize: editFontsize ?  16 + change.toDouble() : 16,
+                              color: !darkMode ? Colors.black: Colors.white,
                             ),
                           ),
                         ),
@@ -533,12 +578,13 @@ class _AddDrugState extends State<AddDrug> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.0),
                                 border: Border.all(
-                                    color: Color(0xffD0D0D0),
+                                    color: !darkMode ? Color(0xffD0D0D0): kBlackDarkMode,
                                     width: 1
-                                )
+                                ),
+                              color: !darkMode ? Colors.white: kBlackDarkMode,
                             ),
                             child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.06),
+                              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.045),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
@@ -548,8 +594,9 @@ class _AddDrugState extends State<AddDrug> {
                                   ),
                                   Text('เช้า',
                                     style: TextStyle(
-                                        fontSize: 18,
-                                        fontFamily: 'PlexSansThaiRg'
+                                        fontSize: editFontsize ?  18 + change.toDouble() : 18,
+                                        fontFamily: 'PlexSansThaiRg',
+                                      color:  !darkMode ? Colors.black: Colors.white,
                                     ),),
                                 ],
                               ),
@@ -573,12 +620,13 @@ class _AddDrugState extends State<AddDrug> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.0),
                                 border: Border.all(
-                                    color: Color(0xffD0D0D0),
+                                    color: !darkMode ? Color(0xffD0D0D0): kBlackDarkMode,
                                     width: 1
-                                )
+                                ),
+                              color: !darkMode ? Colors.white: kBlackDarkMode,
                             ),
                             child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.05),
+                              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.03),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
@@ -588,8 +636,9 @@ class _AddDrugState extends State<AddDrug> {
                                   ),
                                   Text('กลางวัน',
                                     style: TextStyle(
-                                        fontSize: 18,
-                                        fontFamily: 'PlexSansThaiRg'
+                                        fontSize: editFontsize ?  18 + change.toDouble() : 18,
+                                        fontFamily: 'PlexSansThaiRg',
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),),
                                 ],
                               ),
@@ -613,12 +662,13 @@ class _AddDrugState extends State<AddDrug> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.0),
                                 border: Border.all(
-                                    color: Color(0xffD0D0D0),
+                                    color: !darkMode ? Color(0xffD0D0D0): kBlackDarkMode,
                                     width: 1
-                                )
+                                ),
+                              color: !darkMode ? Colors.white: kBlackDarkMode,
                             ),
                             child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.06),
+                              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.045),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
@@ -628,8 +678,9 @@ class _AddDrugState extends State<AddDrug> {
                                   ),
                                   Text('เย็น',
                                     style: TextStyle(
-                                        fontSize: 18,
-                                        fontFamily: 'PlexSansThaiRg'
+                                        fontSize: editFontsize ?  18 + change.toDouble() : 18,
+                                        fontFamily: 'PlexSansThaiRg',
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),),
                                 ],
                               ),
@@ -652,12 +703,13 @@ class _AddDrugState extends State<AddDrug> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.0),
                                 border: Border.all(
-                                    color: Color(0xffD0D0D0),
+                                    color: !darkMode ? Color(0xffD0D0D0): kBlackDarkMode,
                                     width: 1
-                                )
+                                ),
+                              color: !darkMode ? Colors.white: kBlackDarkMode,
                             ),
                             child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.06),
+                              padding: EdgeInsets.symmetric(horizontal: screenWidth*0.045),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
@@ -667,8 +719,9 @@ class _AddDrugState extends State<AddDrug> {
                                   ),
                                   Text('ก่อนนอน',
                                     style: TextStyle(
-                                        fontSize: 18,
-                                        fontFamily: 'PlexSansThaiRg'
+                                        fontSize: editFontsize ?  18 + change.toDouble() : 18,
+                                        fontFamily: 'PlexSansThaiRg',
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),),
                                 ],
                               ),
@@ -695,7 +748,8 @@ class _AddDrugState extends State<AddDrug> {
                             'การแจ้งเตือน',
                             style: TextStyle(
                               fontFamily: 'PlexSansThaiMd',
-                              fontSize: 16,
+                              fontSize: editFontsize ?  16 + change.toDouble() : 16,
+                              color: !darkMode ? Colors.black: Colors.white,
                             ),
                           ),
                         ),
@@ -706,9 +760,10 @@ class _AddDrugState extends State<AddDrug> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.0),
                                 border: Border.all(
-                                    color: Color(0xffD0D0D0),
+                                    color: !darkMode ? Color(0xffD0D0D0): kBlackDarkMode,
                                     width: 1
-                                )
+                                ),
+                              color: !darkMode ? Colors.white: kBlackDarkMode,
                             ),
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: screenWidth*0.03),
@@ -724,14 +779,15 @@ class _AddDrugState extends State<AddDrug> {
                                   ),
                                   Text('09:00',
                                     style: TextStyle(
-                                        fontSize: 16,
-                                        fontFamily: 'PlexSansThaiRg'
+                                        fontSize: editFontsize ?  16 + change.toDouble() : 16,
+                                        fontFamily: 'PlexSansThaiRg',
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),),
                                   Text('น.',
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                         fontFamily: 'PlexSansThaiRg',
-                                        color: Color(0xff8B8B8B)
+                                      color: !darkMode ? Color(0xff8B8B8B): Colors.white,
                                     ),),
                                 ],
                               ),
@@ -754,9 +810,10 @@ class _AddDrugState extends State<AddDrug> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.0),
                                 border: Border.all(
-                                    color: Color(0xffD0D0D0),
+                                    color: !darkMode ? Color(0xffD0D0D0): kBlackDarkMode,
                                     width: 1
-                                )
+                                ),
+                              color: !darkMode ? Colors.white: kBlackDarkMode,
                             ),
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: screenWidth*0.03),
@@ -772,14 +829,15 @@ class _AddDrugState extends State<AddDrug> {
                                   ),
                                   Text('12:00',
                                     style: TextStyle(
-                                        fontSize: 16,
-                                        fontFamily: 'PlexSansThaiRg'
+                                        fontSize: editFontsize ?  16 + change.toDouble() : 16,
+                                        fontFamily: 'PlexSansThaiRg',
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),),
                                   Text('น.',
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                         fontFamily: 'PlexSansThaiRg',
-                                        color: Color(0xff8B8B8B)
+                                      color: !darkMode ? Color(0xff8B8B8B): Colors.white,
                                     ),),
                                 ],
                               ),
@@ -802,9 +860,10 @@ class _AddDrugState extends State<AddDrug> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.0),
                                 border: Border.all(
-                                    color: Color(0xffD0D0D0),
+                                    color: !darkMode ? Color(0xffD0D0D0): kBlackDarkMode,
                                     width: 1
-                                )
+                                ),
+                              color: !darkMode ? Colors.white: kBlackDarkMode,
                             ),
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: screenWidth*0.03),
@@ -820,14 +879,15 @@ class _AddDrugState extends State<AddDrug> {
                                   ),
                                   Text('17:00',
                                     style: TextStyle(
-                                        fontSize: 16,
-                                        fontFamily: 'PlexSansThaiRg'
+                                        fontSize: editFontsize ?  16 + change.toDouble() : 16,
+                                        fontFamily: 'PlexSansThaiRg',
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),),
                                   Text('น.',
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                         fontFamily: 'PlexSansThaiRg',
-                                        color: Color(0xff8B8B8B)
+                                        color: !darkMode ? Color(0xff8B8B8B): Colors.white,
                                     ),),
                                 ],
                               ),
@@ -849,9 +909,10 @@ class _AddDrugState extends State<AddDrug> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.0),
                                 border: Border.all(
-                                    color: Color(0xffD0D0D0),
+                                    color: !darkMode ? Color(0xffD0D0D0): kBlackDarkMode,
                                     width: 1
-                                )
+                                ),
+                              color: !darkMode ? Colors.white: kBlackDarkMode,
                             ),
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: screenWidth*0.03),
@@ -867,14 +928,15 @@ class _AddDrugState extends State<AddDrug> {
                                   ),
                                   Text('21:00',
                                     style: TextStyle(
-                                        fontSize: 16,
-                                        fontFamily: 'PlexSansThaiRg'
+                                        fontSize: editFontsize ?  16 + change.toDouble() : 16,
+                                        fontFamily: 'PlexSansThaiRg',
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),),
                                   Text('น.',
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                         fontFamily: 'PlexSansThaiRg',
-                                        color: Color(0xff8B8B8B)
+                                      color: !darkMode ? Color(0xff8B8B8B): Colors.white,
                                     ),),
                                 ],
                               ),
@@ -907,8 +969,8 @@ class _AddDrugState extends State<AddDrug> {
                         'ข้อบ่งใช้',
                         style: TextStyle(
                             fontFamily: 'PlexSansThaiSm',
-                            fontSize: 16,
-                            color: Colors.black
+                            fontSize: editFontsize ?  16 + change.toDouble() : 16,
+                          color: !darkMode ? Colors.black: Colors.white,
                         ),
                       ),
                       SizedBox(height: 7,),
@@ -921,7 +983,10 @@ class _AddDrugState extends State<AddDrug> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(top: 4.0),
-                                  child: Text('• '),
+                                  child: Text('• ',
+                                    style: TextStyle(
+                                      color: !darkMode ? Colors.black: Colors.white,
+                                    ),),
                                 )
                               ],
                             ),
@@ -931,8 +996,8 @@ class _AddDrugState extends State<AddDrug> {
                                   data['conditionOfUse'],
                                   style: TextStyle(
                                       fontFamily: 'PlexSansThaiRg',
-                                      fontSize: 14,
-                                      color: Colors.black
+                                      fontSize: editFontsize ?  14 + change.toDouble() : 14,
+                                    color: !darkMode ? Colors.black: Colors.white,
                                   ),
                                 ),
                                 SizedBox(height: 7,),
@@ -940,9 +1005,10 @@ class _AddDrugState extends State<AddDrug> {
                                   'อ่านข้อมูลเพิ่มเติม',
                                   style: TextStyle(
                                       fontFamily: 'PlexSansThaiRg',
-                                      fontSize: 14,
-                                      color: Colors.black,
-                                      decoration: TextDecoration.underline
+                                      fontSize: editFontsize ?  14 + change.toDouble() : 14,
+                                      color: !darkMode ? Colors.black: Colors.white,
+                                      decoration: TextDecoration.underline,
+                                    decorationColor: !darkMode ? Colors.black: Colors.white,
                                   ),
                                 ),
                                 SizedBox(height: 5,),
@@ -974,8 +1040,8 @@ class _AddDrugState extends State<AddDrug> {
                         'คำแนะนำเพิ่มเติม',
                         style: TextStyle(
                             fontFamily: 'PlexSansThaiSm',
-                            fontSize: 16,
-                            color: Colors.black
+                            fontSize: editFontsize ?  16 + change.toDouble() : 16,
+                            color: !darkMode ? Colors.black: Colors.white,
                         ),
                       ),
                       SizedBox(height: 7,),
@@ -988,7 +1054,10 @@ class _AddDrugState extends State<AddDrug> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(top: 4.0),
-                                  child: Text('• '),
+                                  child: Text('• ',
+                                    style: TextStyle(
+                                      color: !darkMode ? Colors.black: Colors.white,
+                                    ),),
                                 )
                               ],
                             ),
@@ -999,8 +1068,8 @@ class _AddDrugState extends State<AddDrug> {
                                     data['additionalAdvice'],
                                     style: TextStyle(
                                         fontFamily: 'PlexSansThaiRg',
-                                        fontSize: 14,
-                                        color: Colors.black
+                                        fontSize: editFontsize ?  14 + change.toDouble() : 14,
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),
                                   ),
                                   SizedBox(height: 5,),
@@ -1032,8 +1101,8 @@ class _AddDrugState extends State<AddDrug> {
                         'อาการไม่พึงประสงค์',
                         style: TextStyle(
                             fontFamily: 'PlexSansThaiSm',
-                            fontSize: 16,
-                            color: Colors.black
+                            fontSize: editFontsize ?  16 + change.toDouble() : 16,
+                            color: !darkMode ? Colors.black: Colors.white,
                         ),
                       ),
                       SizedBox(
@@ -1048,7 +1117,10 @@ class _AddDrugState extends State<AddDrug> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(top: 4.0),
-                                  child: Text('• '),
+                                  child: Text('• ',
+                                    style: TextStyle(
+                                      color: !darkMode ? Colors.black: Colors.white,
+                                    ),),
                                 )
                               ],
                             ),
@@ -1059,8 +1131,8 @@ class _AddDrugState extends State<AddDrug> {
                                     data['adverseDrugReaction'],
                                     style: TextStyle(
                                         fontFamily: 'PlexSansThaiRg',
-                                        fontSize: 14,
-                                        color: Colors.black
+                                        fontSize: editFontsize ?  14 + change.toDouble() : 14,
+                                        color: !darkMode ? Colors.black: Colors.white,
                                     ),
                                   ),
 
@@ -1091,8 +1163,8 @@ class _AddDrugState extends State<AddDrug> {
                         'ข้อมูลการจ่ายยา',
                         style: TextStyle(
                             fontFamily: 'PlexSansThaiSm',
-                            fontSize: 16,
-                            color: Colors.black
+                            fontSize: editFontsize ?  16 + change.toDouble() : 16,
+                            color: !darkMode ? Colors.black: Colors.white,
                         ),
                       ),
                       Padding(
@@ -1107,8 +1179,8 @@ class _AddDrugState extends State<AddDrug> {
                                   'ร้านยา: ',
                                   style: TextStyle(
                                       fontFamily: 'PlexSansThaiSm',
-                                      fontSize: 14,
-                                      color: Colors.black
+                                      fontSize: editFontsize ?  14 + change.toDouble() : 14,
+                                      color: !darkMode ? Colors.black: Colors.white,
                                   ),
                                 ),
                                 Expanded(
@@ -1116,8 +1188,8 @@ class _AddDrugState extends State<AddDrug> {
                                     storeName,
                                     style: TextStyle(
                                         fontFamily: 'PlexSansThaiRg',
-                                        fontSize: 14,
-                                        color: Colors.black
+                                        fontSize: editFontsize ?  14 + change.toDouble() : 14,
+                                        color: !darkMode ? Colors.black: Colors.white,
                                     ),
                                   ),
                                 ),
@@ -1131,8 +1203,8 @@ class _AddDrugState extends State<AddDrug> {
                                   'วันที่จ่าย: ',
                                   style: TextStyle(
                                       fontFamily: 'PlexSansThaiSm',
-                                      fontSize: 14,
-                                      color: Colors.black
+                                      fontSize: editFontsize ?  14 + change.toDouble() : 14,
+                                      color: !darkMode ? Colors.black: Colors.white,
                                   ),
                                 ),
                                 Expanded(
@@ -1140,8 +1212,8 @@ class _AddDrugState extends State<AddDrug> {
                                     formattedDispensing,
                                     style: TextStyle(
                                         fontFamily: 'PlexSansThaiRg',
-                                        fontSize: 14,
-                                        color: Colors.black
+                                        fontSize: editFontsize ?  14 + change.toDouble() : 14,
+                                        color: !darkMode ? Colors.black: Colors.white,
                                     ),
                                   ),
                                 ),
@@ -1364,7 +1436,7 @@ class _AddDrugState extends State<AddDrug> {
                             builder: (BuildContext context){
                               return Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: !darkMode ? Colors.white: kBlackDarkMode,
                                   borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(20),
                                     topRight: Radius.circular(20)
@@ -1382,7 +1454,7 @@ class _AddDrugState extends State<AddDrug> {
                                            style: TextStyle(
                                              fontSize: 20,
                                              fontFamily: 'PlexSansThaiMd',
-                                             color: Color(0xff059E78),
+                                             color: !darkMode ? Color(0xff059E78): Colors.white,
                                            ),
                                          ),
                                          SizedBox(
@@ -1390,6 +1462,10 @@ class _AddDrugState extends State<AddDrug> {
                                          ),
                                          Text(
                                            'คุณสามารถดูข้อมูลยาของคุณได้ที่หน้า “ยาของฉัน”',
+                                           style: TextStyle(
+                                             fontSize: editFontsize ?  14 + change.toDouble() : 14,
+                                             color: !darkMode ? Colors.black: Colors.white,
+                                           ),
                                          ),
                                          SizedBox(
                                            height: 15,
@@ -1413,17 +1489,17 @@ class _AddDrugState extends State<AddDrug> {
                                                   'วันที่จ่าย: ',
                                                   style: TextStyle(
                                                       fontFamily: 'PlexSansThaiSm',
-                                                      fontSize: 14,
-                                                      color: Colors.black
+                                                      fontSize: editFontsize ?  14 + change.toDouble() : 14,
+                                                    color: !darkMode ? Colors.black: Colors.white,
                                                   ),
                                                 ),
                                                 Expanded(
                                                   child: Text(
-                                                    '12 มกราคม 2566',
+                                                    formattedDispensing,
                                                     style: TextStyle(
                                                         fontFamily: 'PlexSansThaiRg',
-                                                        fontSize: 14,
-                                                        color: Colors.black
+                                                        fontSize: editFontsize ?  14 + change.toDouble() : 14,
+                                                      color: !darkMode ? Colors.black: Colors.white,
                                                     ),
                                                   ),
                                                 ),
@@ -1437,17 +1513,17 @@ class _AddDrugState extends State<AddDrug> {
                                                   'ร้านยา: ',
                                                   style: TextStyle(
                                                       fontFamily: 'PlexSansThaiSm',
-                                                      fontSize: 14,
-                                                      color: Colors.black
+                                                      fontSize: editFontsize ?  14 + change.toDouble() : 14,
+                                                    color: !darkMode ? Colors.black: Colors.white,
                                                   ),
                                                 ),
                                                 Expanded(
                                                   child: Text(
-                                                    'ร้านขายยาเภสัชมหิดล สถานปฏิบัติการเภสัชกรรมชุมชน',
+                                                    storeName,
                                                     style: TextStyle(
                                                         fontFamily: 'PlexSansThaiRg',
-                                                        fontSize: 14,
-                                                        color: Colors.black
+                                                        fontSize: editFontsize ?  14 + change.toDouble() : 14,
+                                                      color: !darkMode ? Colors.black: Colors.white,
                                                     ),
                                                   ),
                                                 ),
@@ -1461,8 +1537,8 @@ class _AddDrugState extends State<AddDrug> {
                                                   'เบอร์โทรติดต่อ: ',
                                                   style: TextStyle(
                                                       fontFamily: 'PlexSansThaiSm',
-                                                      fontSize: 14,
-                                                      color: Colors.black
+                                                      fontSize: editFontsize ?  14 + change.toDouble() : 14,
+                                                    color: !darkMode ? Colors.black: Colors.white,
                                                   ),
                                                 ),
                                                 Expanded(
@@ -1470,8 +1546,8 @@ class _AddDrugState extends State<AddDrug> {
                                                     '094-941-1828',
                                                     style: TextStyle(
                                                         fontFamily: 'PlexSansThaiRg',
-                                                        fontSize: 14,
-                                                        color: Colors.black
+                                                        fontSize: editFontsize ?  14 + change.toDouble() : 14,
+                                                      color: !darkMode ? Colors.black: Colors.white,
                                                     ),
                                                   ),
                                                 ),
@@ -1489,7 +1565,7 @@ class _AddDrugState extends State<AddDrug> {
                                                       Navigator.pushNamed(context, '/homepage');
                                                     },
                                                     child:
-                                                    Text('กลับหน้าหลัก', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 17, color: Colors.black),
+                                                    Text('กลับหน้าหลัก', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: editFontsize ?  17 + change.toDouble() : 17, color: Colors.black),
                                                     ),
                                                     style: ElevatedButton.styleFrom(
                                                       backgroundColor: Color(0xffECECEC),
@@ -1510,10 +1586,10 @@ class _AddDrugState extends State<AddDrug> {
                                                       Navigator.pushNamed(context, '/my-drug-list');
                                                     },
                                                     child:
-                                                    Text('ยาของฉัน', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 17, color: Colors.white),
+                                                    Text('ยาของฉัน', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: editFontsize ?  17 + change.toDouble() : 17, color: !darkMode ? Colors.white: Colors.black),
                                                     ),
                                                     style: ElevatedButton.styleFrom(
-                                                      backgroundColor: Color(0xff059E78),
+                                                      backgroundColor: !darkMode ? Color(0xff059E78): kLightGreenDarkMode,
                                                       elevation: 0.5,
                                                       shape: RoundedRectangleBorder(
                                                         borderRadius: BorderRadius.circular(8), // Set your desired border radius
@@ -1536,10 +1612,10 @@ class _AddDrugState extends State<AddDrug> {
                         });
                       },
                       child:
-                      Text('เพิ่มข้อมูลยา', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 18, color: Colors.white),
+                      Text('เพิ่มข้อมูลยา', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: editFontsize ?  18 + change.toDouble() : 18, color: !darkMode ? Colors.white: Colors.black),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xff059E78),
+                        backgroundColor: !darkMode ? Color(0xff059E78): kLightGreenDarkMode,
                         elevation: 2,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8), // Set your desired border radius
@@ -1554,7 +1630,7 @@ class _AddDrugState extends State<AddDrug> {
                     child: ElevatedButton(
 
                       child:
-                      Text('เพิ่มข้อมูลยาเรีบยร้อย', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 18, color: Colors.white),
+                      Text('เพิ่มข้อมูลยาเรีบยร้อย', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: editFontsize ?  18 + change.toDouble() : 18, color: Colors.white),
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xff059E78),

@@ -35,9 +35,9 @@ export const Homepage = () => {
             let url: string = ''
 
             if(queryUrl === ''){
-                url = `http://localhost:8080/api/drug/?page=${currentPage - 1}&size=${drugsPerPage}`;
+                url = `http://54.174.232.218:8080/api/drug/?page=${currentPage - 1}&size=${drugsPerPage}`;
             }else{
-                url = `http://localhost:8080/api/drug/get-drugs?page=${currentPage - 1}&size=${drugsPerPage}` + queryUrl ;
+                url = `http://54.174.232.218:8080/api/drug/get-drugs?page=${currentPage - 1}&size=${drugsPerPage}` + queryUrl ;
             }
 
             const response = await fetch(url);
@@ -77,7 +77,7 @@ export const Homepage = () => {
     useEffect(() => {
         const fetchCategory = async () => {
             
-            let url: string = `http://localhost:8080/api/drug/get-categories`;
+            let url: string = `http://54.174.232.218:8080/api/drug/get-categories`;
 
             const response = await fetch(url);
 

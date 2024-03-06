@@ -7,6 +7,8 @@ import 'package:pillmate/pages/drug_information.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:ionicons/ionicons.dart';
 
+import '../services/sqlite_service.dart';
+
 class QRCodeScanner extends StatefulWidget {
   const QRCodeScanner({super.key});
 
@@ -19,11 +21,32 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
   QRViewController? controller;
   Barcode? barcode;
   bool isNavigate = false;
+  bool editFontsize = false;
+  int change = 0;
+  late SqliteService _sqliteService;
 
   @override
   void dispose() {
     controller?.dispose();
     super.dispose();
+  }
+
+
+  Future<void> initFontSize() async {
+    bool status = await _sqliteService.getEditFontSizeStatus();
+    int change = await _sqliteService.getFontSizeChange();
+    setState(() {
+      editFontsize = status;
+      this.change = change;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    this._sqliteService= SqliteService();
+    this._sqliteService.initializeDB();
+    initFontSize();
   }
 
   @override
@@ -59,14 +82,14 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
           children: [
             buildQrView(context),
             Positioned(
-              left: screenWidth*0.1,
+              left: screenWidth*0.078,
               top: screenHeight*0.2,
               child: Container(
-                width: screenWidth*0.8,
+                width: screenWidth*0.85,
                 child: Text('สแกนเพื่อดูข้อมูลยาโดย\nให้ตำแหน่ง QR code อยู่ตรงกลางภาพ',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: editFontsize ?  16 + change.toDouble() : 16,
                   fontFamily: 'PlexSansThaiRg',
                   color: Colors.white
                 ),),
@@ -106,7 +129,7 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
                                       Text(
                                         'เปิดไฟฉาย',
                                         style: TextStyle(
-                                            fontSize: 12,
+                                            fontSize: editFontsize ?  12 + change.toDouble() : 12,
                                             fontFamily: 'PlexSansThaiRg',
                                             color: Color(0xff059E78)
                                         ),
@@ -133,7 +156,7 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
                                   Text(
                                     'เปิดไฟฉาย',
                                     style: TextStyle(
-                                        fontSize: 12,
+                                        fontSize: editFontsize ?  12 + change.toDouble() : 12,
                                         fontFamily: 'PlexSansThaiRg',
                                         color: Colors.white
                                     ),
