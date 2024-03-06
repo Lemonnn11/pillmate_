@@ -220,6 +220,7 @@ class _MyDrugListState extends State<MyDrugList> {
                     child: Container(
                       width: screenWidth,
                       height: 31,
+
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(

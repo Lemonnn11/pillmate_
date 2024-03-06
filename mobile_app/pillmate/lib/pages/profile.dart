@@ -28,6 +28,7 @@ class _ProfilePageState extends State<ProfilePage> {
   int change = 0;
   bool darkMode = false;
 
+
   @override
   void initState() {
     super.initState();
@@ -62,6 +63,7 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
+
   void authChangesListener(){
     FirebaseAuth.instance
         .authStateChanges()
@@ -86,22 +88,28 @@ class _ProfilePageState extends State<ProfilePage> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: !darkMode ? Colors.white: kBlackDarkModeBg,
       body: SingleChildScrollView(
         child: Stack(
           children: [
             Container(
               height: 181,
               width: screenWidth,
-              decoration: BoxDecoration(
+              decoration: !darkMode ? BoxDecoration(
                 borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(20.0),
                     bottomRight: Radius.circular(20.0)),
-                gradient: LinearGradient(colors: [
+                gradient:  LinearGradient(colors: [
                   kLightGreen,
                   kTeal,
                   kTeal,
                 ],
                     begin: Alignment.topLeft, end: Alignment.bottomRight),
+              ): BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20.0),
+                      bottomRight: Radius.circular(20.0)),
+                  color: kGreenDarkMode
               ),
               child: Padding(
                 padding: EdgeInsets.only(top: 35.0),
@@ -112,7 +120,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       radius: 40,
                       // backgroundImage: AssetImage('images/profile-pic.png'),
                     ),
-                    Text(name,style: TextStyle(fontSize: editFontsize ?  18 + change.toDouble() : 18, fontFamily: 'PlexSansThaiMd', color:  Colors.white),)
+                    Text(name,style: TextStyle(fontSize: editFontsize ?  18 + change.toDouble() : 18, fontFamily: 'PlexSansThaiMd',
+                        color: !darkMode ? Colors.white: Colors.black),)
                   ],
                 ),
               ),
@@ -132,6 +141,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               style: TextStyle(
                                 fontSize: editFontsize ?  18 + change.toDouble() : 18,
                                 fontFamily: 'PlexSansThaiMd',
+                                color: !darkMode ? Colors.black: Colors.white,
                               ),
                             ),
                           ],
@@ -140,7 +150,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       Container(
                         width: screenWidth,
                         height: 1.2,
-                        color: Color(0xffE7E7E7),
+                          color:  !darkMode ? Color(0xffE7E7E7): Color(0xff8B8B8B)
                       ),
                       GestureDetector(
                         onTap: (){
@@ -156,7 +166,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 padding:EdgeInsets.only(top: 2.0, right: screenWidth*0.025),
                                 child: Container(
                                   width: 24,
-                                  child: Image.asset('icons/user-green.png'),
+                                  child:  !darkMode ? Image.asset('icons/user-green.png') : Image.asset('icons/user-light-green.png') ,
                                 ),
                               ),
                               Column(
@@ -167,6 +177,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     style: TextStyle(
                                       fontSize: editFontsize ?  15 + change.toDouble() : 15,
                                       fontFamily: 'PlexSansThaiMd',
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),
                                   ),
                                   Text(
@@ -174,6 +185,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     style: TextStyle(
                                       fontSize: editFontsize ?  13 + change.toDouble() : 13,
                                       fontFamily: 'PlexSansThaiRg',
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),
                                   ),
                                 ],
@@ -185,7 +197,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       Container(
                         width: screenWidth,
                         height: 1.2,
-                        color: Color(0xffE7E7E7),
+                          color:  !darkMode ? Color(0xffE7E7E7): Color(0xff8B8B8B)
                       ),
                       GestureDetector(
                         onTap: () {
@@ -201,7 +213,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 padding:EdgeInsets.only(top: 2.0, right: screenWidth*0.025),
                                 child: Container(
                                   width: 24,
-                                  child: Image.asset('icons/clock-alarm.png'),
+                                  child:  !darkMode ?  Image.asset('icons/clock-alarm.png') : Image.asset('icons/fluent_clock-alarm-24-regular_dark.png') ,
                                 ),
                               ),
                               Expanded(
@@ -213,6 +225,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       style: TextStyle(
                                         fontSize: editFontsize ?  15 + change.toDouble() : 15,
                                         fontFamily: 'PlexSansThaiMd',
+                                        color: !darkMode ? Colors.black: Colors.white,
                                       ),
                                     ),
                                     Text(
@@ -220,6 +233,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       style: TextStyle(
                                         fontSize: editFontsize ?  13 + change.toDouble() : 13,
                                         fontFamily: 'PlexSansThaiRg',
+                                        color: !darkMode ? Colors.black: Colors.white,
                                       ),
                                     ),
                                   ],
@@ -232,7 +246,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       Container(
                         width: screenWidth,
                         height: 1.2,
-                        color: Color(0xffE7E7E7),
+                          color:  !darkMode ? Color(0xffE7E7E7): Color(0xff8B8B8B)
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
@@ -244,7 +258,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               padding:EdgeInsets.only(top: 2.0, right: screenWidth*0.025),
                               child: Container(
                                 width: 24,
-                                child: Image.asset('icons/location.png'),
+                                child: !darkMode ?  Image.asset('icons/location.png'): Image.asset('icons/location_dark.png') ,
                               ),
                             ),
                             Column(
@@ -255,6 +269,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   style: TextStyle(
                                     fontSize: editFontsize ?  15 + change.toDouble() : 15,
                                     fontFamily: 'PlexSansThaiMd',
+                                    color: !darkMode ? Colors.black: Colors.white,
                                   ),
                                 ),
                                 Text(
@@ -262,6 +277,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   style: TextStyle(
                                     fontSize: editFontsize ?  13 + change.toDouble() : 13,
                                     fontFamily: 'PlexSansThaiRg',
+                                    color: !darkMode ? Colors.black: Colors.white,
                                   ),
                                 ),
                               ],
@@ -272,7 +288,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       Container(
                         width: screenWidth,
                         height: 1.2,
-                        color: Color(0xffE7E7E7),
+                          color:  !darkMode ? Color(0xffE7E7E7): Color(0xff8B8B8B)
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
@@ -284,6 +300,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               style: TextStyle(
                                 fontSize: editFontsize ?  18 + change.toDouble() : 18,
                                 fontFamily: 'PlexSansThaiMd',
+                                color: !darkMode ? Colors.black: Colors.white,
                               ),
                             ),
                           ],
@@ -292,7 +309,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       Container(
                         width: screenWidth,
                         height: 1.2,
-                        color: Color(0xffE7E7E7),
+                          color:  !darkMode ? Color(0xffE7E7E7): Color(0xff8B8B8B)
                       ),
                       GestureDetector(
                         onTap: (){
@@ -308,7 +325,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 padding:EdgeInsets.only(top: 2.0, right: screenWidth*0.025),
                                 child: Container(
                                   width: 24,
-                                  child: Image.asset('icons/color-mode.png'),
+                                  child: !darkMode ? Image.asset('icons/color-mode.png') :  Image.asset('icons/codicon_color-mode_dark.png'),
                                 ),
                               ),
                               Column(
@@ -319,6 +336,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     style: TextStyle(
                                       fontSize: editFontsize ?  15 + change.toDouble() : 15,
                                       fontFamily: 'PlexSansThaiMd',
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),
                                   ),
                                   Text(
@@ -326,6 +344,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     style: TextStyle(
                                       fontSize: editFontsize ?  13 + change.toDouble() : 13,
                                       fontFamily: 'PlexSansThaiRg',
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),
                                   ),
                                 ],
@@ -337,7 +356,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       Container(
                         width: screenWidth,
                         height: 1.2,
-                        color: Color(0xffE7E7E7),
+                        color:  !darkMode ? Color(0xffE7E7E7): Color(0xff8B8B8B) ,
                       ),
                       GestureDetector(
                         onTap: (){
@@ -353,7 +372,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 padding:EdgeInsets.only(top: 2.0, right: screenWidth*0.025),
                                 child: Container(
                                   width: 24,
-                                  child: Image.asset('icons/ci_font.png'),
+                                  child: !darkMode ? Image.asset('icons/ci_font.png'): Image.asset('icons/ci_font_dark.png'),
                                 ),
                               ),
                               Column(
@@ -364,6 +383,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     style: TextStyle(
                                       fontSize: editFontsize ?  15 + change.toDouble() : 15,
                                       fontFamily: 'PlexSansThaiMd',
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),
                                   ),
                                   Text(
@@ -371,6 +391,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     style: TextStyle(
                                       fontSize: editFontsize ?  13 + change.toDouble() : 13,
                                       fontFamily: 'PlexSansThaiRg',
+                                      color: !darkMode ? Colors.black: Colors.white,
                                     ),
                                   ),
                                 ],
@@ -382,7 +403,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       Container(
                         width: screenWidth,
                         height: 1.2,
-                        color: Color(0xffE7E7E7),
+                          color:  !darkMode ? Color(0xffE7E7E7): Color(0xff8B8B8B)
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
@@ -394,7 +415,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               padding:EdgeInsets.only(top: 3.0, left: 2 ,right: screenWidth*0.03),
                               child: Container(
                                 width: 20,
-                                child: Image.asset('icons/note.png'),
+                                child: !darkMode ?  Image.asset('icons/note.png'): Image.asset('icons/radix-icons_reader_dark.png'),
                               ),
                             ),
                             Expanded(child: Column(
@@ -405,6 +426,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   style: TextStyle(
                                     fontSize: editFontsize ?  15 + change.toDouble() : 15,
                                     fontFamily: 'PlexSansThaiMd',
+                                    color: !darkMode ? Colors.black: Colors.white,
                                   ),
                                 ),
                                 Text(
@@ -412,6 +434,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   style: TextStyle(
                                     fontSize: editFontsize ?  13 + change.toDouble() : 13,
                                     fontFamily: 'PlexSansThaiRg',
+                                    color: !darkMode ? Colors.black: Colors.white,
                                   ),
                                 ),
                               ],
@@ -422,7 +445,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       Container(
                         width: screenWidth,
                         height: 1.2,
-                        color: Color(0xffE7E7E7),
+                          color:  !darkMode ? Color(0xffE7E7E7): Color(0xff8B8B8B)
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),
@@ -434,7 +457,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               padding:EdgeInsets.only(top: 2.0, right: screenWidth*0.025),
                               child: Container(
                                 width: 24,
-                                child: Image.asset('icons/message.png'),
+                                child: !darkMode ? Image.asset('icons/message.png'): Image.asset('icons/solar_chat-round-dots-outline_dark.png'),
                               ),
                             ),
                             Expanded(child: Column(
@@ -445,6 +468,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   style: TextStyle(
                                     fontSize: editFontsize ?  15 + change.toDouble() : 15,
                                     fontFamily: 'PlexSansThaiMd',
+                                    color: !darkMode ? Colors.black: Colors.white,
                                   ),
                                 ),
                                 Text(
@@ -452,6 +476,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   style: TextStyle(
                                     fontSize: editFontsize ?  13 + change.toDouble() : 13,
                                     fontFamily: 'PlexSansThaiRg',
+                                    color: !darkMode ? Colors.black: Colors.white,
                                   ),
                                 ),
                               ],
@@ -462,7 +487,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       Container(
                         width: screenWidth,
                         height: 1.2,
-                        color: Color(0xffE7E7E7),
+                          color:  !darkMode ? Color(0xffE7E7E7): Color(0xff8B8B8B)
                       ),
                       GestureDetector(
                         onTap: () async {
@@ -479,7 +504,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 padding:EdgeInsets.only(top: 2.0, right: screenWidth*0.025),
                                 child: Container(
                                   width: 24,
-                                  child: Image.asset('icons/logout.png'),
+                                  child: !darkMode ? Image.asset('icons/logout.png'): Image.asset('icons/solar_logout-outline_dark.png'),
                                 ),
                               ),
                               Expanded(
@@ -491,6 +516,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       style: TextStyle(
                                         fontSize: editFontsize ?  15 + change.toDouble() : 15,
                                         fontFamily: 'PlexSansThaiMd',
+                                        color: !darkMode ? Colors.black: Colors.white,
                                       ),
                                     ),
                                     Text(
@@ -498,6 +524,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       style: TextStyle(
                                         fontSize: editFontsize ?  13 + change.toDouble() : 13,
                                         fontFamily: 'PlexSansThaiRg',
+                                        color: !darkMode ? Colors.black: Colors.white,
                                       ),
                                     ),
                                   ],
@@ -510,7 +537,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       Container(
                         width: screenWidth,
                         height: 1.2,
-                        color: Color(0xffE7E7E7),
+                          color:  !darkMode ? Color(0xffE7E7E7): Color(0xff8B8B8B)
                       ),
                       SizedBox(height: 20,),
                     ],
@@ -527,21 +554,21 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset('icons/qrcode-scan.png', width: 22, height: 22,) ,
+                Image.asset(! darkMode ? 'icons/qrcode-scan.png': 'icons/qrcode-scan-black.png', width: 22, height: 22,) ,
                 Text('สแกน', style: TextStyle(
-                    color: Colors.white,
+                    color: !darkMode ? Colors.white: Colors.black,
                     fontSize: editFontsize ?  10 + change.toDouble() : 10
                 ),)
               ],
             ),
             shape: CircleBorder(),
-            backgroundColor: Color(0xff059E78),
+            backgroundColor: !darkMode ? Color(0xff059E78): Color(0xff94DDB5),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => QRCodeScanner()
               ));
               // Navigator.of(context).push(MaterialPageRoute(
-              //   builder: (context) => AddDrug()
+              //     builder: (context) => AddDrug()
               // ));
             },
           ),

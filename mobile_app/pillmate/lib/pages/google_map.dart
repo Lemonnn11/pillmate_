@@ -36,6 +36,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   bool editFontsize = false;
   int change = 0;
   late SqliteService _sqliteService;
+  bool darkMode = false;
 
   @override
   void initState() {
@@ -51,6 +52,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
     // ));
 
     initFontSize();
+    initDarkMode();
   }
 
   Future<void> initFontSize() async {
@@ -59,6 +61,13 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
     setState(() {
       editFontsize = status;
       this.change = change;
+    });
+  }
+
+  Future<void> initDarkMode() async {
+    bool status = await _sqliteService.getDarkModeStatus();
+    setState(() {
+      darkMode = status;
     });
   }
 
@@ -160,6 +169,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: !darkMode ? Colors.white: kBlackDarkModeBg,
       body: Container(
         width: screenWidth,
         height: screenHeight,
