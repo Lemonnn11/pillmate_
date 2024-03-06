@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pillmate/pages/sign_up_form/gender.dart';
 
+import '../../constants/constants.dart';
+import '../../services/sqlite_service.dart';
+
 class DOBForm extends StatefulWidget {
   final Map<String, dynamic> info;
   const DOBForm({super.key, required this.info});
@@ -14,13 +17,30 @@ class DOBForm extends StatefulWidget {
 }
 
 class _DOBFormState extends State<DOBForm> {
+  bool darkMode = false;
+  late SqliteService _sqliteService;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    this._sqliteService= SqliteService();
+    this._sqliteService.initializeDB();
+    initDarkMode();
+  }
+
+  Future<void> initDarkMode() async {
+    bool status = await _sqliteService.getDarkModeStatus();
+    setState(() {
+      darkMode = status;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
-        color: Colors.white,
+        color: !darkMode ? Colors.white: kBlackDarkModeBg,
         width: screenWidth,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04),
@@ -37,7 +57,7 @@ class _DOBFormState extends State<DOBForm> {
                         onTap: (){
                           Navigator.pop(context);
                         },
-                        child: Icon(Ionicons.chevron_back_outline, color: Colors.black, size: 30,)),
+                        child: Icon(Ionicons.chevron_back_outline,  color: !darkMode? Color(0xff121212): Colors.white, size: 30,)),
                     Padding(
                       padding: EdgeInsets.only( right: screenWidth*0.015),
                       child: Container(
@@ -50,8 +70,8 @@ class _DOBFormState extends State<DOBForm> {
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           child: LinearProgressIndicator(
                             value: 0.3333333333333333,
-                            backgroundColor: Color(0xffdddddd),
-                            valueColor: AlwaysStoppedAnimation<Color>(Color(0xff059E78)),
+                            backgroundColor: !darkMode? Color(0xffdddddd) : Colors.white,
+                            valueColor: !darkMode? AlwaysStoppedAnimation<Color>(Color(0xff059E78)) : AlwaysStoppedAnimation<Color>(Color(0xff94DDB5)) ,
                           ),
                         ),
                       ),
@@ -59,7 +79,8 @@ class _DOBFormState extends State<DOBForm> {
                     Text('2/6',
                       style: TextStyle(
                           fontSize: 16,
-                          fontFamily: 'PlexSansThaiRg'
+                          fontFamily: 'PlexSansThaiRg',
+                          color:  !darkMode? Color(0xff2c2c2c) : Colors.white
                       ),),
                   ],
                 ),
@@ -69,7 +90,8 @@ class _DOBFormState extends State<DOBForm> {
                 'กรุณากรอกวันเกิดของคุณ',
                 style: TextStyle(
                     fontSize: 20,
-                    fontFamily: 'PlexSansThaiSm'
+                    fontFamily: 'PlexSansThaiSm',
+                    color: !darkMode? Color(0xff121212): Colors.white
                 ),
               ),
               SizedBox(height: 10,),
@@ -78,7 +100,7 @@ class _DOBFormState extends State<DOBForm> {
                 style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'PlexSansThaiRg',
-                    color: Color(0xff3F3F3F)
+                    color: !darkMode? Color(0xff3F3F3F): Colors.white
                 ),
               ),
               SizedBox(height: 17,),
@@ -91,7 +113,7 @@ class _DOBFormState extends State<DOBForm> {
                   style: TextStyle(
                     fontSize: 18,
                     fontFamily: 'PlexSansThaiRg',
-                    color: Colors.black,
+                    color: !darkMode? Color(0xff2c2c2c): Colors.white,
                   ),
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(top: 22, left: 15),
@@ -99,7 +121,7 @@ class _DOBFormState extends State<DOBForm> {
                     hintStyle: TextStyle(
                         fontSize: 18,
                         fontFamily: 'PlexSansThaiRg',
-                        color: Color(0XFF717171)
+                        color: !darkMode ? Color(0XFF717171):  Colors.white70
                     ),
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Color(0xffD0D0D0)),
@@ -125,10 +147,10 @@ class _DOBFormState extends State<DOBForm> {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => GenderForm(info: widget.info,)));
                   },
                   child:
-                  Text('ไปต่อ', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 18, color: Colors.white),
+                  Text('ไปต่อ', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 18,  color: !darkMode?  Colors.white:Color(0xff2c2c2c)),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xff059e78),
+                    backgroundColor: !darkMode? Color(0xff059E78): Color(0xff94DDB5),
                     elevation: 2,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8), // Set your desired border radius
