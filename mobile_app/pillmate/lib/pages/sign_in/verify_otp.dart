@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pillmate/models/personal_information.dart';
 
+import '../../constants/constants.dart';
 import '../../services/sqlite_service.dart';
 
 class VerifyOTP extends StatefulWidget {
   final String verificationId;
   final String phoneNumber;
+
   const VerifyOTP({super.key, required this.verificationId, required this.phoneNumber});
 
 
@@ -36,6 +38,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
   int secondss = 120;
   bool editFontsize = false;
   int change = 0;
+  bool darkMode = false;
 
   void startTimer(){
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
@@ -60,8 +63,15 @@ class _VerifyOTPState extends State<VerifyOTP> {
     this._sqliteService.initializeDB();
     getPersons();
     initFontSize();
+    initDarkMode();
   }
 
+  Future<void> initDarkMode() async {
+    bool status = await _sqliteService.getDarkModeStatus();
+    setState(() {
+      darkMode = status;
+    });
+  }
   Future<void> getPersons() async {
     final data = await _sqliteService.getPersonalInfo();
     this._personList = data;
@@ -83,11 +93,12 @@ class _VerifyOTPState extends State<VerifyOTP> {
     final minutes = twoDigits(duration.inMinutes.remainder(60));
     final seconds = twoDigits(duration.inSeconds.remainder(60));
     return Scaffold(
+      backgroundColor: !darkMode ? Colors.white: kBlackDarkModeBg,
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           Container(
-            color: Colors.white,
+            color: !darkMode ? Colors.white: kBlackDarkModeBg,
             width: screenWidth,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04),
@@ -97,7 +108,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                 SizedBox(height: 150,),
                 Container(
                   width: screenWidth * 0.5,
-                  child: Image.asset('images/pillmate1.png'),
+                  child: !darkMode ? Image.asset('images/pillmate1.png') :Image.asset('images/pillmate_darkmode.png')  ,
                 ),
                 Row(
                   children: [
@@ -106,7 +117,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                       style: TextStyle(
                         fontSize: 20,
                         fontFamily: 'PlexSansThaiMd',
-                        color: Colors.black,
+                        color: !darkMode ? Colors.black: Colors.white,
                       ),
                     ),
                   ],
@@ -117,7 +128,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                   style: TextStyle(
                     fontSize: editFontsize ?  16 + change.toDouble() : 16,
                     fontFamily: 'PlexSansThaiMd',
-                    color: Color(0xff3F3F3F),
+                    color: !darkMode ? Colors.black: Colors.white,
                   ),
                 ),
                   SizedBox(height: 15,),
@@ -131,6 +142,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w400,
+                      color: !darkMode ? Colors.black: Colors.white,
                     ),
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
@@ -161,7 +173,9 @@ class _VerifyOTPState extends State<VerifyOTP> {
                       LengthLimitingTextInputFormatter(1),
                       FilteringTextInputFormatter.allow(RegExp("[0-9]")),
                     ],
+
                     textAlign: TextAlign.center,
+
                   ),
                     ),
                       Container(
@@ -171,6 +185,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w400,
+                            color: !darkMode ? Colors.black: Colors.white,
                           ),
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
@@ -211,6 +226,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w400,
+                            color: !darkMode ? Colors.black: Colors.white,
                           ),
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
@@ -251,6 +267,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w400,
+                            color: !darkMode ? Colors.black: Colors.white,
                           ),
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
@@ -291,6 +308,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w400,
+                            color: !darkMode ? Colors.black: Colors.white,
                           ),
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
@@ -331,6 +349,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w400,
+                            color: !darkMode ? Colors.black: Colors.white,
                           ),
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
@@ -378,7 +397,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                           style: TextStyle(
                             fontSize: editFontsize ?  14 + change.toDouble() : 14,
                             fontFamily: 'PlexSansThaiRg',
-                            color: Colors.black,
+                            color: !darkMode ? Colors.black: Colors.white70,
                           ),
                         ),
                         SizedBox(
@@ -391,7 +410,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                               style: TextStyle(
                                 fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                 fontFamily: 'PlexSansThaiMd',
-                                color: Colors.red,
+                                color:  !darkMode ? Colors.red : Color(0xffED6B81),
                               ),
                             ),
                             SizedBox(
@@ -405,7 +424,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                               style: TextStyle(
                                 fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                 fontFamily: 'PlexSansThaiMd',
-                                color: Colors.red,
+                                color:  !darkMode ? Colors.red : Color(0xffED6B81),
                               ),
                             ),
                             SizedBox(
@@ -445,7 +464,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                             style: TextStyle(
                               fontSize: 16,
                               fontFamily: 'PlexSansThaiMd',
-                              color: Color(0xff059E78),
+                              color:  !darkMode ? Color(0xff059E78): Color(0xff94DDB5),
                             ),
                           ),
                         ),
@@ -492,10 +511,10 @@ class _VerifyOTPState extends State<VerifyOTP> {
                     }
                   },
                   child:
-                  Text('ยืนยัน', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 18, color: Colors.white),
+                  Text('ยืนยัน', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 18, color: !darkMode ? Colors.white: Colors.black),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xff059E78),
+                    backgroundColor: !darkMode ? Color(0xff059E78): Color(0xff94DDB5),
                     elevation: 2,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8), // Set your desired border radius
