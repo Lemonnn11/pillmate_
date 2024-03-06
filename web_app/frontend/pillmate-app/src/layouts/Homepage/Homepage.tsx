@@ -178,7 +178,7 @@ export const Homepage = () => {
                     <div className="dropdown">
                         <button className="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown">
                             <div className='d-flex justify-content-around align-items-center gap-2'>
-                                <img src={process.env.PUBLIC_URL + '/images/lemon.jpg'} style={{width:'55px', height:'55px', borderRadius: '50%', verticalAlign: 'middle'}}/>
+                                <img src={process.env.PUBLIC_URL + '/images/user.png'} style={{width:'55px', height:'55px', borderRadius: '50%', verticalAlign: 'middle'}}/>
                                 <IoIosArrowDown size={20} color='#8A8A8A' className='mt-1'/>
                             </div>
                         </button>
