@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pillmate/pages/sign_up_form/name.dart';
 
+import '../constants/constants.dart';
+import '../services/sqlite_service.dart';
+
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
 
@@ -10,13 +13,31 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
+  bool darkMode = false;
+  late SqliteService _sqliteService;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    this._sqliteService= SqliteService();
+    this._sqliteService.initializeDB();
+    initDarkMode();
+  }
+
+  Future<void> initDarkMode() async {
+    bool status = await _sqliteService.getDarkModeStatus();
+    setState(() {
+      darkMode = status;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
-        color: Colors.white,
+        color: !darkMode ? Colors.white: kBlackDarkModeBg,
         width: screenWidth,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04),
@@ -26,7 +47,7 @@ class _WelcomePageState extends State<WelcomePage> {
               SizedBox(height: 120,),
               Container(
                 width: screenWidth * 0.5,
-                child: Image.asset('images/pillmate1.png'),
+                child: !darkMode ? Image.asset('images/pillmate1.png') :Image.asset('images/pillmate_darkmode.png') ,
               ),
               SizedBox(height: 5,),
               Text(
@@ -34,7 +55,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 style: TextStyle(
                   fontSize: 20,
                   fontFamily: 'PlexSansThaiMd',
-                  color: Colors.black,
+                    color: !darkMode? Color(0xff121212): Colors.white
                 ),
               ),
               SizedBox(height: 10,),
@@ -43,7 +64,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 style: TextStyle(
                   fontSize: 20,
                   fontFamily: 'PlexSansThaiMd',
-                  color: Colors.black,
+                    color: !darkMode? Color(0xff121212): Colors.white
                 ),
               ),
               Padding(
@@ -65,10 +86,10 @@ class _WelcomePageState extends State<WelcomePage> {
                     );
                   },
                   child:
-                  Text('เริ่มเลย', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 18, color: Colors.white),
+                  Text('เริ่มเลย', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 18, color: !darkMode? Colors.white: Color(0xff121212)),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xff059E78),
+                    backgroundColor: !darkMode? Color(0xff059E78): Color(0xff94DDB5),
                     elevation: 2,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8), // Set your desired border radius
@@ -88,7 +109,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   Text('ไว้ทีหลัง', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 18, color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xffD0D0D0),
+                    backgroundColor: !darkMode? Color(0xffD0D0D0): Color(0xff575757),
                     elevation: 2,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8), // Set your desired border radius

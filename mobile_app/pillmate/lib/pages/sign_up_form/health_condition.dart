@@ -4,10 +4,13 @@ import 'package:ionicons/ionicons.dart';
 import 'package:pillmate/pages/sign_up_form/dob.dart';
 import 'package:pillmate/pages/sign_up_form/drug_allergies.dart';
 
+import '../../services/sqlite_service.dart';
+
 
 class HealthConditionForm extends StatefulWidget {
   final Map<String, dynamic> info;
   const HealthConditionForm({super.key, required this.info});
+
 
   @override
   State<HealthConditionForm> createState() => _HealthConditionFormState();
@@ -27,7 +30,23 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
   bool isButton11Clicked = false;
   String others = "";
   String tmp = "";
+  bool darkMode = false;
+  late SqliteService _sqliteService;
 
+  Future<void> initDarkMode() async {
+    bool status = await _sqliteService.getDarkModeStatus();
+    setState(() {
+      darkMode = status;
+    });
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    this._sqliteService= SqliteService();
+    this._sqliteService.initializeDB();
+    initDarkMode();
+  }
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;

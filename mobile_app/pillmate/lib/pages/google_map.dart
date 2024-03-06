@@ -175,7 +175,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
         height: screenHeight,
         child: Stack(
           children: [
-            _currLocation == null ? Center(child: Text('Loading...'),):GoogleMap(
+            _currLocation == null ? Center(child: Text('Loading...', style: TextStyle(color: !darkMode ? Colors.black: Colors.white),), ):GoogleMap(
               onMapCreated:  ((GoogleMapController controller) => _mapController.complete(controller)),
               initialCameraPosition: CameraPosition(target: LatLng(double.parse(widget.pharmacy['latitude']!), double.parse(widget.pharmacy['longitude']!)), zoom: 10),
               markers: {
@@ -194,7 +194,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
               width: screenWidth,
               height: 103,
               decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: !darkMode ? Colors.white: kBlackDarkMode,
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(20.0),
                       bottomRight: Radius.circular(20.0))
@@ -205,7 +205,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     IconButton(
-                      icon: Icon(Ionicons.chevron_back_outline, color: Colors.black,size: 30), onPressed: () {
+                      icon: Icon(Ionicons.chevron_back_outline,    color: !darkMode ? Color(0xff121212) : Colors.white,size: 30), onPressed: () {
                       Navigator.pop(context);
                     },
                     ),
@@ -214,8 +214,10 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                       child: Text(
                         'แผนที่ร้านยา',
                         style: TextStyle(
+                            color: !darkMode ? Color(0xff121212) : Colors.white,
                             fontSize: 20,
                             fontFamily: 'PlexSansThaiSm'
+
                         ),
                       ),
                     ),
@@ -228,7 +230,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
               child: Container(
                 width: screenWidth,
                 decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: !darkMode ? Colors.white: kBlackDarkMode,
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20.0),
                         topRight: Radius.circular(20.0))
@@ -247,6 +249,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                               style: TextStyle(
                                 fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                 fontFamily: 'PlexSansThaiMd',
+                                  color: !darkMode ? Color(0xff121212) : Colors.white
                               ),
 
                             ),
@@ -259,6 +262,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                             style: TextStyle(
                               fontSize: 20,
                               fontFamily: 'PlexSansThaiMd',
+                                color: !darkMode ? Color(0xff121212) : Colors.white
                             ),
                           ),
                         ],
@@ -269,7 +273,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                         style: TextStyle(
                             fontSize: editFontsize ?  12 + change.toDouble() : 12,
                             fontFamily: 'PlexSansThaiRg',
-                            color: Color(0xff8B8B8B)
+                            color: !darkMode ? Color(0xff8B8B8B)   :Color(0xffD0D0D0)
                         ),
                       ),
                       SizedBox(height: 8,),
@@ -278,6 +282,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                         style: TextStyle(
                           fontSize: editFontsize ?  14 + change.toDouble() : 14,
                           fontFamily: 'PlexSansThaiRg',
+                            color: !darkMode ? Color(0xff121212) : Colors.white
                         ),
                       ),
                       SizedBox(height: 8),
@@ -288,7 +293,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                             style: TextStyle(
                                 fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                 fontFamily: 'PlexSansThaiMd',
-                                color: Color(0xff059E78)
+                                color: !darkMode?  Color(0xff059E78): Color(0xff94DDB5)
                             ),
                           ),
                           SizedBox(width: 4,),
@@ -297,7 +302,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                             style: TextStyle(
                                 fontSize:  editFontsize ?  14 + change.toDouble() : 14,
                                 fontFamily: 'PlexSansThaiRg',
-                                color: Color(0xff121212)
+                                color: !darkMode ? Color(0xff121212) : Colors.white
                             ),
                           ),
                         ],
@@ -311,10 +316,10 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                                 MapsLauncher.launchCoordinates(double.parse(widget.pharmacy['latitude']!), double.parse(widget.pharmacy['longitude']!));
                               },
                               child:
-                              Text('เปิดใน Google Map', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 20, color: Colors.white),
+                              Text('เปิดใน Google Map', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 20, color: !darkMode ? Colors.white : Color(0xff2c2c2c)),
                               ),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xff059E78),
+                                backgroundColor: !darkMode ? Color(0xff059E78): Color(0xff94DDB5),
                                 elevation: 2,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(6), // Set your desired border radius
