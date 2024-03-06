@@ -47,7 +47,7 @@ export const PharmacyInfo: React.FC<PharmacyInfoProps> = (props) => {
                 },
                 body: JSON.stringify(props.pharmacy)
             }
-            const url = `http://54.174.232.218:8080/api/pharmacy/create`;
+            const url = `http://localhost:8080/api/pharmacy/create`;
 
             const response = await fetch(url, request)
 
