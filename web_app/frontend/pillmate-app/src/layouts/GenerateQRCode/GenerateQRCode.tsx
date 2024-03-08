@@ -13,6 +13,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { log, time } from 'console';
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { IoCloseCircleOutline } from 'react-icons/io5';
+import { ReturnUnitAmount } from './components/ReturnUnitAmount';
 
 
 export const GenerateQRCode = () => {
@@ -32,8 +33,10 @@ export const GenerateQRCode = () => {
     const [ takeMedWhen, setTakeMedWhen ] = useState("...");
     const [ every, setEvery ] = useState("...");
     const [ dosageClick, setDosageClick ] = useState(false)
+    const [ unitAmountClick, setUnitAmountClick ] = useState(false)
     const [ dosageClickDropdown, setDosageClickDropdown ] = useState(true); 
     const [ unit, setUnit] = useState("แคปซูล");
+    const [ unitAmount, setUnitAmount] = useState("แคปซูล");
     const [ addtionalAdvice, setAdditionalAdvice ] = useState('ยานี้อาจระคายเคืองกระเพาะอาหาร ให้รับประทานหลังอาหารทันที')
     const auth = getAuth();
     const [ tradeName, setTradeName] = useState('');
@@ -49,11 +52,14 @@ export const GenerateQRCode = () => {
     const [ everyDisabled, setEveryDisabled ] = useState(false);
     const [ timesPerDayFocus, setTimePerDayFocus ] = useState(false);
     const [ wrongFormatDossagePerTake, setWrongFormatDossagePerTake ] = useState(false);
+    const [ wrongFormatAmountOfMeds, setWrongFormatAmountOfMeds ] = useState(false);
     const [ wrongFormatTimesPerDay, setWrongFormatTimesPerDay ] = useState(false);
     const [ selectedEvery, setSeletedEvery ] = useState(false);
     const [ selectedTakeMedWhen, setSeletedTakeMedWhen ] = useState(false);
     const [ plsSelectedWhen, setPlsSelectedWhen] = useState(false);
     const [ wrongFormatExpiredDate, setWrongFormatExpiredDate ] = useState(false);
+    const [ timeOfTakenn, setTimeOfTakenn] = useState('');
+    const [ loadingModal, setLoadingModal ] = useState(false);
     const date = new Date()
     const result = date.toLocaleDateString('th-TH', {
     year: 'numeric',
@@ -113,6 +119,8 @@ export const GenerateQRCode = () => {
         setTakeMedWhen(value);
         if(value !== '...'){
             setSeletedTakeMedWhen(true);
+            setSeletedEvery(false);
+            setEvery('...');
         }
     } 
 
@@ -120,6 +128,10 @@ export const GenerateQRCode = () => {
         setEvery(value);
         if(value !== '...'){
             setSeletedEvery(true);
+            setTakeMedWhen('...')
+        }else{
+            setSeletedEvery(false);
+            
         }
     } 
 
@@ -130,6 +142,11 @@ export const GenerateQRCode = () => {
     const handleUnit = (value: string) => {
         setUnit(value);
         setDosageClick(!dosageClick);
+    }
+
+    const handleUnitAmount = (value: string) => {
+        setUnitAmount(value);
+        setUnitAmountClick(!dosageClick);
     }
 
     const handleMorning = () => {
@@ -151,6 +168,14 @@ export const GenerateQRCode = () => {
     const handleDosageClick = () => {
         setDosageClick(true);
     } 
+
+    const handleUnitAmountClick = () => {
+        setUnitAmountClick(true);
+    }
+
+    const handleUnitAmountClickNotFocus = () => {
+        setUnitAmountClick(false);
+    }
 
     const handleDosageClickNotFocus = () => {
         setDosageClick(false);
@@ -181,6 +206,17 @@ export const GenerateQRCode = () => {
         }
     }
 
+    const handleAmountOfMeds = (event: ChangeEvent<HTMLInputElement>) => {
+        const { value } = event.target;
+        const isValidInput = /^\d+$/.test(value);
+        if (isValidInput || value === '') {
+            setAmountOfMeds(value);
+            setWrongFormatAmountOfMeds(false);
+        }else{
+            setWrongFormatAmountOfMeds(true);
+        }
+    }
+
     const handleTimesPerDay = (event: ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
         const isValidInput = /^[0-9]$/.test(value);
@@ -207,11 +243,12 @@ export const GenerateQRCode = () => {
 
     async function createQRCode(event: React.FormEvent<HTMLFormElement>){
         event.preventDefault();
+        setLoadingModal(true);
         const url = `http://localhost:8080/api/qrCode/create`;
         if(takeMedWhen !== '...' && (!morning && !noon && !evening && !Bed)){
             setPlsSelectedWhen(true);
         }else {
-            if(dosagePerTake !== '' && timePerDay !== '' && expiredDate !== '' && conditionOfUse !== '' && amountOfMeds !== ''){
+            if(dosagePerTake !== '' && timePerDay !== '' && expiredDate !== '' && conditionOfUse !== '' && amountOfMeds !== '' && (takeMedWhen !== '...' || every !== '...')){
             
                 const gmtOffset = +7 * 60; // GMT-5 time zone (5 hours behind UTC)
                 const expDate = new Date(expiredDate);
@@ -245,6 +282,7 @@ export const GenerateQRCode = () => {
                 if(Bed){
                     timeOfTaken += 'ก่อนนอน';
                 }
+                setTimeOfTakenn(timeOfTaken);
     
                 const user = auth.currentUser;
     
@@ -271,11 +309,15 @@ export const GenerateQRCode = () => {
                         const response = await create.json()
                         console.log(response["id"])
                         setImageID(response["id"])
+                        setLoadingModal(false);
                         setModalShow(true);
                     }
                 });
                 }
                 
+            }else{
+                setLoadingModal(false);
+                setModalShow(false);
             }
         }
 
@@ -284,7 +326,22 @@ export const GenerateQRCode = () => {
 
     return (
         <div className='d-flex' style={{height:'100vh', width: '100vw', marginRight:'1px'}}>
-            {modalShow ? (<div className="modal fade" id="exampleModalCenter"  role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style={{fontFamily: "LINESeedSansTHRegular"}}>
+            {loadingModal ? (<div className="modal fade" id="exampleModalCenter"  role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style={{fontFamily: "LINESeedSansTHRegular"}}>
+            <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div className="modal-content">
+                    <div className="modal-header d-flex justify-content-end">
+                        <button type="button" className="close btn" data-bs-dismiss="modal" aria-label="Close">
+                            ปิด
+                        </button>
+            </div>
+            <div className="modal-body">
+                <div className='d-flex' style={{marginLeft: '5.5%', marginRight: '8.5%', gap: '11%', marginBottom:'2%'}}>
+                    <a>Loading...</a>
+                </div>
+            </div>
+            </div>
+            </div>
+        </div>): modalShow ? (<div className="modal fade" id="exampleModalCenter"  role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style={{fontFamily: "LINESeedSansTHRegular"}}>
                 <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div className="modal-content">
                         <div className="modal-header d-flex justify-content-end">
@@ -342,14 +399,14 @@ export const GenerateQRCode = () => {
                                 {genericName}
                             </div>
                             <div>
-                                จำนวน {amountOfMeds} เม็ด
+                                จำนวน {amountOfMeds} {unitAmount}
                             </div>
                             </div>
                             <div>
-                                รับประทานยาหลังอาหารทันที ครั้งละ {dosagePerTake} เม็ด
+                                รับประทานยา{takeMedWhen === '...' ? every: takeMedWhen} ครั้งละ {dosagePerTake} {unit}
                             </div>
                             <div>
-                                วันละ {timePerDay} ครั้ง เช้า เย็น
+                                วันละ {timePerDay} ครั้ง {takeMedWhen === '...' ? `ทุกๆ ${every}`: `${timeOfTakenn}`}
                             </div>
                             <div className='d-flex gap-1 mt-3'>
                                 <div style={{fontFamily: "LINESeedSansTHBold"}}>
@@ -429,7 +486,7 @@ export const GenerateQRCode = () => {
                                 ประเภทยา:
                             </div>
                             <div style={{fontSize: '18px', fontFamily: "LINESeedSansENRegular"}}>
-                                {category}
+                                {category === '' ? 'N/A': category}
                             </div>
                         </div>
                         {/* <div className='d-flex mt-2'>
@@ -548,9 +605,6 @@ export const GenerateQRCode = () => {
                                         <div style={{fontSize: '16px', color: '#000000'}}>
                                             เวลาการรับประทาน
                                         </div>
-                                        <div>
-                                            *
-                                        </div>
                                     </div>
                                 </label>
                                 <div className="dropdown">
@@ -571,9 +625,6 @@ export const GenerateQRCode = () => {
                                     <div className='d-flex'>
                                         <div style={{fontSize: '16px', color: '#000000'}}>
                                             ทุกๆ
-                                        </div>
-                                        <div>
-                                            *
                                         </div>
                                     </div>
                                 </label>
@@ -611,11 +662,17 @@ export const GenerateQRCode = () => {
                                 </label>
                                 <div className="d-flex gap-2" >
                         
-                                    {morning ? <button className="btn btn-selected" type="button" onClick={handleMorning} style={{backgroundColor: 'white', width: '4.5vw', height: '50px'}}>
+                                    {morning ? selectedEvery ?  <button disabled className="btn" type="button" onClick={handleMorning} style={{backgroundColor: 'white', width: '4.5vw', height: '50px', borderColor: '#e2e2e2'}}>
                                                         <div className='d-flex justify-content-center'>
                                                             เช้า
                                                          </div>
-                                                </button>:
+                                                </button>: 
+                                                <button className="btn btn-selected" type="button" onClick={handleMorning} style={{backgroundColor: 'white', width: '4.5vw', height: '50px'}}>
+                                                    <div className='d-flex justify-content-center'>
+                                                        เช้า
+                                                    </div>
+                                                </button>
+                                        :
                                                 selectedEvery ? 
                                                 <button disabled className="btn" type="button" onClick={handleMorning} style={{backgroundColor: 'white', width: '4.5vw', height: '50px', borderColor: '#e2e2e2'}}>
                                                         <div className='d-flex justify-content-center'>
@@ -628,7 +685,11 @@ export const GenerateQRCode = () => {
                                                          </div>
                                                 </button>
                                     }
-                                    {noon ? <button className="btn btn-selected" type="button" onClick={handleNoon} style={{backgroundColor: 'white', width: '4.5vw', height: '50px'}}>
+                                    {noon ? selectedEvery ? <button disabled className="btn" type="button" onClick={handleNoon} style={{backgroundColor: 'white', width: '4.5vw', height: '50px', borderColor: '#e2e2e2'}}>
+                                    <div className='d-flex justify-content-center'>
+                                      กลางวัน
+                                    </div>
+                                     </button>:<button className="btn btn-selected" type="button" onClick={handleNoon} style={{backgroundColor: 'white', width: '4.5vw', height: '50px'}}>
                                        <div className='d-flex justify-content-center'>
                                          กลางวัน
                                        </div>
@@ -643,7 +704,11 @@ export const GenerateQRCode = () => {
                                       กลางวัน
                                     </div>
                                  </button>}
-                                    {evening ? <button className="btn btn-selected" type="button" onClick={handleEvening} style={{backgroundColor: 'white', width: '4.5vw', height: '50px'}}>
+                                    {evening ? selectedEvery ? <button disabled className="btn" type="button" onClick={handleEvening} style={{backgroundColor: 'white', width: '4.5vw', height: '50px', borderColor: '#e2e2e2'}}>
+                                       <div className='d-flex justify-content-center'>
+                                         เย็น
+                                       </div>
+                                    </button>: <button className="btn btn-selected" type="button" onClick={handleEvening} style={{backgroundColor: 'white', width: '4.5vw', height: '50px'}}>
                                        <div className='d-flex justify-content-center'>
                                          เย็น
                                        </div>
@@ -660,7 +725,11 @@ export const GenerateQRCode = () => {
                                          เย็น
                                        </div>
                                     </button>}
-                                    {Bed ? <button className="btn btn-selected" type="button" onClick={handleBed} style={{backgroundColor: 'white', width: '4.5vw', height: '50px'}}>
+                                    {Bed ?  selectedEvery ? <button disabled className="btn" type="button" onClick={handleBed} style={{backgroundColor: 'white', width: '4.5vw', height: '50px', borderColor: '#e2e2e2'}}>
+                                       <div className='d-flex justify-content-center'>
+                                         ก่อนนอน
+                                       </div>
+                                    </button>:<button className="btn btn-selected" type="button" onClick={handleBed} style={{backgroundColor: 'white', width: '4.5vw', height: '50px'}}>
                                        <div className='d-flex justify-content-center'>
                                          ก่อนนอน
                                        </div>
@@ -761,7 +830,32 @@ export const GenerateQRCode = () => {
                                         </div>
                                     </div>
                                 </label>
-                                <input type="text" className="form-control" placeholder='จำนวนยา' aria-label="Text input with dropdown button" name="dosagePerTake" required onChange={e => setAmountOfMeds(e.target.value)} value={amountOfMeds}  style={{width: '14vw', height: '46px'}}/>
+                                <div className='d-flex'>
+                                    {unitAmountClick ? 
+                                    <input type="text" onClick={handleUnitAmountClick} onBlur={handleUnitAmountClickNotFocus} className="form-control form-control-clicked" placeholder='จำนวน' name="dosagePerTake" required onChange={e => handleAmountOfMeds(e)} value={amountOfMeds} style={{width: '9vw', height: '46px', borderRight: 'none', borderTopRightRadius: '0px', borderBottomRightRadius: '0px'}}/>:
+                                    <input type="text" onClick={handleUnitAmountClick} onBlur={handleUnitAmountClickNotFocus} className="form-control" placeholder='จำนวน' name="dosagePerTake" required onChange={e => handleAmountOfMeds(e)} value={amountOfMeds} style={{width: '9vw', height: '46px', borderRight: 'none', borderTopRightRadius: '0px', borderBottomRightRadius: '0px'}}/>}
+                                    
+                                    {/* <div className="dropdown">
+                                        <button className="btn onclicked-button" onClick={handleDosageClick} type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" style={{backgroundColor: 'white', width: '5vw', height: '46px', borderTopLeftRadius: '0px', borderBottomLeftRadius: '0px'}}>
+                                        <div className='d-flex justify-content-between'>
+                                        {unit}
+                                        <IoIosArrowDown size={14} color='#2C2C2C' className='mt-1'/>
+                                        </div>
+                                        </button>
+                                        <ReturnUnit handleUnit={handleUnit} />
+                                    </div>: */}
+                                    <div className="dropdown">
+                                        <button className="btn" onClick={handleUnitAmountClick} onBlur={handleUnitAmountClickNotFocus} type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" style={unitAmountClick ? {borderLeft: 'none', borderColor: '#1AB48D', boxShadow: '0 0 0 0.2rem rgba(213, 236, 230, 0.75)' ,backgroundColor: 'white', width: '5vw', height: '46px', borderTopLeftRadius: '0px', borderBottomLeftRadius: '0px'}: {borderLeft: '0', borderColor: '#e2e2e2',backgroundColor: 'white', width: '5vw', height: '46px', borderTopLeftRadius: '0px', borderBottomLeftRadius: '0px'}}>
+                                        <div className='d-flex justify-content-between'>
+                                        {unitAmount}
+                                        <IoIosArrowDown size={14} color='#2C2C2C' className='mt-1'/>
+                                        </div>
+                                        </button>
+                                        <ReturnUnitAmount handleUnitAmount={handleUnitAmount} />
+                                    </div>
+                                    
+                                </div>
+                                {wrongFormatAmountOfMeds ? (<div className='d-flex gap-1 align-items-center mt-2'><div className='d-flex align-items-center'><IoCloseCircleOutline color='red'/></div><div style={{color: 'red', fontSize: '14px',fontFamily:'LINESeedSansENRegular'}}>กรุณาใส่ตัวเลข</div></div>): (<div></div>)}
                             </div>
                             <div className='align-self-end'>
                                     <button className="btn" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModalCenter" style={{ width: '10vw', backgroundColor: '#1AB48D', height: '46px'}}>

@@ -213,7 +213,6 @@ export const Homepage = () => {
                             <th scope='col' style={{paddingTop: '1%', paddingBottom: '1%', paddingLeft: '1.5%'}}>id</th>
                             <th scope='col' style={{paddingTop: '1%', paddingBottom: '1%'}}>Trade name</th>
                             <th scope='col' style={{paddingTop: '1%', paddingBottom: '1%'}}>Generic name</th>
-                            <th scope='col' style={{paddingTop: '1%', paddingBottom: '1%'}}>Containers</th>
                             <th scope='col' style={{paddingTop: '1%', paddingBottom: '1%'}}></th>
                     
                         </tr>

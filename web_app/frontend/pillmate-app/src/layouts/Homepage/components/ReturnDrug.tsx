@@ -25,29 +25,19 @@ export const ReturnDrug: React.FC<ReturnDrugProps> = (props) => {
 
     return(
         <tr className='align-middle tablerow'>
-            <td style={{paddingTop: '1.75%', paddingBottom: '1.75%',paddingLeft: '1.5%'}}>
+            <td style={{paddingTop: '1.75%', paddingBottom: '1.75%',paddingLeft: '2.5%'}}>
                 <div style={{fontFamily: 'LINESeedSansENBold', fontSize: '14px'}}>
                     {props.drug.id}
                 </div>
             </td>
-            <td style={{paddingTop: '1.5%', paddingBottom: '1.5%', width: '30%'}}>
+            <td style={{paddingTop: '1.5%', paddingBottom: '1.5%', width: '35%'}}>
                 <div style={{fontFamily: 'LINESeedSansENRegular', fontSize: '14px'}}>
                     {props.drug.tradeName}
                 </div>
             </td>
-            <td style={{paddingTop: '1.5%', paddingBottom: '1.5%', width: '30%'}}>
+            <td style={{paddingTop: '1.5%', paddingBottom: '1.5%', width: '35%'}}>
                 <div style={{fontFamily: 'LINESeedSansENRegular', fontSize: '14px'}}>
                     {props.drug.genericName}
-                </div>
-            </td>
-            <td >
-                <div className="d-flex gap-2">
-                <div style={{fontFamily: 'LINESeedSansENRegular', fontSize: '14px', backgroundColor: '#DFDFDF', paddingLeft: '2.5%', paddingRight: '2.5%', paddingTop: '1.5%', paddingBottom: '1.5%', borderRadius: '24px'}}>
-                    Container N/A
-                </div>
-                <div style={{fontFamily: 'LINESeedSansENRegular', fontSize: '14px', backgroundColor: '#DFDFDF',  paddingLeft: '2.5%', paddingRight: '2.5%', paddingTop: '1.5%', paddingBottom: '1.5%', borderRadius: '24px'}}>
-                    Storage N/A
-                </div>
                 </div>
             </td>
             <td>
