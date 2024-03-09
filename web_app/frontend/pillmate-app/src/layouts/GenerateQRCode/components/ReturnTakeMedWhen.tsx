@@ -10,7 +10,6 @@ export const ReturnTakemedWhen: React.FC<ReturnTakemedWhenProps> = (props) => {
         'หลังอาหาร',
         'ก่อนอาหาร',
         'หลังอาหารทันที',
-        'เวลา',
         'พร้อมอาหาร',
         '...'
       ];

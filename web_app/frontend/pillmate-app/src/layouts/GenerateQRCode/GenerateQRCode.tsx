@@ -34,6 +34,9 @@ export const GenerateQRCode = () => {
     const [ every, setEvery ] = useState("...");
     const [ dosageClick, setDosageClick ] = useState(false)
     const [ unitAmountClick, setUnitAmountClick ] = useState(false)
+    const [ takeMedWhenClick, setTakeMedWhenClick] = useState(false);
+    const [ EveryClick, setEveryClick] = useState(false);
+    const [ additionalAdviceClick, setAdditionalAdviceClick] = useState(false);
     const [ dosageClickDropdown, setDosageClickDropdown ] = useState(true); 
     const [ unit, setUnit] = useState("แคปซูล");
     const [ unitAmount, setUnitAmount] = useState("แคปซูล");
@@ -60,6 +63,8 @@ export const GenerateQRCode = () => {
     const [ wrongFormatExpiredDate, setWrongFormatExpiredDate ] = useState(false);
     const [ timeOfTakenn, setTimeOfTakenn] = useState('');
     const [ loadingModal, setLoadingModal ] = useState(false);
+    const [ url, setUrl ] = useState('');
+
     const date = new Date()
     const result = date.toLocaleDateString('th-TH', {
     year: 'numeric',
@@ -100,8 +105,9 @@ export const GenerateQRCode = () => {
                         xhr.send();
                     
                         // Or inserted into an <img> element
-                        const img = document.getElementById('myimg');
-                        img!.setAttribute('src', url);
+                        // const img = document.getElementById('myimg');
+                        // img!.setAttribute('src', url);
+                        setUrl(url);
                       })
                       .catch((error) => {
                         // Handle any errors
@@ -117,7 +123,10 @@ export const GenerateQRCode = () => {
 
     const handleTakeMedWhen = (value: string) => {
         setTakeMedWhen(value);
-        if(value !== '...'){
+        if(value === 'ทานเมื่อมีอาการ'){
+            setSeletedEvery(true);
+        }
+        else if(value !== '...'){
             setSeletedTakeMedWhen(true);
             setSeletedEvery(false);
             setEvery('...');
@@ -194,6 +203,29 @@ export const GenerateQRCode = () => {
         setTimePerDayFocus(false);
     }
 
+    const handleTakeMedWhenFocus = () => {
+        setTakeMedWhenClick(true);
+    }
+
+    const handleTakeMedWhenNotFocus = () => {
+        setTakeMedWhenClick(false);
+    }
+
+    const handleEveryFocus = () => {
+        setEveryClick(true);
+    }
+
+    const handleEveryNotFocus = () => {
+        setEveryClick(false);
+    }
+
+    const handleAddtionalAdviceFocus = () => {
+        setAdditionalAdviceClick(true);
+    }
+
+    const handleAddtionalAdviceNotFocus = () => {
+        setAdditionalAdviceClick(false);
+    }
 
     const handleDosagePerTake = (event: ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
@@ -352,8 +384,13 @@ export const GenerateQRCode = () => {
                 <div className="modal-body">
                     <div className='d-flex' style={{marginLeft: '5.5%', marginRight: '8.5%', gap: '11%', marginBottom:'2%'}}>
                         <div style={{width:'30%'}}>
-                            <div ref={componentRef} >
-                            <img src={""} id="myimg"/>
+                            <div  >
+                                {url !== ''? <div ref={componentRef}>
+                                    <img  src={url} id="myimg"/>
+                                </div>: <div className='d-flex justify-content-center align-items-center' style={{height: '20vh'}}>
+                                    Loading QR Code...
+                                </div>}
+                            
                             </div>
                             <div style={{marginLeft: '9.5%', width: '100%'}}>
                             <div className='d-flex gap-1'>
@@ -443,8 +480,15 @@ export const GenerateQRCode = () => {
                         ปรินต์ QR Code
                     </div>
                     </button>}
-                    content={() => componentRef.current}
-                    />
+                    content={() => {
+                        if (componentRef && componentRef.current) {
+                            return componentRef.current;
+                        } else {
+                            console.log('componentRef is not available right now.');
+                        }
+                        return null;
+                    }}
+                />
                     </div>
                 </div>
                 </div>
@@ -511,7 +555,7 @@ export const GenerateQRCode = () => {
 
             <div  style={{width: '62vw',background: '#F6F6F6', paddingRight: '8%',  paddingTop: '3%', paddingLeft: '7%'}}>
                 <div className='d-flex justify-content-start' style={{gap: '8px'}}>
-                    <div className='d-flex align-items-center'>
+                    <div onClick={history.goBack} className='d-flex align-items-center'>
                         <IoIosArrowBack size={32}/>
                     </div>
                     <div style={{fontSize: '32px', fontFamily: "LINESeedSansENBold"}}>
@@ -608,7 +652,7 @@ export const GenerateQRCode = () => {
                                     </div>
                                 </label>
                                 <div className="dropdown">
-                                    <button className="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"  style={{backgroundColor: 'white', width: '14vw', height: '46px', borderColor: '#e2e2e2'}}>
+                                    <button className="btn" onClick={handleTakeMedWhenFocus} onBlur={handleTakeMedWhenNotFocus} type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"  style={takeMedWhenClick ? {borderColor: '#1AB48D', boxShadow: '0 0 0 0.2rem rgba(213, 236, 230, 0.75)' ,backgroundColor: 'white', width: '14vw', height: '46px'}: {borderColor: '#e2e2e2',backgroundColor: 'white', width: '14vw', height: '46px'}}>
                                        <div className='d-flex justify-content-between'>
                                        {takeMedWhen}
                                         <IoIosArrowDown size={14} color='#2C2C2C' className='mt-1'/>
@@ -629,7 +673,7 @@ export const GenerateQRCode = () => {
                                     </div>
                                 </label>
                                 <div className="dropdown">
-                                    <button className="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" style={{backgroundColor: 'white', width: '14vw', height: '46px', borderColor: '#e2e2e2'}}>
+                                    <button className="btn" onClick={handleEveryFocus} onBlur={handleEveryNotFocus} type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" style={EveryClick ? {borderColor: '#1AB48D', boxShadow: '0 0 0 0.2rem rgba(213, 236, 230, 0.75)' ,backgroundColor: 'white', width: '14vw', height: '46px'}: {borderColor: '#e2e2e2',backgroundColor: 'white', width: '14vw', height: '46px'}}>
                                        <div className='d-flex justify-content-between'>
                                        {every}
                                         <IoIosArrowDown size={14} color='#2C2C2C' className='mt-1'/>
@@ -793,7 +837,7 @@ export const GenerateQRCode = () => {
                                     </div>
                                 </label>
                                 <div className="dropdown">
-                                    <button className="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style={{backgroundColor: 'white', width: '39vw', height:'46px'}}>
+                                    <button className="btn" onClick={handleAddtionalAdviceFocus} onBlur={handleAddtionalAdviceNotFocus} type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style={additionalAdviceClick ? {borderColor: '#1AB48D', boxShadow: '0 0 0 0.2rem rgba(213, 236, 230, 0.75)' ,backgroundColor: 'white', width: '39vw', height: '46px'}: {borderColor: '#e2e2e2',backgroundColor: 'white', width: '39vw', height: '46px'}}>
                                        <div className='d-flex justify-content-between'>
                                        {addtionalAdvice}
                                         <IoIosArrowDown size={14} color='#2C2C2C' className='mt-1'/>
