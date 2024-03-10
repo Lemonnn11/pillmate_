@@ -35,9 +35,9 @@ export const Homepage = () => {
             let url: string = ''
 
             if(queryUrl === ''){
-                url = `https://lemonnn11.xyz/api/drug/?page=${currentPage - 1}&size=${drugsPerPage}`;
+                url = `http://localhost:8080/api/drug/?page=${currentPage - 1}&size=${drugsPerPage}`;
             }else{
-                url = `https://lemonnn11.xyz/api/drug/get-drugs?page=${currentPage - 1}&size=${drugsPerPage}` + queryUrl ;
+                url = `http://localhost:8080/api/drug/get-drugs?page=${currentPage - 1}&size=${drugsPerPage}` + queryUrl ;
             }
 
             const response = await fetch(url);

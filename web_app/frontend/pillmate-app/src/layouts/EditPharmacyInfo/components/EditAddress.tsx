@@ -44,7 +44,7 @@ export const EditAddress: React.FC<AddressInfoProps> = (props) => {
 
                 
                 if(email !== ''){
-                const url = `https://lemonnn11.xyz/api/pharmacy/get-pharmacy?email=${email}`;
+                const url = `http://localhost:8080/api/pharmacy/get-pharmacy?email=${email}`;
     
                 console.log(url)
 
