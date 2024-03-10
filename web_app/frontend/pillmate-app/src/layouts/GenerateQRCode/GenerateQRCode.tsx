@@ -276,7 +276,7 @@ export const GenerateQRCode = () => {
     async function createQRCode(event: React.FormEvent<HTMLFormElement>){
         event.preventDefault();
         setLoadingModal(true);
-        const url = `https://lemonnn11.xyz/api/qrCode/create`;
+        const url = `http://localhost:8080/api/qrCode/create`;
         if(takeMedWhen !== '...' && (!morning && !noon && !evening && !Bed)){
             setPlsSelectedWhen(true);
         }else {
