@@ -47,7 +47,7 @@ export const PharmacyInfo: React.FC<PharmacyInfoProps> = (props) => {
                 },
                 body: JSON.stringify(props.pharmacy)
             }
-            const url = `http://localhost:8080/api/pharmacy/create`;
+            const url = `https://lemonnn11.xyz/api/pharmacy/create`;
 
             const response = await fetch(url, request)
 
@@ -158,18 +158,13 @@ export const PharmacyInfo: React.FC<PharmacyInfoProps> = (props) => {
                         <div style={{fontSize: '16px', color: '#000000', fontFamily: 'LINESeedSansENRegular'}}>
                             Service Date
                         </div>
-                    </div>
-                    <div className='d-flex justify-content-between'>
-                        <div className='mt-2'>
-                            <label  className="form-label" style={{fontFamily: 'LINESeedSansENRegular'}}>
-                                <div className='d-flex'>
-                                    <div style={{fontSize: '14px', color: '#000000'}}>
-                                        Opened date
-                                    </div>
-                                    { showRequiredOpenedDate ? <div style={{fontSize: '16px', color: 'red'}}>
+                        { showRequiredOpenedDate || showRequiredClosedDate ? <div style={{fontSize: '16px', color: 'red'}}>
                                         *
                                     </div>: <div></div>}
-                                </div>
+                    </div>
+                    <div className='d-flex justify-content-between'>
+                        <div className=''>
+                            <label  className="form-label" style={{fontFamily: 'LINESeedSansENRegular'}}>
                             </label>
                             <div className='dropdown'>
                                 <button className='btn' type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style={ showRequiredOpenedDate ? {backgroundColor: '#FFEDED', width: '11vw', height:'49px', border: '1px solid #FF0000'}: {backgroundColor: 'white', width: '11vw', height:'49px', border: '1px solid #DFDFDF'}}>
@@ -181,16 +176,8 @@ export const PharmacyInfo: React.FC<PharmacyInfoProps> = (props) => {
                                 <ReturnDate handleDate={handleOpenedDate}/>
                             </div>
                         </div>
-                        <div className='mt-2'>
+                        <div className=''>
                             <label  className="form-label" style={{fontFamily: 'LINESeedSansENRegular'}}>
-                                <div className='d-flex'>
-                                    <div style={{fontSize: '14px', color: '#000000'}}>
-                                        Closed date
-                                    </div>
-                                    { showRequiredClosedDate ? <div style={{fontSize: '16px', color: 'red'}}>
-                                        *
-                                    </div>: <div></div>}
-                                </div>
                             </label>
                             <div className='dropdown'>
                                 <button className='btn' type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style={ showRequiredClosedDate ? {backgroundColor: '#FFEDED', width: '11vw', height:'49px', border: '1px solid #FF0000'}: {backgroundColor: 'white', width: '11vw', height:'49px', border: '1px solid #DFDFDF'}}>

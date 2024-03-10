@@ -82,7 +82,7 @@ export const Login = () => {
                             You've made too many recent attempts. Please try again later.
                         </div>): (<div></div>)}
                     </div>
-                    <div className="mt-2"style={{marginLeft:'-0.8%'}}>
+                    <div className="mt-2"style={{marginLeft:'-2%'}}>
                         <button type="button" className="btn btn-link" style={{color:'black'}}>Forgot my password</button>
                     </div>
                     <button className="btn mt-2" type="submit" style={{ width: '25vw', backgroundColor: '#059E78', height: '49px'}}>
@@ -91,7 +91,7 @@ export const Login = () => {
                         </div>
                     </button>
                 </form>
-                <div className="d-flex align-items-end gap-2" style={{height:'42%'}}>
+                <div className="d-flex align-items-end gap-2" style={{height:'5%'}}>
                     <div style={{fontFamily: 'LINESeedSansENRegular', fontSize: '16px'}}>
                         Don’t have an account?
                     </div>
