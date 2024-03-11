@@ -77,7 +77,7 @@ export const Homepage = () => {
     useEffect(() => {
         const fetchCategory = async () => {
             
-            let url: string = `https://lemonnn11.xyz/api/drug/get-categories`;
+            let url: string = `http://localhost:8080/api/drug/get-categories`;
 
             const response = await fetch(url);
 
