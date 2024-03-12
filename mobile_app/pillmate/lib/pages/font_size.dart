@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pillmate/models/app_config.dart';
 
+import '../constants/constants.dart';
 import '../services/sqlite_service.dart';
 
 class FontSize extends StatefulWidget {
@@ -20,6 +21,7 @@ class _FontSizeState extends State<FontSize> {
   late SqliteService _sqliteService;
   bool editFontsize = false;
   int change = 0;
+  bool darkMode = false;
 
   @override
   void initState() {
@@ -28,6 +30,14 @@ class _FontSizeState extends State<FontSize> {
     this._sqliteService.initializeDB();
     initSwitchStatus();
     initFontSize();
+    initDarkMode();
+  }
+
+  Future<void> initDarkMode() async {
+    bool status = await _sqliteService.getDarkModeStatus();
+    setState(() {
+      darkMode = status;
+    });
   }
 
   Future<void> initSwitchStatus() async {
@@ -55,7 +65,7 @@ class _FontSizeState extends State<FontSize> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.5,
-        backgroundColor: Colors.white,
+        backgroundColor: !darkMode ? Colors.white : kBlackDarkModeBg,
         automaticallyImplyLeading: false,
         toolbarHeight: 45,
         title: Padding(
@@ -65,18 +75,19 @@ class _FontSizeState extends State<FontSize> {
             style: TextStyle(
                 fontSize: 20,
                 fontFamily: 'PlexSansThaiSm',
-                color: Colors.black
+                color: !darkMode ? Colors.black:Colors.white
             ),
           ),
         ),
         leading: IconButton(
-          icon: Icon(Ionicons.chevron_back_outline, color: Colors.black,size: 30), onPressed: () {
+          icon: Icon(Ionicons.chevron_back_outline, color: !darkMode ? Colors.black:Colors.white,size: 30), onPressed: () {
           Navigator.pop(context);
         },
         ),
       ),
       body: Container(
         height: screenHeight,
+        color: !darkMode ? Colors.white : kBlackDarkModeBg,
         child: Stack(
           children: [
             Padding(
@@ -95,8 +106,8 @@ class _FontSizeState extends State<FontSize> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('การตั้งค่าขนาดของตัวอักษร',style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble(): 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),),
-                            Text('เปลี่ยนขนาดตัวอักษรด้านล่างให้เข้ากับการใช้งานของคุณ',style: TextStyle(fontSize: editFontsize ?  13 + change.toDouble(): 13, fontFamily: 'PlexSansThaiRg', color:  Colors.black),),
+                            Text('การตั้งค่าขนาดของตัวอักษร',style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble(): 16, fontFamily: 'PlexSansThaiMd', color: !darkMode ? Colors.black:Colors.white),),
+                            Text('เปลี่ยนขนาดตัวอักษรด้านล่างให้เข้ากับการใช้งานของคุณ',style: TextStyle(fontSize: editFontsize ?  13 + change.toDouble(): 13, fontFamily: 'PlexSansThaiRg', color: !darkMode ? Colors.black:Colors.white),),
                           ],
                         ),
                       ),
