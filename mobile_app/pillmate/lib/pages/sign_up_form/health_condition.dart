@@ -4,6 +4,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:pillmate/pages/sign_up_form/dob.dart';
 import 'package:pillmate/pages/sign_up_form/drug_allergies.dart';
 
+import '../../constants/constants.dart';
 import '../../services/sqlite_service.dart';
 
 
@@ -53,7 +54,7 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
-        color: Colors.white,
+        color: !darkMode ? Colors.white: kBlackDarkModeBg,
         width: screenWidth,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04),
@@ -70,7 +71,7 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                         onTap: (){
                           Navigator.pop(context);
                         },
-                        child: Icon(Ionicons.chevron_back_outline, color: Colors.black, size: 30,)),
+                        child: Icon(Ionicons.chevron_back_outline, color: !darkMode ? Colors.black:Colors.white, size: 30,)),
                     Padding(
                       padding: EdgeInsets.only( right: screenWidth*0.015),
                       child: Container(
@@ -83,8 +84,8 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           child: LinearProgressIndicator(
                             value: 0.6666666667,
-                            backgroundColor: Color(0xffdddddd),
-                            valueColor: AlwaysStoppedAnimation<Color>(Color(0xff059E78)),
+                            backgroundColor: !darkMode? Color(0xffdddddd) : Colors.white,
+                            valueColor: !darkMode? AlwaysStoppedAnimation<Color>(Color(0xff059E78)) : AlwaysStoppedAnimation<Color>(Color(0xff94DDB5)),
                           ),
                         ),
                       ),
@@ -92,7 +93,8 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                     Text('4/6',
                       style: TextStyle(
                           fontSize: 16,
-                          fontFamily: 'PlexSansThaiRg'
+                          fontFamily: 'PlexSansThaiRg',
+                          color: !darkMode ? Colors.black:Colors.white
                       ),),
                   ],
                 ),
@@ -102,7 +104,8 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                 'เลือกโรคประจำตัวที่คุณมี',
                 style: TextStyle(
                     fontSize: 20,
-                    fontFamily: 'PlexSansThaiSm'
+                    fontFamily: 'PlexSansThaiSm',
+                    color: !darkMode ? Colors.black:Colors.white
                 ),
               ),
               SizedBox(height: 10,),
@@ -111,7 +114,7 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                 style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'PlexSansThaiRg',
-                    color: Color(0xff3F3F3F)
+                    color: !darkMode ? Color(0xff3F3F3F):Colors.white
                 ),
               ),
               SizedBox(height: 13,),
@@ -143,6 +146,7 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                             children: [
                               Text(
                                   'ฉันไม่มีโรคประจำตัว'
+
                               ),
                             ],
                           ),
@@ -154,6 +158,7 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                                 width: 1,
                                 color: Color(0xffD0D0D0)
                             ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                             borderRadius: BorderRadius.circular(24)
                         ),
                         height: 31,
@@ -163,7 +168,10 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                  'ฉันไม่มีโรคประจำตัว'
+                                  'ฉันไม่มีโรคประจำตัว',
+                            style: TextStyle(
+                              color:!darkMode ? Colors.black: Colors.white,
+                            ),
                               ),
                             ],
                           ),
@@ -188,6 +196,7 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                                 width: 1,
                                 color: Color(0xff059E78)
                             ),
+
                             borderRadius: BorderRadius.circular(24)
                         ),
                         height: 31,
@@ -209,6 +218,7 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                                 width: 1,
                                 color: Color(0xffD0D0D0)
                             ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                             borderRadius: BorderRadius.circular(24)
                         ),
                         height: 31,
@@ -218,7 +228,10 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                  'ความดันโลหิตสูง'
+                                  'ความดันโลหิตสูง',
+                                style: TextStyle(
+                                  color:!darkMode ? Colors.black: Colors.white,
+                                ),
                               ),
                             ],
                           ),
@@ -264,6 +277,7 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                                 width: 1,
                                 color: Color(0xffD0D0D0)
                             ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                             borderRadius: BorderRadius.circular(24)
                         ),
                         height: 31,
@@ -273,7 +287,10 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                  'ปอดอักเสบ'
+                                  'ปอดอักเสบ',
+                                style: TextStyle(
+                                  color:!darkMode ? Colors.black: Colors.white,
+                                ),
                               ),
                             ],
                           ),
@@ -319,6 +336,7 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                                 width: 1,
                                 color: Color(0xffD0D0D0)
                             ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                             borderRadius: BorderRadius.circular(24)
                         ),
                         height: 31,
@@ -328,7 +346,10 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                  'หลอดเลือดในสมอง'
+                                  'หลอดเลือดในสมอง',
+                                style: TextStyle(
+                                  color:!darkMode ? Colors.black: Colors.white,
+                                ),
                               ),
                             ],
                           ),
@@ -374,6 +395,7 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                                 width: 1,
                                 color: Color(0xffD0D0D0)
                             ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                             borderRadius: BorderRadius.circular(24)
                         ),
                         height: 31,
@@ -383,7 +405,10 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                  'กระเพาะอาหาร'
+                                  'กระเพาะอาหาร',
+                                style: TextStyle(
+                                  color:!darkMode ? Colors.black: Colors.white,
+                                ),
                               ),
                             ],
                           ),
@@ -429,6 +454,7 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                                 width: 1,
                                 color: Color(0xffD0D0D0)
                             ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                             borderRadius: BorderRadius.circular(24)
                         ),
                         height: 31,
@@ -438,7 +464,10 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                  'เบาหวาน'
+                                  'เบาหวาน',
+                                style: TextStyle(
+                                  color:!darkMode ? Colors.black: Colors.white,
+                                ),
                               ),
                             ],
                           ),
@@ -484,6 +513,7 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                                 width: 1,
                                 color: Color(0xffD0D0D0)
                             ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                             borderRadius: BorderRadius.circular(24)
                         ),
                         height: 31,
@@ -493,7 +523,10 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                  'ถุงลมโป่งพอง'
+                                  'ถุงลมโป่งพอง',
+                          style: TextStyle(
+                            color:!darkMode ? Colors.black: Colors.white,
+                          ),
                               ),
                             ],
                           ),
@@ -539,6 +572,7 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                                 width: 1,
                                 color: Color(0xffD0D0D0)
                             ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                             borderRadius: BorderRadius.circular(24)
                         ),
                         height: 31,
@@ -548,7 +582,10 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                  'โรคไต'
+                                  'โรคไต',
+                                style: TextStyle(
+                                  color:!darkMode ? Colors.black: Colors.white,
+                                ),
                               ),
                             ],
                           ),
@@ -594,6 +631,7 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                                 width: 1,
                                 color: Color(0xffD0D0D0)
                             ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                             borderRadius: BorderRadius.circular(24)
                         ),
                         height: 31,
@@ -603,7 +641,10 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                  'โรคหัวใจ'
+                                  'โรคหัวใจ',
+                                style: TextStyle(
+                                  color:!darkMode ? Colors.black: Colors.white,
+                                ),
                               ),
                             ],
                           ),
@@ -649,6 +690,7 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                                 width: 1,
                                 color: Color(0xffD0D0D0)
                             ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                             borderRadius: BorderRadius.circular(24)
                         ),
                         height: 31,
@@ -658,7 +700,10 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                  'โรคตับ'
+                                  'โรคตับ',
+                                style: TextStyle(
+                                  color:!darkMode ? Colors.black: Colors.white,
+                                ),
                               ),
                             ],
                           ),
@@ -704,6 +749,7 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                                 width: 1,
                                 color: Color(0xffD0D0D0)
                             ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                             borderRadius: BorderRadius.circular(24)
                         ),
                         height: 31,
@@ -713,7 +759,10 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                  'อื่นๆ'
+                                  'อื่นๆ',
+                                style: TextStyle(
+                                  color:!darkMode ? Colors.black: Colors.white,
+                                ),
                               ),
                             ],
                           ),
@@ -742,7 +791,7 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                     hintStyle: TextStyle(
                         fontSize: 18,
                         fontFamily: 'PlexSansThaiRg',
-                        color: Color(0XFF717171)
+                        color: !darkMode ? Color(0XFF717171):Colors.white,
                     ),
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Color(0xffD0D0D0)),
@@ -808,10 +857,10 @@ class _HealthConditionFormState extends State<HealthConditionForm> {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => DrugAllergies(info: widget.info,)));
                           },
                           child:
-                          Text('ไปต่อ', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 18, color: Colors.white),
+                          Text('ไปต่อ', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 18, color: !darkMode?  Colors.white:Color(0xff2c2c2c)),
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xff059e78),
+                            backgroundColor: !darkMode? Color(0xff059E78): Color(0xff94DDB5),
                             elevation: 2,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8), // Set your desired border radius

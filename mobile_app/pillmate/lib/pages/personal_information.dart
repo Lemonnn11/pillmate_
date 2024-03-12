@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import '../constants/constants.dart';
 import '../services/sqlite_service.dart';
 import 'package:pillmate/models/personal_information.dart';
 
@@ -15,6 +16,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
   bool isEdit = false;
   bool editFontsize = false;
   int change = 0;
+  bool darkMode = false;
   late SqliteService _sqliteService;
   List<PersonalInformationModel>? p1 = null;
   TextEditingController _nameController = new TextEditingController();
@@ -34,6 +36,14 @@ class _PersonalInformationState extends State<PersonalInformation> {
     this._sqliteService.initializeDB();
     getPersonalInformation();
     initFontSize();
+    initDarkMode();
+  }
+
+  Future<void> initDarkMode() async {
+    bool status = await _sqliteService.getDarkModeStatus();
+    setState(() {
+      darkMode = status;
+    });
   }
 
   Future<void> initFontSize() async {
@@ -85,7 +95,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.5,
-        backgroundColor: Colors.white,
+        backgroundColor: !darkMode ? Colors.white: kBlackDarkModeBg,
         automaticallyImplyLeading: false,
         toolbarHeight: 45,
         title: Padding(
@@ -95,12 +105,12 @@ class _PersonalInformationState extends State<PersonalInformation> {
             style: TextStyle(
                 fontSize: 20,
                 fontFamily: 'PlexSansThaiSm',
-                color: Colors.black
+              color: !darkMode ? Colors.black: Colors.white,
             ),
           ),
         ),
         leading: IconButton(
-          icon: Icon(Ionicons.chevron_back_outline, color: Colors.black,size: 30), onPressed: () {
+          icon: Icon(Ionicons.chevron_back_outline,     color: !darkMode ? Colors.black: Colors.white,size: 30), onPressed: () {
           Navigator.pop(context);
           this.isEdit = false;
         },
@@ -119,7 +129,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
               child:  Text( 'บันทึก', style: TextStyle(
                   fontSize: editFontsize ?  16 + change.toDouble() : 16,
                   fontFamily: 'PlexSansThaiRg',
-                  color: Colors.black
+                color: !darkMode ? Colors.black: Colors.white,
               ),)
             ),
           ):
@@ -134,15 +144,16 @@ class _PersonalInformationState extends State<PersonalInformation> {
           child:  Text( 'แก้ไข', style: TextStyle(
           fontSize: editFontsize ?  16 + change.toDouble() : 16,
           fontFamily: 'PlexSansThaiRg',
-          color: Colors.black
+            color: !darkMode ? Colors.black: Colors.white,
           ),)
           ),
           )
         ],
       ),
       body: Container(
+        color: !darkMode ? Colors.white: kBlackDarkModeBg,
         width: screenWidth,
-        color: Colors.white,
+
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 15),
           child: ListView(
@@ -167,7 +178,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('วัน/เดือน/ปี เกิด',
-                    style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                    style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd',  color: !darkMode ? Colors.black: Colors.white,),
                   ),
                   SizedBox(height: 4,),
                   Container(
@@ -179,7 +190,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                           hintStyle: TextStyle(
                             fontSize: editFontsize ?  14 + change.toDouble() : 14,
                             fontFamily: 'PlexSansThaiRg',
-                            color: Colors.black
+                            color: !darkMode ? Colors.black: Colors.white,
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Color(0xffD0D0D0)),
@@ -207,7 +218,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('กรุ๊ปเลือด',
-                          style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                          style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color: !darkMode ? Colors.black: Colors.white,),
                         ),
                         SizedBox(height: 4,),
                         Container(
@@ -219,7 +230,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                               hintStyle: TextStyle(
                                   fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                   fontFamily: 'PlexSansThaiRg',
-                                  color: Colors.black
+                                color: !darkMode ? Colors.black: Colors.white,
                               ),
                               enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Color(0xffD0D0D0)),
@@ -246,7 +257,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('เพศ',
-                        style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                        style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd',  color: !darkMode ? Colors.black: Colors.white,),
                       ),
                       SizedBox(height: 4,),
                       Container(
@@ -258,7 +269,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                             hintStyle: TextStyle(
                                 fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                 fontFamily: 'PlexSansThaiRg',
-                                color: Colors.black
+                              color: !darkMode ? Colors.black: Colors.white,
                             ),
                             enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Color(0xffD0D0D0)),
@@ -288,7 +299,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('น้ำหนัก (กก.)',
-                          style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                          style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color: !darkMode ? Colors.black: Colors.white,),
                         ),
                         SizedBox(height: 4,),
                         Container(
@@ -302,7 +313,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                   style: TextStyle(
                                     fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                     fontFamily: 'PlexSansThaiRg',
-                                    color: Color(0xff575757),
+                                    color: !darkMode ?Color(0xff575757): Colors.white70,
                                   ),
                                 ),
                               ),
@@ -311,7 +322,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                               hintStyle: TextStyle(
                                   fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                   fontFamily: 'PlexSansThaiRg',
-                                  color: Colors.black
+                                  color: !darkMode ?Colors.black: Colors.white
                               ),
                               enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Color(0xffD0D0D0)),
@@ -338,7 +349,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('ส่วนสูง (ซม.)',
-                        style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                        style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd',      color: !darkMode ?Colors.black: Colors.white),
                       ),
                       SizedBox(height: 4,),
                       Container(
@@ -352,7 +363,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                 style: TextStyle(
                                   fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                   fontFamily: 'PlexSansThaiRg',
-                                  color: Color(0xff575757),
+                                  color: !darkMode ?Color(0xff575757): Colors.white70,
                                 ),
                               ),
                             ),
@@ -361,7 +372,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                             hintStyle: TextStyle(
                                 fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                 fontFamily: 'PlexSansThaiRg',
-                                color: Colors.black
+                                color: !darkMode ?Colors.black: Colors.white
                             ),
                             enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Color(0xffD0D0D0)),
@@ -388,7 +399,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('โรคประจำตัว',
-                    style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                    style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd',   color: !darkMode ?Colors.black: Colors.white),
                   ),
                   SizedBox(height: 4,),
                   Container(
@@ -400,7 +411,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         hintStyle: TextStyle(
                             fontSize: editFontsize ?  14 + change.toDouble() : 14,
                             fontFamily: 'PlexSansThaiRg',
-                            color: Colors.black
+                            color: !darkMode ?Colors.black: Colors.white
                         ),
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Color(0xffD0D0D0)),
@@ -425,7 +436,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('ยาที่แพ้',
-                    style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                    style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd',   color: !darkMode ?Colors.black: Colors.white),
                   ),
                   SizedBox(height: 4,),
                   Container(
@@ -437,7 +448,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         hintStyle: TextStyle(
                             fontSize: editFontsize ?  14 + change.toDouble() : 14,
                             fontFamily: 'PlexSansThaiRg',
-                            color: Colors.black
+                            color: !darkMode ?Colors.black: Colors.white
                         ),
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Color(0xffD0D0D0)),
@@ -462,7 +473,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('ยาที่ใช้ประจำ',
-                    style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                    style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd',   color: !darkMode ?Colors.black: Colors.white),
                   ),
                   SizedBox(height: 4,),
                   Container(
@@ -474,7 +485,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         hintStyle: TextStyle(
                             fontSize: editFontsize ?  14 + change.toDouble() : 14,
                             fontFamily: 'PlexSansThaiRg',
-                            color: Colors.black
+                            color: !darkMode ?Colors.black: Colors.white
                         ),
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Color(0xffD0D0D0)),

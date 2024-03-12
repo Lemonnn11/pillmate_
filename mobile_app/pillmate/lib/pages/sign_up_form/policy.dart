@@ -4,6 +4,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:pillmate/models/personal_information.dart';
 import 'package:pillmate/pages/homepage.dart';
 
+import '../../constants/constants.dart';
 import '../../services/sqlite_service.dart';
 
 class PolicyForm extends StatefulWidget {
@@ -16,12 +17,20 @@ class PolicyForm extends StatefulWidget {
 
 class _PolicyFormState extends State<PolicyForm> {
   late SqliteService _sqliteService;
+  bool darkMode = false;
 
+  Future<void> initDarkMode() async {
+    bool status = await _sqliteService.getDarkModeStatus();
+    setState(() {
+      darkMode = status;
+    });
+  }
   @override
   void initState() {
     super.initState();
     this._sqliteService= SqliteService();
     this._sqliteService.initializeDB();
+    initDarkMode();
   }
 
   @override
@@ -29,7 +38,7 @@ class _PolicyFormState extends State<PolicyForm> {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(
-        color: Colors.white,
+        color: !darkMode ? Colors.white: kBlackDarkModeBg,
         width: screenWidth,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04),
@@ -46,7 +55,7 @@ class _PolicyFormState extends State<PolicyForm> {
                         onTap: (){
                           Navigator.pop(context);
                         },
-                        child: Icon(Ionicons.chevron_back_outline, color: Colors.black, size: 30,)),
+                        child: Icon(Ionicons.chevron_back_outline, color: !darkMode ? Colors.black:Colors.white, size: 30,)),
                     Padding(
                       padding: EdgeInsets.only( right: screenWidth*0.015),
                       child: Container(
@@ -59,8 +68,8 @@ class _PolicyFormState extends State<PolicyForm> {
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           child: LinearProgressIndicator(
                             value: 1,
-                            backgroundColor: Color(0xffdddddd),
-                            valueColor: AlwaysStoppedAnimation<Color>(Color(0xff059E78)),
+                            backgroundColor: !darkMode? Color(0xffdddddd) : Colors.white,
+                            valueColor: !darkMode? AlwaysStoppedAnimation<Color>(Color(0xff059E78)) : AlwaysStoppedAnimation<Color>(Color(0xff94DDB5)),
                           ),
                         ),
                       ),
@@ -68,7 +77,8 @@ class _PolicyFormState extends State<PolicyForm> {
                     Text('6/6',
                       style: TextStyle(
                           fontSize: 16,
-                          fontFamily: 'PlexSansThaiRg'
+                          fontFamily: 'PlexSansThaiRg',
+                          color: !darkMode ? Colors.black:Colors.white
                       ),),
                   ],
                 ),
@@ -78,7 +88,8 @@ class _PolicyFormState extends State<PolicyForm> {
                 'เงื่อนไขและข้อตกลง',
                 style: TextStyle(
                     fontSize: 20,
-                    fontFamily: 'PlexSansThaiSm'
+                    fontFamily: 'PlexSansThaiSm',
+                    color: !darkMode ? Colors.black:Colors.white
                 ),
               ),
               SizedBox(height: 10,),
@@ -87,7 +98,7 @@ class _PolicyFormState extends State<PolicyForm> {
                 style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'PlexSansThaiRg',
-                    color: Color(0xff3F3F3F)
+                    color: !darkMode ?  Color(0xff3F3F3F):Colors.white
                 ),
               ),
               SizedBox(height: 13,),
@@ -109,10 +120,10 @@ class _PolicyFormState extends State<PolicyForm> {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => Homepage()));
                           },
                           child:
-                          Text('ยอมรับ', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 18, color: Colors.white),
+                          Text('ยอมรับ', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 18, color: !darkMode?  Colors.white:Color(0xff2c2c2c)),
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xff059e78),
+                            backgroundColor: !darkMode? Color(0xff059E78): Color(0xff94DDB5),
                             elevation: 2,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8), // Set your desired border radius
