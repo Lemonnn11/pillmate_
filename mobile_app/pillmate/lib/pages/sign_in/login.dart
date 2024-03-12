@@ -114,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                         hintStyle: TextStyle(
                             fontSize: editFontsize ?  18 + change.toDouble() : 18,
                             fontFamily: 'PlexSansThaiRg',
-                          color: !darkMode ? Colors.black: Colors.white70,
+                          color: !darkMode ? Color(0xff717171): Colors.white70,
                         ),
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Color(0xffD0D0D0)),
