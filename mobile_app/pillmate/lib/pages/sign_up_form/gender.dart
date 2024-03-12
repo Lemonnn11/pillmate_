@@ -187,9 +187,12 @@ class _GenderFormState extends State<GenderForm> {
                             child: Column(
                               children: [
                                 Container(
-                                  child: Image.asset('images/female.png'),
+
+                                  child:
+                               Image.asset('images/female.png'),
                                 ),
-                                SizedBox(height: 15,),
+                                SizedBox(height: 15,
+                                ),
                                 Text(
                                   'หญิง',
                                   style: TextStyle(

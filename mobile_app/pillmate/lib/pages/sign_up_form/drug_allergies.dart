@@ -152,6 +152,7 @@ class _DrugAllergiesState extends State<DrugAllergies> {
                                 width: 1,
                                 color: Color(0xffD0D0D0)
                             ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                             borderRadius: BorderRadius.circular(24)
                         ),
                         height: 31,
@@ -161,7 +162,10 @@ class _DrugAllergiesState extends State<DrugAllergies> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                  'ฉันไม่มียาที่แพ้'
+                                  'ฉันไม่มียาที่แพ้',
+                            style: TextStyle(
+                              color:!darkMode ? Colors.black: Colors.white,
+                              ),
                               ),
                             ],
                           ),
@@ -207,6 +211,7 @@ class _DrugAllergiesState extends State<DrugAllergies> {
                                 width: 1,
                                 color: Color(0xffD0D0D0)
                             ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                             borderRadius: BorderRadius.circular(24)
                         ),
                         height: 31,
@@ -216,7 +221,10 @@ class _DrugAllergiesState extends State<DrugAllergies> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                  'เพนิซิลลิน (Penicillin)'
+                                  'เพนิซิลลิน (Penicillin)',
+                                style: TextStyle(
+                                  color:!darkMode ? Colors.black: Colors.white,
+                                ),
                               ),
                             ],
                           ),
@@ -262,6 +270,7 @@ class _DrugAllergiesState extends State<DrugAllergies> {
                                 width: 1,
                                 color: Color(0xffD0D0D0)
                             ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                             borderRadius: BorderRadius.circular(24)
                         ),
                         height: 31,
@@ -271,7 +280,10 @@ class _DrugAllergiesState extends State<DrugAllergies> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                  'อะมอกซี่ซิลลิน (Amoxycillin)'
+                                  'อะมอกซี่ซิลลิน (Amoxycillin)',
+                                style: TextStyle(
+                                  color:!darkMode ? Colors.black: Colors.white,
+                                ),
                               ),
                             ],
                           ),
@@ -317,6 +329,7 @@ class _DrugAllergiesState extends State<DrugAllergies> {
                                 width: 1,
                                 color: Color(0xffD0D0D0)
                             ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                             borderRadius: BorderRadius.circular(24)
                         ),
                         height: 31,
@@ -326,7 +339,10 @@ class _DrugAllergiesState extends State<DrugAllergies> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                  'แอสไพริน (Aspirin)'
+                                  'แอสไพริน (Aspirin)',
+                                style: TextStyle(
+                                  color:!darkMode ? Colors.black: Colors.white,
+                                ),
                               ),
                             ],
                           ),
@@ -372,6 +388,7 @@ class _DrugAllergiesState extends State<DrugAllergies> {
                                 width: 1,
                                 color: Color(0xffD0D0D0)
                             ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                             borderRadius: BorderRadius.circular(24)
                         ),
                         height: 31,
@@ -381,7 +398,11 @@ class _DrugAllergiesState extends State<DrugAllergies> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                  'ไอโอดีน (Iodine)'
+                                  'ไอโอดีน (Iodine)',
+                                style: TextStyle(
+                                  color:!darkMode ? Colors.black: Colors.white,
+                                ),
+
                               ),
                             ],
                           ),
@@ -427,6 +448,7 @@ class _DrugAllergiesState extends State<DrugAllergies> {
                                 width: 1,
                                 color: Color(0xffD0D0D0)
                             ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                             borderRadius: BorderRadius.circular(24)
                         ),
                         height: 31,
@@ -436,7 +458,10 @@ class _DrugAllergiesState extends State<DrugAllergies> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                  'อินซูลิน (Insulin)'
+                                  'อินซูลิน (Insulin)',
+                                style: TextStyle(
+                                  color:!darkMode ? Colors.black: Colors.white,
+                                ),
                               ),
                             ],
                           ),
@@ -482,6 +507,7 @@ class _DrugAllergiesState extends State<DrugAllergies> {
                                 width: 1,
                                 color: Color(0xffD0D0D0)
                             ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                             borderRadius: BorderRadius.circular(24)
                         ),
                         height: 31,
@@ -491,7 +517,10 @@ class _DrugAllergiesState extends State<DrugAllergies> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                  'ไอบูโพรเฟน (Ibuprofen)'
+                                  'ไอบูโพรเฟน (Ibuprofen)',
+                                style: TextStyle(
+                                  color:!darkMode ? Colors.black: Colors.white,
+                                ),
                               ),
                             ],
                           ),
@@ -537,6 +566,7 @@ class _DrugAllergiesState extends State<DrugAllergies> {
                                 width: 1,
                                 color: Color(0xffD0D0D0)
                             ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                             borderRadius: BorderRadius.circular(24)
                         ),
                         height: 31,
@@ -546,7 +576,10 @@ class _DrugAllergiesState extends State<DrugAllergies> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                  'อัลโลพูรินอล (Allopurinol)'
+                                  'อัลโลพูรินอล (Allopurinol)',
+                                style: TextStyle(
+                                  color:!darkMode ? Colors.black: Colors.white,
+                                ),
                               ),
                             ],
                           ),
@@ -592,6 +625,7 @@ class _DrugAllergiesState extends State<DrugAllergies> {
                                 width: 1,
                                 color: Color(0xffD0D0D0)
                             ),
+                            color: !darkMode ? Colors.white: kBlackDarkMode,
                             borderRadius: BorderRadius.circular(24)
                         ),
                         height: 31,
@@ -601,7 +635,10 @@ class _DrugAllergiesState extends State<DrugAllergies> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                  'อื่นๆ'
+                                  'อื่นๆ',
+                                style: TextStyle(
+                                  color:!darkMode ? Colors.black: Colors.white,
+                                ),
                               ),
                             ],
                           ),
@@ -625,12 +662,13 @@ class _DrugAllergiesState extends State<DrugAllergies> {
                     color: Colors.black,
                   ),
                   decoration: InputDecoration(
+
                     contentPadding: EdgeInsets.only(top: 22, left: 15),
-                    hintText: 'โรคประจำตัวอื่นๆ',
+                    hintText: 'ยาอื่นๆ',
                     hintStyle: TextStyle(
                         fontSize: 18,
                         fontFamily: 'PlexSansThaiRg',
-                        color: Color(0XFF717171)
+                      color: !darkMode ? Color(0XFF717171):Colors.white,
                     ),
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Color(0xffD0D0D0)),
