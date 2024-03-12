@@ -6,6 +6,7 @@ import 'package:pillmate/pages/qr_code_scanner.dart';
 import '../components/reusable_bottom_navigation_bar.dart';
 import 'package:ionicons/ionicons.dart';
 
+import '../constants/constants.dart';
 import '../models/daily_med.dart';
 import '../models/medicine.dart';
 import '../services/local_notification_service.dart';
@@ -39,6 +40,7 @@ class _DrugNotificationState extends State<DrugNotification> {
   List<bool> _notificationList = [];
   bool editFontsize = false;
   int change = 0;
+  bool darkMode = false;
 
   @override
   void dispose() {
@@ -52,6 +54,7 @@ class _DrugNotificationState extends State<DrugNotification> {
   Future<void> initFontSize() async {
     bool status = await _sqliteService.getEditFontSizeStatus();
     int change = await _sqliteService.getFontSizeChange();
+
     setState(() {
       editFontsize = status;
       this.change = change;
@@ -242,7 +245,16 @@ class _DrugNotificationState extends State<DrugNotification> {
     authChangesListener();
     initIsNotified();
     getMedicines();
+    initDarkMode();
     initFontSize();
+  }
+
+
+  Future<void> initDarkMode() async {
+    bool status = await _sqliteService.getDarkModeStatus();
+    setState(() {
+      darkMode = status;
+    });
   }
 
   Future<void> initIsNotified() async {
@@ -265,7 +277,7 @@ class _DrugNotificationState extends State<DrugNotification> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.5,
-        backgroundColor: Colors.white,
+        backgroundColor: !darkMode ? Colors.white : kBlackDarkModeBg,
         automaticallyImplyLeading: false,
         toolbarHeight: 45,
         title: Padding(
@@ -275,12 +287,12 @@ class _DrugNotificationState extends State<DrugNotification> {
             style: TextStyle(
                 fontSize: 20,
                 fontFamily: 'PlexSansThaiSm',
-                color: Colors.black
+                color: !darkMode ? Colors.black:Colors.white
             ),
           ),
         ),
         leading: IconButton(
-          icon: Icon(Ionicons.chevron_back_outline, color: Colors.black,size: 30), onPressed: () {
+          icon: Icon(Ionicons.chevron_back_outline, color: !darkMode ? Colors.black:Colors.white,size: 30), onPressed: () {
           Navigator.pop(context);
           this.isEdit = false;
         },
@@ -310,7 +322,7 @@ class _DrugNotificationState extends State<DrugNotification> {
                 child: Text( 'บันทึก', style: TextStyle(
                     fontSize:  editFontsize ?  16 + change.toDouble() : 16,
                     fontFamily: 'PlexSansThaiRg',
-                    color: Colors.black
+                    color: !darkMode ? Colors.black:Colors.white
                 ),)),
           ): GestureDetector(
             onTap: () async {
@@ -322,14 +334,14 @@ class _DrugNotificationState extends State<DrugNotification> {
                 child: Text('แก้ไข', style: TextStyle(
                     fontSize:  editFontsize ?  16 + change.toDouble() : 16,
                     fontFamily: 'PlexSansThaiRg',
-                    color: Colors.black
+                    color: !darkMode ? Colors.black:Colors.white
                 ),)),
           )
         ],
       ),
       body: Container(
         width: screenWidth,
-        color: Colors.white,
+        color: !darkMode ? Colors.white : kBlackDarkModeBg,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 15),
           child: ListView(
@@ -343,8 +355,8 @@ class _DrugNotificationState extends State<DrugNotification> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('การตั้งค่าการแจ้งเตือน',style: TextStyle(fontSize:  editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),),
-                          Text('เปลี่ยนเวลาการแจ้งเตือนให้เข้ากับชีวิตประจำวันของคุณ',style: TextStyle(fontSize:  editFontsize ?  13 + change.toDouble() : 13, fontFamily: 'PlexSansThaiRg', color:  Colors.black),),
+                          Text('การตั้งค่าการแจ้งเตือน',style: TextStyle(fontSize:  editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color: !darkMode ? Colors.black:Colors.white),),
+                          Text('เปลี่ยนเวลาการแจ้งเตือนให้เข้ากับชีวิตประจำวันของคุณ',style: TextStyle(fontSize:  editFontsize ?  13 + change.toDouble() : 13, fontFamily: 'PlexSansThaiRg', color: !darkMode ? Colors.black:Colors.white),),
                         ],
                       ),
                     ),
@@ -373,10 +385,10 @@ class _DrugNotificationState extends State<DrugNotification> {
                     children: [
                       Container(
                         width: screenWidth*0.05,
-                        child: Image.asset('icons/bi_sunrise-black.png'),
+                        child: !darkMode ? Image.asset('icons/bi_sunrise-black.png'): Image.asset('icons/bi_sunrise_darkmode.png'),
                       ),
                         Text('  ช่วงเช้า',
-                        style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                        style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color: !darkMode ? Colors.black:Colors.white),
                       ),
                     ],
                   ),
@@ -390,7 +402,7 @@ class _DrugNotificationState extends State<DrugNotification> {
                         hintStyle: TextStyle(
                             fontSize: editFontsize ?  14 + change.toDouble() : 14,
                             fontFamily: 'PlexSansThaiRg',
-                            color: Colors.black
+                            color: !darkMode ? Colors.black:Colors.white
                         ),
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Color(0xffD0D0D0)),
@@ -413,10 +425,10 @@ class _DrugNotificationState extends State<DrugNotification> {
                     children: [
                       Container(
                         width: screenWidth*0.05,
-                        child: Image.asset('icons/ph_sun-black.png'),
+                        child: !darkMode ? Image.asset('icons/ph_sun-black.png'): Image.asset('icons/sun_darkmode.png'),
                       ),
                       Text('  ช่วงกลางวัน',
-                        style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                        style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color: !darkMode ? Colors.black:Colors.white),
                       ),
                     ],
                   ),
@@ -430,7 +442,7 @@ class _DrugNotificationState extends State<DrugNotification> {
                         hintStyle: TextStyle(
                             fontSize: editFontsize ?  14 + change.toDouble() : 14,
                             fontFamily: 'PlexSansThaiRg',
-                            color: Colors.black
+                            color: !darkMode ? Colors.black:Colors.white
                         ),
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Color(0xffD0D0D0)),
@@ -453,10 +465,10 @@ class _DrugNotificationState extends State<DrugNotification> {
                     children: [
                       Container(
                         width: screenWidth*0.05,
-                        child: Image.asset('icons/bi_sunset-black.png'),
+                        child: !darkMode ? Image.asset('icons/bi_sunset-black.png'): Image.asset('icons/sunset_darkmode.png'),
                       ),
                       Text('  ช่วงเย็น',
-                        style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                        style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color: !darkMode ? Colors.black:Colors.white),
                       ),
                     ],
                   ),
@@ -470,7 +482,7 @@ class _DrugNotificationState extends State<DrugNotification> {
                         hintStyle: TextStyle(
                             fontSize: editFontsize ?  14 + change.toDouble() : 14,
                             fontFamily: 'PlexSansThaiRg',
-                            color: Colors.black
+                            color: !darkMode ? Colors.black:Colors.white
                         ),
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Color(0xffD0D0D0)),
@@ -493,10 +505,10 @@ class _DrugNotificationState extends State<DrugNotification> {
                     children: [
                       Container(
                         width: screenWidth*0.05,
-                        child: Image.asset('icons/solar_moon-black.png'),
+                        child: !darkMode ? Image.asset('icons/solar_moon-black.png'):  Image.asset('icons/solar_moon_darkmode.png'),
                       ),
                       Text('  ก่อนนอน',
-                        style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color:  Colors.black),
+                        style: TextStyle(fontSize: editFontsize ?  16 + change.toDouble() : 16, fontFamily: 'PlexSansThaiMd', color: !darkMode ? Colors.black:Colors.white),
                       ),
                     ],
                   ),
@@ -510,7 +522,7 @@ class _DrugNotificationState extends State<DrugNotification> {
                         hintStyle: TextStyle(
                             fontSize: editFontsize ?  14 + change.toDouble() : 14,
                             fontFamily: 'PlexSansThaiRg',
-                            color: Colors.black
+                            color: !darkMode ? Colors.black:Colors.white
                         ),
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Color(0xffD0D0D0)),
