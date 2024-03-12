@@ -11,9 +11,9 @@ import '../constants/constants.dart';
 import '../services/sqlite_service.dart';
 
 class AddDrug extends StatefulWidget {
-  // final String info = '{"timePeriodForMed":"...","date":"2024-02-19T01:44:23.470Z","pharID":"Fy751CumG69MLZfZLvqe","additionalAdvice":"ยานี้อาจระคายเคืองกระเพาะอาหาร ให้รับประทานหลังอาหารทันที","quantity":250,"amountOfMeds":10,"genericName":"Paracetamol","expiredDate":"2023-11-04T00:00:00.000Z","adverseDrugReaction":"หากมีอาการผื่นแพ้ เยื่อบุผิวลอก ให้หยุดใช้ยาและหากมีอาการหนักควรปรึกษาแพทย์ทันที","timeOfMed":"หลังอาหาร","typeOfMedicine":"Tablet","tradeName":"Bakamol Tab. 500 mg","dosagePerTake":2,"takeMedWhen":"เช้า กลางวัน เย็น","QRCodeID":"8c5ea443-83e4-4d92-88d9-5d0e06a06db8","timePerDay":3,"conditionOfUse":"ลดคลื่นไส้อาเจียน"}';
-  final String info;
-  const AddDrug({super.key, required this.info});
+  final String info = '{"timePeriodForMed":"...","date":"2024-02-19T01:44:23.470Z","pharID":"Fy751CumG69MLZfZLvqe","additionalAdvice":"ยานี้อาจระคายเคืองกระเพาะอาหาร ให้รับประทานหลังอาหารทันที","quantity":250,"amountOfMeds":10,"genericName":"Paracetamol","expiredDate":"2023-11-04T00:00:00.000Z","adverseDrugReaction":"หากมีอาการผื่นแพ้ เยื่อบุผิวลอก ให้หยุดใช้ยาและหากมีอาการหนักควรปรึกษาแพทย์ทันที","timeOfMed":"หลังอาหาร","typeOfMedicine":"Tablet","tradeName":"Bakamol Tab. 500 mg","dosagePerTake":2,"takeMedWhen":"เช้า กลางวัน เย็น","QRCodeID":"8c5ea443-83e4-4d92-88d9-5d0e06a06db8","timePerDay":3,"conditionOfUse":"ลดคลื่นไส้อาเจียน"}';
+  // final String info;
+  const AddDrug({super.key});
 
   @override
   State<AddDrug> createState() => _AddDrugState();
@@ -45,6 +45,131 @@ class _AddDrugState extends State<AddDrug> {
       },
       onError: (e) => print("Error completing: $e"),
     );
+  }
+
+  int checkDayOverAmountOfdayInMonth(int day){
+    var dt = DateTime.now();
+    switch(dt.month.toString()){
+      case '1': {
+        if(day > 31){
+          return day-31;
+        }else{
+          return day;
+        }
+      }
+
+      case '2': {
+        bool isLeapYear = false;
+        if (dt.year % 4 == 0) {
+          if (dt.year % 100 == 0) {
+            if (dt.year % 400 == 0) {
+              isLeapYear = true;
+            } else {
+              isLeapYear = false;
+            }
+          } else {
+            isLeapYear = true;
+          }
+        } else {
+          isLeapYear = false;
+        }
+        if(isLeapYear){
+          if(day > 29){
+            return day-29;
+          }else{
+            return day;
+          }
+        }else{
+          if(day > 28){
+            return day-28;
+          }else{
+            return day;
+          }
+        }
+
+      }
+
+      case '3': {
+        if(day > 31){
+          return day-31;
+        }else{
+          return day;
+        }
+      }
+
+      case '4': {
+        if(day > 30){
+          return day-30;
+        }else{
+          return day;
+        }
+      }
+
+      case '5': {
+        if(day > 31){
+          return day-31;
+        }else{
+          return day;
+        }
+      }
+
+      case '6': {
+        if(day > 30){
+          return day-30;
+        }else{
+          return day;
+        }
+      }
+
+      case '7': {
+        if(day > 31){
+          return day-31;
+        }else{
+          return day;
+        }
+      }
+
+      case '8': {
+        if(day > 31){
+          return day-31;
+        }else{
+          return day;
+        }
+      }
+      break;
+
+      case '9': {
+        if(day > 30){
+          return day-30;
+        }else{
+          return day;
+        }
+      }
+
+      case '10': {
+        if(day > 31){
+          return day-31;
+        }else{
+          return day;
+        }
+      }
+      case '11': {
+        if(day > 30){
+          return day-30;
+        }else{
+          return day;
+        }
+      }
+
+      case '12': {
+        if(day > 31){
+          return day-31;
+        }else{
+          return day;
+        }
+      }
+    }
+    return day;
   }
 
   @override
@@ -1352,11 +1477,11 @@ class _AddDrugState extends State<AddDrug> {
                               tmpp+=',';
                               for(int i = 0; i < round - 1;i++){
                                 if(i == round-2){
-                                  tmpp += (dt.day + i + 1).toString();
+                                  tmpp += (checkDayOverAmountOfdayInMonth(dt.day + i + 1)).toString();
                                   tmpp += " ";
                                   tmpp += data['takeMedWhen'];
                                 }else{
-                                  tmpp += (dt.day + 1 + i).toString();
+                                  tmpp += (checkDayOverAmountOfdayInMonth(dt.day + i + 1)).toString();
                                   tmpp += " ";
                                   tmpp += data['takeMedWhen'];
                                   tmpp += ",";
@@ -1366,11 +1491,11 @@ class _AddDrugState extends State<AddDrug> {
                               tmpp = '';
                               for(int i = 0; i < round;i++){
                                 if(i == round-1){
-                                  tmpp += (dt.day + i + 1).toString();
+                                  tmpp += (checkDayOverAmountOfdayInMonth(dt.day + i + 1)).toString();
                                   tmpp += " ";
                                   tmpp += data['takeMedWhen'];
                                 }else{
-                                  tmpp += (dt.day + 1 + i).toString();
+                                  tmpp += (checkDayOverAmountOfdayInMonth(dt.day + i + 1)).toString();
                                   tmpp += " ";
                                   tmpp += data['takeMedWhen'];
                                   tmpp += ",";
@@ -1381,11 +1506,11 @@ class _AddDrugState extends State<AddDrug> {
                           else{
                             for(int i = 0; i < round;i++){
                               if(i == round-1){
-                                tmpp += (dt.day + i + 1).toString();
+                                tmpp += (checkDayOverAmountOfdayInMonth(dt.day + i + 1)).toString();
                                 tmpp += " ";
                                 tmpp += data['takeMedWhen'];
                               }else{
-                                tmpp += (dt.day + 1 + i).toString();
+                                tmpp += (checkDayOverAmountOfdayInMonth(dt.day + i + 1)).toString();
                                 tmpp += " ";
                                 tmpp += data['takeMedWhen'];
                                 tmpp += ",";

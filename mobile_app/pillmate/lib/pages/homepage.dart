@@ -84,6 +84,131 @@ class _HomepageState extends State<Homepage> {
     });
   }
 
+  int checkDayOverAmountOfdayInMonth(int day){
+    var dt = DateTime.now();
+    switch(dt.month.toString()){
+      case '1': {
+        if(day > 31){
+          return day-31;
+        }else{
+          return day;
+        }
+      }
+
+      case '2': {
+        bool isLeapYear = false;
+        if (dt.year % 4 == 0) {
+          if (dt.year % 100 == 0) {
+            if (dt.year % 400 == 0) {
+              isLeapYear = true;
+            } else {
+              isLeapYear = false;
+            }
+          } else {
+            isLeapYear = true;
+          }
+        } else {
+          isLeapYear = false;
+        }
+        if(isLeapYear){
+          if(day > 29){
+            return day-29;
+          }else{
+            return day;
+          }
+        }else{
+          if(day > 28){
+            return day-28;
+          }else{
+            return day;
+          }
+        }
+
+      }
+
+      case '3': {
+        if(day > 31){
+          return day-31;
+        }else{
+          return day;
+        }
+      }
+
+      case '4': {
+        if(day > 30){
+          return day-30;
+        }else{
+          return day;
+        }
+      }
+
+      case '5': {
+        if(day > 31){
+          return day-31;
+        }else{
+          return day;
+        }
+      }
+
+      case '6': {
+        if(day > 30){
+          return day-30;
+        }else{
+          return day;
+        }
+      }
+
+      case '7': {
+        if(day > 31){
+          return day-31;
+        }else{
+          return day;
+        }
+      }
+
+      case '8': {
+        if(day > 31){
+          return day-31;
+        }else{
+          return day;
+        }
+      }
+      break;
+
+      case '9': {
+        if(day > 30){
+          return day-30;
+        }else{
+          return day;
+        }
+      }
+
+      case '10': {
+        if(day > 31){
+          return day-31;
+        }else{
+          return day;
+        }
+      }
+      case '11': {
+        if(day > 30){
+          return day-30;
+        }else{
+          return day;
+        }
+      }
+
+      case '12': {
+        if(day > 31){
+          return day-31;
+        }else{
+          return day;
+        }
+      }
+    }
+    return day;
+  }
+
   Future<void> onClickedFromChild(bool isClicked, String qrcodeID, int amountTaken, String medicationSchedule, String when) async {
     if(isClicked){
       final listOfString = medicationSchedule.split(',');
@@ -325,12 +450,50 @@ class _HomepageState extends State<Homepage> {
             final listWhen = element.takeMedWhen.split(' ');
             final diff = listWhen.length - dailyMed.length - 1;
             final last = listOfMed[listOfMed.length - 1].split(' ');
+            print('${last.length} ${listWhen.length}');
             if(last.length + dailyMed.length - 1 <= listWhen.length+1){
-              for(int i = 1; i <= dailyMed.length-1;i++){
-                for(int j = 0; j < listWhen.length;j++){
-                  if(last[last.length-1] == listWhen[j] && j != listWhen.length-1){
+                for(int i = 1; i <= dailyMed.length-1;i++){
+                  for(int j = 0; j < listWhen.length;j++){
+                    if(last[last.length-1] == listWhen[j] && j != listWhen.length-1){
+                      tmp += ' ';
+                      tmp += listWhen[j+1];
+                    }
+                  }
+                }
+            }
+            else{
+              if(last.length < listWhen.length + 1){
+                var diff =  listWhen.length + 1 - last.length;
+                for(int i = 0; i < diff;i++){
+                  for(int j = 0; j < listWhen.length;j++){
+                    if(last[last.length-1] == listWhen[j]&& j != listWhen.length-1){
+                      tmp += ' ';
+                      tmp += listWhen[j+1];
+                    }
+                  }
+                }
+                tmp += ',';
+                var more = dailyMed.length - 1 - diff;
+                tmp += checkDayOverAmountOfdayInMonth(int.parse(last[0])+ 1).toString();
+                tmp += ' ';
+                for(int j = 0; j < more;j++){
+                    if(j == more - 1 || j == 0){
+                      tmp += listWhen[j];
+                    }else{
+                      tmp += ' ';
+                      tmp += listWhen[j];
+                    }
+                }
+              }else{
+                tmp += ',';
+                tmp += checkDayOverAmountOfdayInMonth(int.parse(last[0])+ 1).toString();
+                tmp += ' ';
+                for(int j = 0; j < dailyMed.length-1;j++){
+                  if(j == 0){
+                    tmp += listWhen[j];
+                  }else{
                     tmp += ' ';
-;                    tmp += listWhen[j+1];
+                    tmp += listWhen[j];
                   }
                 }
               }
@@ -346,6 +509,7 @@ class _HomepageState extends State<Homepage> {
               tmp+=',';
             }
           }
+          print('tmp: ${tmp}');
           await _sqliteService.alterMedicationSchedule(element.qrcodeID, tmp);
         }
         if(dailyMed[0] == DateTime.now().day.toString()){
@@ -1123,12 +1287,12 @@ class _HomepageState extends State<Homepage> {
             shape: CircleBorder(),
             backgroundColor: !darkMode ? Color(0xff059E78): Color(0xff94DDB5),
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => QRCodeScanner()
-              ));
               // Navigator.of(context).push(MaterialPageRoute(
-              //     builder: (context) => AddDrug()
+              //   builder: (context) => QRCodeScanner()
               // ));
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => AddDrug()
+              ));
             },
           ),
         ),

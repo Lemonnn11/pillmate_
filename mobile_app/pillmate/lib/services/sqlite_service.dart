@@ -9,9 +9,10 @@ import 'package:path/path.dart';
 import '../models/personal_information.dart';
 import 'local_notification_service.dart';
 class SqliteService {
+  late Database db;
   Future<Database> initializeDB() async {
     String path = await getDatabasesPath();
-    return openDatabase(
+    db = await openDatabase(
       join(path, 'pillmate.db'),
       onCreate: (database, version) async {
         await database.execute(
@@ -32,32 +33,33 @@ class SqliteService {
       },
       version: 1,
     );
+    return db;
   }
 
   Future<int> createPersonalInfoItem(PersonalInformationModel personalInformation) async {
     int res = 0;
-    final Database db = await initializeDB();
+    db = await initializeDB();
     res = await db.insert('PERSONAL_INFO', personalInformation.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
     return res;
   }
 
   Future<int> createAppConfigItem(AppConfigModel appConfigModel) async {
     int res = 0;
-    final Database db = await initializeDB();
+    db = await initializeDB();
     res = await db.insert('APP_CONFIG', appConfigModel.toMap(), conflictAlgorithm: ConflictAlgorithm.ignore);
     return res;
   }
 
   Future<int> createMedicineItem(MedicineModel medicine) async {
     int res = 0;
-    final Database db = await initializeDB();
+    db = await initializeDB();
     res = await db.insert('MEDICINE', medicine.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
     return res;
   }
 
   Future<int> createDailyMedItem(DaileyMedModel daileyMedModel) async {
     int res = 0;
-    final Database db = await initializeDB();
+    db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.query('DAILY_MED');
     final List<DaileyMedModel> list = queryResult.map((e) => DaileyMedModel.fromMap(e)).toList();
     bool flag = false;
@@ -80,7 +82,7 @@ class SqliteService {
   }
 
   Future<void> deleteMedicineItem(String qrcodeID) async {
-    final db = await initializeDB();
+    db = await initializeDB();
     try{
       await db.delete("MEDICINE", where: "qrcode_id = ?", whereArgs: [qrcodeID]);
     }catch(e){
@@ -89,37 +91,37 @@ class SqliteService {
   }
 
   Future<void> inactivateStatus(MedicineModel medicine)async {
-    final Database db = await initializeDB();
+    db = await initializeDB();
     await db.update("MEDICINE", medicine.toMap(), where: 'qrcode_id = ?', whereArgs: [medicine.qrcodeID]);
   }
 
   Future<void> increaseAmountTaken(String qrcodeID, int amountTaken, String medicationSchedule) async {
-    final Database db = await initializeDB();
+    db = await initializeDB();
     print(medicationSchedule);
     await db.rawUpdate(''' UPDATE MEDICINE SET amount_taken = ?, medication_schedule = ? WHERE qrcode_id = ? ''', [amountTaken + 1, medicationSchedule,qrcodeID]);
   }
 
   Future<void> alterMedicationSchedule(String qrcodeID, String medicationSchedule) async {
-    final Database db = await initializeDB();
+    db = await initializeDB();
     print(medicationSchedule);
     await db.rawUpdate(''' UPDATE MEDICINE SET medication_schedule = ? WHERE qrcode_id = ? ''', [medicationSchedule,qrcodeID]);
   }
 
   Future<List<MedicineModel>> getMedicines() async {
-    final db = await initializeDB();
+    db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.query('MEDICINE');
     return queryResult.map((e) => MedicineModel.fromMap(e)).toList();
   }
 
   Future<List<MedicineModel>> getActiveMedicine() async{
-    final db = await initializeDB();
+    db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.query('MEDICINE',
     where: 'status = 1');
     return queryResult.map((e) => MedicineModel.fromMap(e)).toList();
   }
 
   Future<List<DaileyMedModel>> getDailyMedicines() async {
-    final db = await initializeDB();
+    db = await initializeDB();
     DateTime dt = DateTime.now();
 
     final List<Map<String, Object?>> queryResult = await db.query('DAILY_MED',
@@ -130,12 +132,12 @@ class SqliteService {
   }
 
   Future<void> alterDailyAmountTaken(int amountTaken) async {
-    final Database db = await initializeDB();
+    db = await initializeDB();
     await db.rawUpdate(''' UPDATE DAILY_MED SET amount_taken = ? ''', [amountTaken+1]);
   }
 
   Future<void> alterDailyMed(int med) async {
-    final Database db = await initializeDB();
+    db = await initializeDB();
     List<DaileyMedModel> list = await getDailyMedicines();
     if(list[0].dailyMed == 0){
       await db.rawUpdate(''' UPDATE DAILY_MED SET daily_med = ? ''', [med]);
@@ -144,64 +146,64 @@ class SqliteService {
 
 
   Future<void> increaseDailyMed(int med) async {
-    final Database db = await initializeDB();
+    db = await initializeDB();
     List<DaileyMedModel> list = await getDailyMedicines();
     await db.rawUpdate(''' UPDATE DAILY_MED SET daily_med = ? ''', [list[0].dailyMed + med]);
   }
 
   Future<void> decreaseDailyMed(int med) async {
-    final Database db = await initializeDB();
+    db = await initializeDB();
     List<DaileyMedModel> list = await getDailyMedicines();
     await db.rawUpdate(''' UPDATE DAILY_MED SET daily_med = ? ''', [list[0].dailyMed - med]);
   }
 
   Future<void> updateNotificationTime(int morningHour, int morningMinute, int noonHour, int noonMinute, int eveningHour, int eveningMinute, int nightHour, int nightMinute)async {
-    final Database db = await initializeDB();
+    db = await initializeDB();
     List<DaileyMedModel> list = await getDailyMedicines();
     await db.rawUpdate(''' UPDATE DAILY_MED SET morning_time_hour = ?, morning_time_minute = ? , noon_time_hour = ?, noon_time_minute = ?, evening_time_hour = ?, evening_time_minute = ?, night_time_hour = ?, night_time_minute = ? ''', [morningHour, morningMinute, noonHour, noonMinute, eveningHour, eveningMinute, nightHour, nightMinute]);
   }
 
   Future<void> turnOffNotification() async {
-    final Database db = await initializeDB();
+    db = await initializeDB();
     List<DaileyMedModel> list = await getDailyMedicines();
     await LocalNotificationService.cancelAllNotifications();
     await db.rawUpdate(''' UPDATE DAILY_MED SET is_notified = ? ''', [0]);
   }
 
   Future<void> turnOnNotification() async {
-    final Database db = await initializeDB();
+    db = await initializeDB();
     List<DaileyMedModel> list = await getDailyMedicines();
     await db.rawUpdate(''' UPDATE DAILY_MED SET is_notified = ? ''', [1]);
   }
 
   Future<void> turnOffChangeFontSize() async {
-    final Database db = await initializeDB();
+    db = await initializeDB();
     await db.rawUpdate(''' UPDATE APP_CONFIG SET edit_font_size = ? ''', [0]);
   }
 
   Future<void> turnOnChangeFontSize() async {
-    final Database db = await initializeDB();
+    db = await initializeDB();
     await db.rawUpdate(''' UPDATE APP_CONFIG SET edit_font_size = ? ''', [1]);
   }
 
   Future<void> turnOffDarkMode() async {
-    final Database db = await initializeDB();
+    db = await initializeDB();
     await db.rawUpdate(''' UPDATE APP_CONFIG SET dark_mode = ? ''', [0]);
   }
 
   Future<void> turnOnDarkMode() async {
-    final Database db = await initializeDB();
+    db = await initializeDB();
     List<DaileyMedModel> list = await getDailyMedicines();
     await db.rawUpdate(''' UPDATE APP_CONFIG SET dark_mode = ? ''', [1]);
   }
 
   Future<void> alterFontSize(int change) async {
-    final Database db = await initializeDB();
+    db = await initializeDB();
     await db.rawUpdate(''' UPDATE APP_CONFIG SET font_size_change = ? ''', [change]);
   }
 
   Future<List<MedicineModel>> getInactiveMedicine() async{
-    final db = await initializeDB();
+    db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.query('MEDICINE',
         where: 'status = 0');
     return queryResult.map((e) => MedicineModel.fromMap(e)).toList();
@@ -209,7 +211,7 @@ class SqliteService {
 
 
   Future<bool> getEditFontSizeStatus() async {
-    final db = await initializeDB();
+    db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.query('APP_CONFIG',
         where: 'id = 1');
     List<AppConfigModel> list = queryResult.map((e) => AppConfigModel.fromMap(e)).toList();
@@ -217,7 +219,7 @@ class SqliteService {
    }
 
   Future<int> getFontSizeChange() async {
-    final db = await initializeDB();
+    db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.query('APP_CONFIG',
         where: 'id = 1');
     List<AppConfigModel> list = queryResult.map((e) => AppConfigModel.fromMap(e)).toList();
@@ -225,7 +227,7 @@ class SqliteService {
   }
 
   Future<bool> getDarkModeStatus() async {
-    final db = await initializeDB();
+    db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.query('APP_CONFIG',
         where: 'id = 1');
     List<AppConfigModel> list = queryResult.map((e) => AppConfigModel.fromMap(e)).toList();
@@ -233,7 +235,7 @@ class SqliteService {
   }
 
   Future<List<PersonalInformationModel>> getPersonalInfo() async {
-    final db = await initializeDB();
+    db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.query('PERSONAL_INFO');
     return queryResult.map((e) => PersonalInformationModel.fromMap(e)).toList();
   }

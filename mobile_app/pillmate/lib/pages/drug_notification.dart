@@ -107,7 +107,7 @@ class _DrugNotificationState extends State<DrugNotification> {
                 for(int j = 0; j < listWhen.length;j++){
                   if(last[last.length-1] == listWhen[j] && j != listWhen.length-1){
                     tmp += ' ';
-                    ;                    tmp += listWhen[j+1];
+                    tmp += listWhen[j+1];
                   }
                 }
               }
