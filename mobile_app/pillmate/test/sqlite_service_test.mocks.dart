@@ -41,6 +41,28 @@ class _FakeDatabase_0 extends _i1.SmartFake implements _i2.Database {
 /// See the documentation for Mockito's code generation for more information.
 class MockSqliteService extends _i1.Mock implements _i3.SqliteService {
   @override
+  _i2.Database get db => (super.noSuchMethod(
+        Invocation.getter(#db),
+        returnValue: _FakeDatabase_0(
+          this,
+          Invocation.getter(#db),
+        ),
+        returnValueForMissingStub: _FakeDatabase_0(
+          this,
+          Invocation.getter(#db),
+        ),
+      ) as _i2.Database);
+
+  @override
+  set db(_i2.Database? _db) => super.noSuchMethod(
+        Invocation.setter(
+          #db,
+          _db,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
   _i4.Future<_i2.Database> initializeDB() => (super.noSuchMethod(
         Invocation.method(
           #initializeDB,
@@ -117,6 +139,17 @@ class MockSqliteService extends _i1.Mock implements _i3.SqliteService {
         returnValue: _i4.Future<void>.value(),
         returnValueForMissingStub: _i4.Future<void>.value(),
       ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<List<_i7.MedicineModel>?> getMedicineById(String? qrcodeID) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getMedicineById,
+          [qrcodeID],
+        ),
+        returnValue: _i4.Future<List<_i7.MedicineModel>?>.value(),
+        returnValueForMissingStub: _i4.Future<List<_i7.MedicineModel>?>.value(),
+      ) as _i4.Future<List<_i7.MedicineModel>?>);
 
   @override
   _i4.Future<void> inactivateStatus(_i7.MedicineModel? medicine) =>
