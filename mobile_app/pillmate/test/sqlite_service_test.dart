@@ -18,7 +18,8 @@ void main(){
   AppConfigModel appConfigModel = new AppConfigModel(1, 0, 0, 0);
   PersonalInformationModel personalInformationModel = new PersonalInformationModel(1, "Pannavich Thanormvongse", "11/04/02", "ชาย", 0, 0, "ฉันไม่มีโรคประจำตัว ", "ฉันไม่มียาที่แพ้", "", "");
   MedicineModel medicineModel = new MedicineModel("8c5ea443-83e4-4d92-88d9-5d0e06a06db8", "Fy751CumG69MLZfZLvqe", 2, 3, "หลังอาหาร", "...", "เช้า กลางวัน เย็น", "2023-11-04T00:00:00.000Z", "2024-02-19T01:44:23.470Z", "ลดคลื่นไส้อาเจียน", "ยานี้อาจระคายเคืองกระเพาะอาหาร ให้รับประทานหลังอาหารทันที", 10, 250.0, "หากมีอาการผื่นแพ้ เยื่อบุผิวลอก ให้หยุดใช้ยาและหากมีอาการหนักควรปรึกษาแพทย์ทันที", "Tablet", "Paracetamol", "Bakamol Tab. 500 mg", "12 มีนาคม 2567 เวลา 16:29 น", 0, 1, "12 เย็น,13 เช้า กลางวัน เย็น,14 เช้า กลางวัน เย็น,15 เช้า กลางวัน เย็น");
-  DaileyMedModel daileyMedModel = new DaileyMedModel(1, 14, 0, 0, 9, 0, 12,0, 17, 0, 21, 0, 1);
+  DaileyMedModel dailyMedModel = new DaileyMedModel(1, 14, 0, 0, 9, 0, 12,0, 17, 0, 21, 0, 1);
+  List<DaileyMedModel> dailyMedList = List.generate(1, (index) => dailyMedModel);
   List<MedicineModel> medicineList = List.generate(5, (index) => medicineModel);
   MedicineModel activeMedicineModel = new MedicineModel("8c5ea443-83e4-4d92-88d9-5d0e06a06db8", "Fy751CumG69MLZfZLvqe", 2, 3, "หลังอาหาร", "...", "เช้า กลางวัน เย็น", "2023-11-04T00:00:00.000Z", "2024-02-19T01:44:23.470Z", "ลดคลื่นไส้อาเจียน", "ยานี้อาจระคายเคืองกระเพาะอาหาร ให้รับประทานหลังอาหารทันที", 10, 250.0, "หากมีอาการผื่นแพ้ เยื่อบุผิวลอก ให้หยุดใช้ยาและหากมีอาการหนักควรปรึกษาแพทย์ทันที", "Tablet", "Paracetamol", "Bakamol Tab. 500 mg", "12 มีนาคม 2567 เวลา 16:29 น", 0, 1, "12 เย็น,13 เช้า กลางวัน เย็น,14 เช้า กลางวัน เย็น,15 เช้า กลางวัน เย็น");
   List<MedicineModel> activeMedicineList = List.generate(5, (index) => activeMedicineModel);
@@ -65,19 +66,67 @@ void main(){
     });
 
     test("create daily medicine",() async {
-      when(sqliteService.createDailyMedItem(daileyMedModel)).thenAnswer((_) async => 1);
-      expect(await sqliteService.createDailyMedItem(daileyMedModel), 1);
+      when(sqliteService.createDailyMedItem(dailyMedModel)).thenAnswer((_) async => 1);
+      expect(await sqliteService.createDailyMedItem(dailyMedModel), 1);
     });
 
     test("create duplicated daily medicine",() async {
-      when(sqliteService.createDailyMedItem(daileyMedModel)).thenAnswer((_) async => 0);
-      expect(await sqliteService.createDailyMedItem(daileyMedModel), 0);
+      when(sqliteService.createDailyMedItem(dailyMedModel)).thenAnswer((_) async => 0);
+      expect(await sqliteService.createDailyMedItem(dailyMedModel), 0);
     });
 
     test("delete medicine",() async {
       List<MedicineModel> medicineList1 = List.generate(1, (index) => medicineModel);
       when(sqliteService.getMedicineById("8c5ea443-83e4-4d92-88d9-5d0e06a06db8")).thenAnswer((_) async => medicineList1);
       expect(await sqliteService.getMedicineById("8c5ea443-83e4-4d92-88d9-5d0e06a06db8"), medicineList1);
+      sqliteService.deleteMedicineItem("8c5ea443-83e4-4d92-88d9-5d0e06a06db8");
+      when(sqliteService.getMedicineById("8c5ea443-83e4-4d92-88d9-5d0e06a06db8")).thenAnswer((_) async => []);
+      expect(await sqliteService.getMedicineById("8c5ea443-83e4-4d92-88d9-5d0e06a06db8"), []);
+    });
+
+    test("get medicine by id",() async {
+      List<MedicineModel> medicineList1 = List.generate(1, (index) => medicineModel);
+      when(sqliteService.getMedicineById("8c5ea443-83e4-4d92-88d9-5d0e06a06db8")).thenAnswer((_) async => medicineList1);
+      expect(await sqliteService.getMedicineById("8c5ea443-83e4-4d92-88d9-5d0e06a06db8"), medicineList1);
+    });
+
+    test("inactive status",() async {
+      MedicineModel medicineModel2 = new MedicineModel("8c5ea443-83e4-4d92-88d9-5d0e06a06db8", "Fy751CumG69MLZfZLvqe", 2, 3, "หลังอาหาร", "...", "เช้า กลางวัน เย็น", "2023-11-04T00:00:00.000Z", "2024-02-19T01:44:23.470Z", "ลดคลื่นไส้อาเจียน", "ยานี้อาจระคายเคืองกระเพาะอาหาร ให้รับประทานหลังอาหารทันที", 10, 250.0, "หากมีอาการผื่นแพ้ เยื่อบุผิวลอก ให้หยุดใช้ยาและหากมีอาการหนักควรปรึกษาแพทย์ทันที", "Tablet", "Paracetamol", "Bakamol Tab. 500 mg", "12 มีนาคม 2567 เวลา 16:29 น", 0, 0, "12 เย็น,13 เช้า กลางวัน เย็น,14 เช้า กลางวัน เย็น,15 เช้า กลางวัน เย็น");
+      List<MedicineModel> medicineList1 = List.generate(1, (index) => medicineModel);
+      List<MedicineModel> medicineList2 = List.generate(1, (index) => medicineModel2);
+      when(sqliteService.getMedicineById("8c5ea443-83e4-4d92-88d9-5d0e06a06db8")).thenAnswer((_) async => medicineList1);
+      List<MedicineModel>? tmpList = await sqliteService.getMedicineById("8c5ea443-83e4-4d92-88d9-5d0e06a06db8");
+      expect(tmpList?.first.status, 1);
+      sqliteService.inactivateStatus(tmpList?.first);
+      when(sqliteService.getMedicineById("8c5ea443-83e4-4d92-88d9-5d0e06a06db8")).thenAnswer((_) async => medicineList2);
+      List<MedicineModel>? tmpList2 = await sqliteService.getMedicineById("8c5ea443-83e4-4d92-88d9-5d0e06a06db8");
+      expect(tmpList2?.first.status, 0);
+    });
+
+    test("increase amount taken",() async {
+      MedicineModel medicineModel2 = new MedicineModel("8c5ea443-83e4-4d92-88d9-5d0e06a06db8", "Fy751CumG69MLZfZLvqe", 2, 3, "หลังอาหาร", "...", "เช้า กลางวัน เย็น", "2023-11-04T00:00:00.000Z", "2024-02-19T01:44:23.470Z", "ลดคลื่นไส้อาเจียน", "ยานี้อาจระคายเคืองกระเพาะอาหาร ให้รับประทานหลังอาหารทันที", 10, 250.0, "หากมีอาการผื่นแพ้ เยื่อบุผิวลอก ให้หยุดใช้ยาและหากมีอาการหนักควรปรึกษาแพทย์ทันที", "Tablet", "Paracetamol", "Bakamol Tab. 500 mg", "12 มีนาคม 2567 เวลา 16:29 น", 1, 1, "12 เย็น,13 เช้า กลางวัน เย็น,14 เช้า กลางวัน เย็น,15 เช้า กลางวัน เย็น");
+      List<MedicineModel> medicineList1 = List.generate(1, (index) => medicineModel);
+      List<MedicineModel> medicineList2 = List.generate(1, (index) => medicineModel2);
+      when(sqliteService.getMedicineById("8c5ea443-83e4-4d92-88d9-5d0e06a06db8")).thenAnswer((_) async => medicineList1);
+      List<MedicineModel>? tmpList = await sqliteService.getMedicineById("8c5ea443-83e4-4d92-88d9-5d0e06a06db8");
+      expect(tmpList?.first.amountTaken, 0);
+      sqliteService.increaseAmountTaken("8c5ea443-83e4-4d92-88d9-5d0e06a06db8", 1, "12 เย็น,13 เช้า กลางวัน เย็น,14 เช้า กลางวัน เย็น,15 เช้า กลางวัน เย็น");
+      when(sqliteService.getMedicineById("8c5ea443-83e4-4d92-88d9-5d0e06a06db8")).thenAnswer((_) async => medicineList2);
+      List<MedicineModel>? tmpList2 = await sqliteService.getMedicineById("8c5ea443-83e4-4d92-88d9-5d0e06a06db8");
+      expect(tmpList2?.first.amountTaken, 1);
+    });
+
+    test("alter medication schedule",() async {
+      MedicineModel medicineModel2 = new MedicineModel("8c5ea443-83e4-4d92-88d9-5d0e06a06db8", "Fy751CumG69MLZfZLvqe", 2, 3, "หลังอาหาร", "...", "เช้า กลางวัน เย็น", "2023-11-04T00:00:00.000Z", "2024-02-19T01:44:23.470Z", "ลดคลื่นไส้อาเจียน", "ยานี้อาจระคายเคืองกระเพาะอาหาร ให้รับประทานหลังอาหารทันที", 10, 250.0, "หากมีอาการผื่นแพ้ เยื่อบุผิวลอก ให้หยุดใช้ยาและหากมีอาการหนักควรปรึกษาแพทย์ทันที", "Tablet", "Paracetamol", "Bakamol Tab. 500 mg", "12 มีนาคม 2567 เวลา 16:29 น", 0, 1, "13 เช้า กลางวัน เย็น,14 เช้า กลางวัน เย็น,15 เช้า กลางวัน เย็น,16 เช้า");
+      List<MedicineModel> medicineList1 = List.generate(1, (index) => medicineModel);
+      List<MedicineModel> medicineList2 = List.generate(1, (index) => medicineModel2);
+      when(sqliteService.getMedicineById("8c5ea443-83e4-4d92-88d9-5d0e06a06db8")).thenAnswer((_) async => medicineList1);
+      List<MedicineModel>? tmpList = await sqliteService.getMedicineById("8c5ea443-83e4-4d92-88d9-5d0e06a06db8");
+      expect(tmpList?.first.medicationSchedule, "12 เย็น,13 เช้า กลางวัน เย็น,14 เช้า กลางวัน เย็น,15 เช้า กลางวัน เย็น");
+      sqliteService.alterMedicationSchedule("8c5ea443-83e4-4d92-88d9-5d0e06a06db8", "13 เช้า กลางวัน เย็น,14 เช้า กลางวัน เย็น,15 เช้า กลางวัน เย็น,16 เช้า");
+      when(sqliteService.getMedicineById("8c5ea443-83e4-4d92-88d9-5d0e06a06db8")).thenAnswer((_) async => medicineList2);
+      List<MedicineModel>? tmpList2 = await sqliteService.getMedicineById("8c5ea443-83e4-4d92-88d9-5d0e06a06db8");
+      expect(tmpList2?.first.medicationSchedule, "13 เช้า กลางวัน เย็น,14 เช้า กลางวัน เย็น,15 เช้า กลางวัน เย็น,16 เช้า");
     });
 
     test("get medicines",() async {
@@ -93,6 +142,141 @@ void main(){
     test("get inactive medicines",() async {
       when(sqliteService.getInactiveMedicine()).thenAnswer((_) async => inactiveMedicineList);
       expect(await sqliteService.getInactiveMedicine(), inactiveMedicineList);
+    });
+
+    test("get daily medicines",() async {
+      when(sqliteService.getDailyMedicines()).thenAnswer((_) async => dailyMedList);
+      expect(await sqliteService.getDailyMedicines(), dailyMedList);
+    });
+
+    test("test alter amount taken of daily medicine", () async {
+      DaileyMedModel daileyMedModel2 = new DaileyMedModel(1, 14, 1, 0, 9, 0, 12,0, 17, 0, 21, 0, 1);
+      List<DaileyMedModel> dailyMedList2 = List.generate(1, (index) => daileyMedModel2);
+      when(sqliteService.getDailyMedicines()).thenAnswer((_) async => dailyMedList);
+      List<DaileyMedModel>? tmpList = await sqliteService.getDailyMedicines();
+      expect(tmpList?.first.amountTaken, 0);
+      sqliteService.alterDailyMed(0);
+      when(sqliteService.getDailyMedicines()).thenAnswer((_) async => dailyMedList2);
+      List<DaileyMedModel>? tmpList2 = await sqliteService.getDailyMedicines();
+      expect(tmpList2?.first.amountTaken, 1);
+      });
+
+    test("test alter dailyMed of daily medicine", () async {
+      DaileyMedModel daileyMedModel2 = new DaileyMedModel(1, 14, 0, 6, 9, 0, 12,0, 17, 0, 21, 0, 1);
+      List<DaileyMedModel> dailyMedList2 = List.generate(1, (index) => daileyMedModel2);
+      when(sqliteService.getDailyMedicines()).thenAnswer((_) async => dailyMedList);
+      List<DaileyMedModel>? tmpList = await sqliteService.getDailyMedicines();
+      expect(tmpList?.first.dailyMed, 0);
+      sqliteService.alterDailyMed(1);
+      when(sqliteService.getDailyMedicines()).thenAnswer((_) async => dailyMedList2);
+      List<DaileyMedModel>? tmpList2 = await sqliteService.getDailyMedicines();
+      expect(tmpList2?.first.dailyMed, 6);
+    });
+
+    test("test increase dailyMed of daily medicine", () async {
+      DaileyMedModel daileyMedModel2 = new DaileyMedModel(1, 14, 0, 3, 9, 0, 12,0, 17, 0, 21, 0, 1);
+      List<DaileyMedModel> dailyMedList2 = List.generate(1, (index) => daileyMedModel2);
+      when(sqliteService.getDailyMedicines()).thenAnswer((_) async => dailyMedList);
+      List<DaileyMedModel>? tmpList = await sqliteService.getDailyMedicines();
+      expect(tmpList?.first.dailyMed, 0);
+      sqliteService.increaseDailyMed(3);
+      when(sqliteService.getDailyMedicines()).thenAnswer((_) async => dailyMedList2);
+      List<DaileyMedModel>? tmpList2 = await sqliteService.getDailyMedicines();
+      expect(tmpList2?.first.dailyMed, 3);
+    });
+
+    test("test decrease dailyMed of daily medicine", () async {
+      DaileyMedModel daileyMedModel1 = new DaileyMedModel(1, 14, 0, 3, 9, 0, 12,0, 17, 0, 21, 0, 1);
+      DaileyMedModel daileyMedModel2 = new DaileyMedModel(1, 14, 0, 0, 9, 0, 12,0, 17, 0, 21, 0, 1);
+      List<DaileyMedModel> dailyMedList1 = List.generate(1, (index) => daileyMedModel1);
+      List<DaileyMedModel> dailyMedList2 = List.generate(1, (index) => daileyMedModel2);
+      when(sqliteService.getDailyMedicines()).thenAnswer((_) async => dailyMedList1);
+      List<DaileyMedModel>? tmpList = await sqliteService.getDailyMedicines();
+      expect(tmpList?.first.dailyMed, 3);
+      sqliteService.alterDailyMed(1);
+      when(sqliteService.getDailyMedicines()).thenAnswer((_) async => dailyMedList2);
+      List<DaileyMedModel>? tmpList2 = await sqliteService.getDailyMedicines();
+      expect(tmpList2?.first.dailyMed, 0);
+    });
+
+    test("test update notification time", () async {
+      DaileyMedModel daileyMedModel1 = new DaileyMedModel(1, 14, 0, 0, 9, 0, 12,0, 17, 0, 21, 0, 1);
+      DaileyMedModel daileyMedModel2 = new DaileyMedModel(1, 14, 0, 0, 10, 30, 13, 30, 18, 30, 22, 30, 1);
+      List<DaileyMedModel> dailyMedList1 = List.generate(1, (index) => daileyMedModel1);
+      List<DaileyMedModel> dailyMedList2 = List.generate(1, (index) => daileyMedModel2);
+      when(sqliteService.getDailyMedicines()).thenAnswer((_) async => dailyMedList1);
+      List<DaileyMedModel>? tmpList = await sqliteService.getDailyMedicines();
+      expect(tmpList?.first.morningTimeHour, 9);
+      expect(tmpList?.first.morningTimeMinute, 0);
+      expect(tmpList?.first.noonTimeHour, 12);
+      expect(tmpList?.first.noonTimeMinute, 0);
+      expect(tmpList?.first.eveningTimeHour, 17);
+      expect(tmpList?.first.eveningTimeMinute, 0);
+      expect(tmpList?.first.nightTimeHour, 21);
+      expect(tmpList?.first.nightTimeMinute, 0);
+      sqliteService.updateNotificationTime(10, 30, 13, 30, 18, 30, 22, 30);
+      when(sqliteService.getDailyMedicines()).thenAnswer((_) async => dailyMedList2);
+      List<DaileyMedModel>? tmpList2 = await sqliteService.getDailyMedicines();
+      expect(tmpList2?.first.morningTimeHour, 10);
+      expect(tmpList2?.first.morningTimeMinute, 30);
+      expect(tmpList2?.first.noonTimeHour, 13);
+      expect(tmpList2?.first.noonTimeMinute, 30);
+      expect(tmpList2?.first.eveningTimeHour, 18);
+      expect(tmpList2?.first.eveningTimeMinute, 30);
+      expect(tmpList2?.first.nightTimeHour, 22);
+      expect(tmpList2?.first.nightTimeMinute, 30);
+    });
+
+    test("turn off notification", () async{
+      DaileyMedModel daileyMedModel2 = new DaileyMedModel(1, 14, 0, 0, 9, 0, 12,0, 17, 0, 21, 0, 0);
+      List<DaileyMedModel> dailyMedList2 = List.generate(1, (index) => daileyMedModel2);
+      when(sqliteService.getDailyMedicines()).thenAnswer((_) async => dailyMedList);
+      List<DaileyMedModel>? tmpList = await sqliteService.getDailyMedicines();
+      expect(tmpList?.first.isNotified, 1);
+      sqliteService.alterDailyMed(1);
+      when(sqliteService.getDailyMedicines()).thenAnswer((_) async => dailyMedList2);
+      List<DaileyMedModel>? tmpList2 = await sqliteService.getDailyMedicines();
+      expect(tmpList2?.first.isNotified, 0);
+    });
+
+    test("turn on notification", () async{
+      DaileyMedModel daileyMedModel1 = new DaileyMedModel(1, 14, 0, 0, 9, 0, 12,0, 17, 0, 21, 0, 0);
+      DaileyMedModel daileyMedModel2 = new DaileyMedModel(1, 14, 0, 0, 9, 0, 12,0, 17, 0, 21, 0, 1);
+      List<DaileyMedModel> dailyMedList1 = List.generate(1, (index) => daileyMedModel1);
+      List<DaileyMedModel> dailyMedList2 = List.generate(1, (index) => daileyMedModel2);
+      when(sqliteService.getDailyMedicines()).thenAnswer((_) async => dailyMedList1);
+      List<DaileyMedModel>? tmpList = await sqliteService.getDailyMedicines();
+      expect(tmpList?.first.isNotified, 0);
+      sqliteService.alterDailyMed(1);
+      when(sqliteService.getDailyMedicines()).thenAnswer((_) async => dailyMedList2);
+      List<DaileyMedModel>? tmpList2 = await sqliteService.getDailyMedicines();
+      expect(tmpList2?.first.isNotified, 1);
+    });
+
+    test("turn off notification", () async{
+      AppConfigModel appConfigModel2 = new AppConfigModel(1, 0, 1, 0);
+      List<AppConfigModel> appConfigList2 = List.generate(1, (index) => appConfigModel2);
+      when(sqliteService.getDailyMedicines()).thenAnswer((_) async => dailyMedList);
+      List<AppConfigModel>? tmpList = await sqliteService.getDailyMedicines();
+      expect(tmpList?.first.editFontSize, 1);
+      sqliteService.alterDailyMed(1);
+      when(sqliteService.getDailyMedicines()).thenAnswer((_) async => appConfigList2);
+      List<AppConfigModel>? tmpList2 = await sqliteService.getDailyMedicines();
+      expect(tmpList2?.first.editFontSize, 0);
+    });
+
+    test("turn on notification", () async{
+      DaileyMedModel daileyMedModel1 = new DaileyMedModel(1, 14, 0, 0, 9, 0, 12,0, 17, 0, 21, 0, 0);
+      DaileyMedModel daileyMedModel2 = new DaileyMedModel(1, 14, 0, 0, 9, 0, 12,0, 17, 0, 21, 0, 1);
+      List<DaileyMedModel> dailyMedList1 = List.generate(1, (index) => daileyMedModel1);
+      List<DaileyMedModel> dailyMedList2 = List.generate(1, (index) => daileyMedModel2);
+      when(sqliteService.getDailyMedicines()).thenAnswer((_) async => dailyMedList1);
+      List<DaileyMedModel>? tmpList = await sqliteService.getDailyMedicines();
+      expect(tmpList?.first.isNotified, 0);
+      sqliteService.alterDailyMed(1);
+      when(sqliteService.getDailyMedicines()).thenAnswer((_) async => dailyMedList2);
+      List<DaileyMedModel>? tmpList2 = await sqliteService.getDailyMedicines();
+      expect(tmpList2?.first.isNotified, 1);
     });
   });
 }

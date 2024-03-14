@@ -120,10 +120,23 @@ class SqliteService {
     return queryResult.map((e) => MedicineModel.fromMap(e)).toList();
   }
 
+  Future<List<AppConfigModel>> getAppConfig() async {
+    db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.query('APP_CONFIG');
+    return queryResult.map((e) => AppConfigModel.fromMap(e)).toList();
+  }
+
   Future<List<MedicineModel>> getActiveMedicine() async{
     db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.query('MEDICINE',
     where: 'status = 1');
+    return queryResult.map((e) => MedicineModel.fromMap(e)).toList();
+  }
+
+  Future<List<MedicineModel>> getInactiveMedicine() async{
+    db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.query('MEDICINE',
+        where: 'status = 0');
     return queryResult.map((e) => MedicineModel.fromMap(e)).toList();
   }
 
@@ -207,13 +220,6 @@ class SqliteService {
   Future<void> alterFontSize(int change) async {
     db = await initializeDB();
     await db.rawUpdate(''' UPDATE APP_CONFIG SET font_size_change = ? ''', [change]);
-  }
-
-  Future<List<MedicineModel>> getInactiveMedicine() async{
-    db = await initializeDB();
-    final List<Map<String, Object?>> queryResult = await db.query('MEDICINE',
-        where: 'status = 0');
-    return queryResult.map((e) => MedicineModel.fromMap(e)).toList();
   }
 
 
