@@ -90,6 +90,13 @@ class SqliteService {
     }
   }
 
+  Future<List<MedicineModel>?> getMedicineById(String qrcodeID) async {
+    db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.query("MEDICINE", where: "qrcode_id = ?", whereArgs: [qrcodeID]);
+    List<MedicineModel> list = queryResult.map((e) => MedicineModel.fromMap(e)).toList();
+    return list;
+  }
+
   Future<void> inactivateStatus(MedicineModel medicine)async {
     db = await initializeDB();
     await db.update("MEDICINE", medicine.toMap(), where: 'qrcode_id = ?', whereArgs: [medicine.qrcodeID]);

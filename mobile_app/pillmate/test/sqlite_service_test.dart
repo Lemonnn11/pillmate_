@@ -18,7 +18,7 @@ void main(){
   AppConfigModel appConfigModel = new AppConfigModel(1, 0, 0, 0);
   PersonalInformationModel personalInformationModel = new PersonalInformationModel(1, "Pannavich Thanormvongse", "11/04/02", "ชาย", 0, 0, "ฉันไม่มีโรคประจำตัว ", "ฉันไม่มียาที่แพ้", "", "");
   MedicineModel medicineModel = new MedicineModel("8c5ea443-83e4-4d92-88d9-5d0e06a06db8", "Fy751CumG69MLZfZLvqe", 2, 3, "หลังอาหาร", "...", "เช้า กลางวัน เย็น", "2023-11-04T00:00:00.000Z", "2024-02-19T01:44:23.470Z", "ลดคลื่นไส้อาเจียน", "ยานี้อาจระคายเคืองกระเพาะอาหาร ให้รับประทานหลังอาหารทันที", 10, 250.0, "หากมีอาการผื่นแพ้ เยื่อบุผิวลอก ให้หยุดใช้ยาและหากมีอาการหนักควรปรึกษาแพทย์ทันที", "Tablet", "Paracetamol", "Bakamol Tab. 500 mg", "12 มีนาคม 2567 เวลา 16:29 น", 0, 1, "12 เย็น,13 เช้า กลางวัน เย็น,14 เช้า กลางวัน เย็น,15 เช้า กลางวัน เย็น");
-  DaileyMedModel daileyMedModel = new DaileyMedModel(1, 12, 0, 0, 9, 0, 12,0, 17, 0, 21, 0, 1);
+  DaileyMedModel daileyMedModel = new DaileyMedModel(1, 14, 0, 0, 9, 0, 12,0, 17, 0, 21, 0, 1);
   List<MedicineModel> medicineList = List.generate(5, (index) => medicineModel);
   MedicineModel activeMedicineModel = new MedicineModel("8c5ea443-83e4-4d92-88d9-5d0e06a06db8", "Fy751CumG69MLZfZLvqe", 2, 3, "หลังอาหาร", "...", "เช้า กลางวัน เย็น", "2023-11-04T00:00:00.000Z", "2024-02-19T01:44:23.470Z", "ลดคลื่นไส้อาเจียน", "ยานี้อาจระคายเคืองกระเพาะอาหาร ให้รับประทานหลังอาหารทันที", 10, 250.0, "หากมีอาการผื่นแพ้ เยื่อบุผิวลอก ให้หยุดใช้ยาและหากมีอาการหนักควรปรึกษาแพทย์ทันที", "Tablet", "Paracetamol", "Bakamol Tab. 500 mg", "12 มีนาคม 2567 เวลา 16:29 น", 0, 1, "12 เย็น,13 เช้า กลางวัน เย็น,14 เช้า กลางวัน เย็น,15 เช้า กลางวัน เย็น");
   List<MedicineModel> activeMedicineList = List.generate(5, (index) => activeMedicineModel);
@@ -41,42 +41,58 @@ void main(){
     );
     sqliteService = MockSqliteService();
     sqliteService.db = database;
-    when(sqliteService.initializeDB()).thenAnswer((_) async => database);
-    when(sqliteService.createAppConfigItem(appConfigModel)).thenAnswer((_) async => 1);
-    when(sqliteService.createPersonalInfoItem(personalInformationModel)).thenAnswer((_) async => 1);
-    when(sqliteService.createMedicineItem(medicineModel)).thenAnswer((_) async => 1);
-    when(sqliteService.getMedicines()).thenAnswer((_) async => medicineList);
-    when(sqliteService.getActiveMedicine()).thenAnswer((_) async => activeMedicineList);
-    when(sqliteService.getInactiveMedicine()).thenAnswer((_) async => inactiveMedicineList);
   });
 
   group("SqlService test", () {
     test("initial database", () async {
+      when(sqliteService.initializeDB()).thenAnswer((_) async => database);
       expect(await sqliteService.initializeDB(), database);
     });
 
     test("create app config",() async {
+      when(sqliteService.createAppConfigItem(appConfigModel)).thenAnswer((_) async => 1);
       expect(await sqliteService.createAppConfigItem(appConfigModel), 1);
     });
 
     test("create personal information",() async {
+      when(sqliteService.createPersonalInfoItem(personalInformationModel)).thenAnswer((_) async => 1);
       expect(await sqliteService.createPersonalInfoItem(personalInformationModel), 1);
     });
 
     test("create medicine",() async {
+      when(sqliteService.createMedicineItem(medicineModel)).thenAnswer((_) async => 1);
       expect(await sqliteService.createMedicineItem(medicineModel), 1);
     });
 
     test("create daily medicine",() async {
-      expect(await sqliteService.createMedicineItem(medicineModel), 1);
+      when(sqliteService.createDailyMedItem(daileyMedModel)).thenAnswer((_) async => 1);
+      expect(await sqliteService.createDailyMedItem(daileyMedModel), 1);
+    });
+
+    test("create duplicated daily medicine",() async {
+      when(sqliteService.createDailyMedItem(daileyMedModel)).thenAnswer((_) async => 0);
+      expect(await sqliteService.createDailyMedItem(daileyMedModel), 0);
+    });
+
+    test("delete medicine",() async {
+      List<MedicineModel> medicineList1 = List.generate(1, (index) => medicineModel);
+      when(sqliteService.getMedicineById("8c5ea443-83e4-4d92-88d9-5d0e06a06db8")).thenAnswer((_) async => medicineList1);
+      expect(await sqliteService.getMedicineById("8c5ea443-83e4-4d92-88d9-5d0e06a06db8"), medicineList1);
     });
 
     test("get medicines",() async {
+      when(sqliteService.getMedicines()).thenAnswer((_) async => medicineList);
       expect(await sqliteService.getMedicines(), medicineList);
     });
 
     test("get active medicines",() async {
+      when(sqliteService.getActiveMedicine()).thenAnswer((_) async => activeMedicineList);
       expect(await sqliteService.getActiveMedicine(), activeMedicineList);
+    });
+
+    test("get inactive medicines",() async {
+      when(sqliteService.getInactiveMedicine()).thenAnswer((_) async => inactiveMedicineList);
+      expect(await sqliteService.getInactiveMedicine(), inactiveMedicineList);
     });
   });
 }
