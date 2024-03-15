@@ -253,30 +253,75 @@ void main(){
       expect(tmpList2?.first.isNotified, 1);
     });
 
-    test("turn off notification", () async{
-      AppConfigModel appConfigModel2 = new AppConfigModel(1, 0, 1, 0);
-      List<AppConfigModel> appConfigList2 = List.generate(1, (index) => appConfigModel2);
-      when(sqliteService.getDailyMedicines()).thenAnswer((_) async => dailyMedList);
-      List<AppConfigModel>? tmpList = await sqliteService.getDailyMedicines();
-      expect(tmpList?.first.editFontSize, 1);
-      sqliteService.alterDailyMed(1);
-      when(sqliteService.getDailyMedicines()).thenAnswer((_) async => appConfigList2);
-      List<AppConfigModel>? tmpList2 = await sqliteService.getDailyMedicines();
-      expect(tmpList2?.first.editFontSize, 0);
+    test("turn off edit font size", () async{
+      AppConfigModel appConfigModel1 = new AppConfigModel(1, 0, 1, 0);
+      AppConfigModel appConfigModel2 = new AppConfigModel(1, 0, 0, 0);
+      when(sqliteService.getEditFontSizeStatus()).thenAnswer((_) async => appConfigModel1.editFontSize == 1 ? true:false);
+      expect(await sqliteService.getEditFontSizeStatus(), true);
+      sqliteService.turnOffChangeFontSize();
+      when(sqliteService.getEditFontSizeStatus()).thenAnswer((_) async => appConfigModel2.editFontSize == 1 ? true:false);
+      expect(await sqliteService.getEditFontSizeStatus(), false);
     });
 
-    test("turn on notification", () async{
-      DaileyMedModel daileyMedModel1 = new DaileyMedModel(1, 14, 0, 0, 9, 0, 12,0, 17, 0, 21, 0, 0);
-      DaileyMedModel daileyMedModel2 = new DaileyMedModel(1, 14, 0, 0, 9, 0, 12,0, 17, 0, 21, 0, 1);
-      List<DaileyMedModel> dailyMedList1 = List.generate(1, (index) => daileyMedModel1);
-      List<DaileyMedModel> dailyMedList2 = List.generate(1, (index) => daileyMedModel2);
-      when(sqliteService.getDailyMedicines()).thenAnswer((_) async => dailyMedList1);
-      List<DaileyMedModel>? tmpList = await sqliteService.getDailyMedicines();
-      expect(tmpList?.first.isNotified, 0);
-      sqliteService.alterDailyMed(1);
-      when(sqliteService.getDailyMedicines()).thenAnswer((_) async => dailyMedList2);
-      List<DaileyMedModel>? tmpList2 = await sqliteService.getDailyMedicines();
-      expect(tmpList2?.first.isNotified, 1);
+    test("turn on edit font size", () async{
+      AppConfigModel appConfigModel1 = new AppConfigModel(1, 0, 0, 0);
+      AppConfigModel appConfigModel2 = new AppConfigModel(1, 0, 1, 0);
+      when(sqliteService.getEditFontSizeStatus()).thenAnswer((_) async => appConfigModel1.editFontSize == 1 ? true:false);
+      expect(await sqliteService.getEditFontSizeStatus(), false);
+      sqliteService.turnOnChangeFontSize();
+      when(sqliteService.getEditFontSizeStatus()).thenAnswer((_) async => appConfigModel2.editFontSize == 1 ? true:false);
+      expect(await sqliteService.getEditFontSizeStatus(), true);
+    });
+
+    test("turn off dark mode", () async{
+      AppConfigModel appConfigModel1 = new AppConfigModel(1, 1, 0, 0);
+      AppConfigModel appConfigModel2 = new AppConfigModel(1, 0, 0, 0);
+      when(sqliteService.getDarkModeStatus()).thenAnswer((_) async => appConfigModel1.darkMode == 1 ? true:false);
+      expect(await sqliteService.getDarkModeStatus(), true);
+      sqliteService.turnOffDarkMode();
+      when(sqliteService.getDarkModeStatus()).thenAnswer((_) async => appConfigModel2.darkMode == 1 ? true:false);
+      expect(await sqliteService.getDarkModeStatus(), false);
+    });
+
+    test("turn on dark mode", () async{
+      AppConfigModel appConfigModel1 = new AppConfigModel(1, 0, 0, 0);
+      AppConfigModel appConfigModel2 = new AppConfigModel(1, 1, 0, 0);
+      when(sqliteService.getDarkModeStatus()).thenAnswer((_) async => appConfigModel1.darkMode == 1 ? true:false);
+      expect(await sqliteService.getDarkModeStatus(), false);
+      sqliteService.turnOnDarkMode();
+      when(sqliteService.getDarkModeStatus()).thenAnswer((_) async => appConfigModel2.darkMode == 1 ? true:false);
+      expect(await sqliteService.getDarkModeStatus(), true);
+    });
+
+    test("alter amount of font size changes", () async{
+      AppConfigModel appConfigModel1 = new AppConfigModel(1, 0, 1, 0);
+      AppConfigModel appConfigModel2 = new AppConfigModel(1, 0, 1, 1);
+      when(sqliteService.getFontSizeChange()).thenAnswer((_) async => appConfigModel1.fontSizeChange);
+      expect(await sqliteService.getFontSizeChange(),  appConfigModel1.fontSizeChange);
+      sqliteService.alterFontSize(1);
+      when(sqliteService.getFontSizeChange()).thenAnswer((_) async => appConfigModel2.fontSizeChange);
+      expect(await sqliteService.getFontSizeChange(), appConfigModel2.fontSizeChange);
+    });
+
+    test("get edit font size status", () async {
+      when(sqliteService.getEditFontSizeStatus()).thenAnswer((_) async => appConfigModel.editFontSize == 1 ? true: false);
+      expect(await sqliteService.getEditFontSizeStatus(), false);
+    });
+
+    test("get amount of font size changes", () async {
+      when(sqliteService.getFontSizeChange()).thenAnswer((_) async => appConfigModel.fontSizeChange);
+      expect(await sqliteService.getFontSizeChange(), 0);
+    });
+
+    test("get dark mode status", () async {
+      when(sqliteService.getDarkModeStatus()).thenAnswer((_) async => appConfigModel.darkMode == 1 ? true: false);
+      expect(await sqliteService.getDarkModeStatus(), false);
+    });
+
+    test("get personal information", () async {
+      List<PersonalInformationModel> personalInfoList = List.generate(1, (index) => personalInformationModel);
+      when(sqliteService.getPersonalInfo()).thenAnswer((_) async => personalInfoList);
+      expect(await sqliteService.getPersonalInfo(), personalInfoList);
     });
   });
 }

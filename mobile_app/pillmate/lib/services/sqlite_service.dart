@@ -120,12 +120,6 @@ class SqliteService {
     return queryResult.map((e) => MedicineModel.fromMap(e)).toList();
   }
 
-  Future<List<AppConfigModel>> getAppConfig() async {
-    db = await initializeDB();
-    final List<Map<String, Object?>> queryResult = await db.query('APP_CONFIG');
-    return queryResult.map((e) => AppConfigModel.fromMap(e)).toList();
-  }
-
   Future<List<MedicineModel>> getActiveMedicine() async{
     db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.query('MEDICINE',
