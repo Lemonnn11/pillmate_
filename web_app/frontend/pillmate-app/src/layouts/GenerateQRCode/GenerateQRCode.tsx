@@ -150,12 +150,12 @@ export const GenerateQRCode = () => {
 
     const handleUnit = (value: string) => {
         setUnit(value);
-        setDosageClick(!dosageClick);
+        handleDosageClickNotFocus();
     }
 
     const handleUnitAmount = (value: string) => {
         setUnitAmount(value);
-        setUnitAmountClick(!dosageClick);
+        handleUnitAmountClickNotFocus();
     }
 
     const handleMorning = () => {
