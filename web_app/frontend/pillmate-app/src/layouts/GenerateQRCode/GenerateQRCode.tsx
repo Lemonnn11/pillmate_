@@ -315,9 +315,10 @@ export const GenerateQRCode = () => {
                     timeOfTaken += 'ก่อนนอน';
                 }
                 setTimeOfTakenn(timeOfTaken);
+                let tmpEvery = ''
                 if(every !== '...'){
                     const tmp = every.split(' ');
-                    setEvery(tmp[0]);
+                    tmpEvery = tmp[0]
                 }
     
                 const user = auth.currentUser;
@@ -327,7 +328,7 @@ export const GenerateQRCode = () => {
     
                     console.log('pharID: ' + profile.displayName!);
                 
-                    const qrCode: QRCodeModel = new QRCodeModel('', profile.displayName!, parseInt(dosagePerTake), parseInt(timePerDay), takeMedWhen, every, timeOfTaken, gmtsDate.toISOString(), gmtsLocalDate.toISOString(), conditionOfUse, addtionalAdvice, parseInt(amountOfMeds), 250, adverseDrugReaction, dosageForm, genericName, tradeName);
+                    const qrCode: QRCodeModel = new QRCodeModel('', profile.displayName!, parseInt(dosagePerTake), parseInt(timePerDay), takeMedWhen, tmpEvery, timeOfTaken, gmtsDate.toISOString(), gmtsLocalDate.toISOString(), conditionOfUse, addtionalAdvice, parseInt(amountOfMeds), 250, adverseDrugReaction, dosageForm, genericName, tradeName);
                     console.log(JSON.stringify(qrCode));
     
                     const request = {
