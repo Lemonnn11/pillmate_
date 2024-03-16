@@ -315,6 +315,10 @@ export const GenerateQRCode = () => {
                     timeOfTaken += 'ก่อนนอน';
                 }
                 setTimeOfTakenn(timeOfTaken);
+                if(every !== '...'){
+                    const tmp = every.split(' ');
+                    setEvery(tmp[0]);
+                }
     
                 const user = auth.currentUser;
     
@@ -440,10 +444,10 @@ export const GenerateQRCode = () => {
                             </div>
                             </div>
                             <div>
-                                รับประทานยา{takeMedWhen === '...' ? every: takeMedWhen} ครั้งละ {dosagePerTake} {unit}
+                                รับประทานยา{takeMedWhen === '...' ? '': takeMedWhen} ครั้งละ {dosagePerTake} {unit}
                             </div>
                             <div>
-                                วันละ {timePerDay} ครั้ง {takeMedWhen === '...' ? `ทุกๆ ${every}`: `${timeOfTakenn}`}
+                                วันละ {timePerDay} ครั้ง {takeMedWhen === '...' ? `ทุกๆ ${every} ชั่วโมง`: `${timeOfTakenn}`}
                             </div>
                             <div className='d-flex gap-1 mt-3'>
                                 <div style={{fontFamily: "LINESeedSansTHBold"}}>
