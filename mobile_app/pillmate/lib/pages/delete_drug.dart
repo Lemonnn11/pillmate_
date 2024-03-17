@@ -68,6 +68,18 @@ class _DeleteDrugState extends State<DeleteDrug> {
     );
   }
 
+  String formattedType(String typeOfMedicine){
+    switch(typeOfMedicine){
+      case 'Tablet':
+        typeOfMedicine = typeOfMedicine.replaceAll('Tablet', 'เม็ด');
+        break;
+      case 'Capsule':
+        typeOfMedicine = typeOfMedicine.replaceAll('Capsule', 'แคปซูล');
+        break;
+    }
+    return typeOfMedicine;
+  }
+
   void formattedDate(){
     DateTime exp = DateTime.parse(widget.med.expiredDate);
     DateTime des = DateTime.parse(widget.med.date);
@@ -224,7 +236,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                               fontFamily: 'PlexSansThaiRg',
                               color: !darkMode ? Colors.black: Colors.white,
                             ),),
-                          Text(widget.med.typeOfMedicine,
+                          Text(formattedType(widget.med.typeOfMedicine),
                             style: TextStyle(
                               fontSize: editFontsize ?  14 + change.toDouble() : 14,
                               fontFamily: 'PlexSansThaiRg',
@@ -289,7 +301,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(widget.med.amountOfMeds.toString() + ' '+ widget.med.typeOfMedicine,
+                        Text(widget.med.amountOfMeds.toString() + ' '+ formattedType(widget.med.typeOfMedicine),
                           style: TextStyle(
                               fontSize: editFontsize ?  16 + change.toDouble() : 16,
                               fontFamily: 'PlexSansThaiRg',
@@ -345,7 +357,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                                       fontFamily: 'PlexSansThaiRg',
                                     color: !darkMode ? Colors.black: Colors.white,
                                   ),),
-                                Text(widget.med.typeOfMedicine,
+                                Text(formattedType(widget.med.typeOfMedicine),
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontFamily: 'PlexSansThaiRg',
@@ -443,7 +455,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(widget.med.timeOfMed,
+                                Text(widget.med.timeOfMed== '...' ? 'ตามเวลา':widget.med.timeOfMed,
                                   style: TextStyle(
                                       fontSize: editFontsize ?  18 + change.toDouble() : 18,
                                       fontFamily: 'PlexSansThaiRg',
@@ -457,7 +469,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                     ),
                   ),
                   SizedBox(width: 16,),
-                  widget.med.timeOfMed.contains('เวลา') ?
+                  widget.med.timeOfMed.contains('...') ?
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -526,7 +538,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                 ],
               ),
               SizedBox(height: 4,),
-              widget.med.timeOfMed.contains('เวลา') || widget.med.timeOfMed.contains('เมื่อ') ?
+              widget.med.timeOfMed.contains('...') || widget.med.timeOfMed.contains('เมื่อ') ?
               Container():
               Wrap(
                 crossAxisAlignment: WrapCrossAlignment.end,
@@ -719,7 +731,7 @@ class _DeleteDrugState extends State<DeleteDrug> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
+                        widget.med.timeOfMed.contains('...') || widget.med.timeOfMed.contains('เมื่อ') ? Container():Padding(
                           padding: const EdgeInsets.only(top: 4.0),
                           child: Text(
                             'การแจ้งเตือน',

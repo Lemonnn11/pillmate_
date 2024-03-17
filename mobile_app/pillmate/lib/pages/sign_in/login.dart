@@ -181,7 +181,8 @@ class _LoginPageState extends State<LoginPage> {
                             _showInvalidPhoneNumber = true;
                             _showEmptyPhoneNumber = false;
                           });
-                        }else{
+                        }
+                        else{
                           await _auth.verifyPhoneNumber(
                             phoneNumber: '+66 ' + phoneNumber,
                             timeout: const Duration(seconds: 120),

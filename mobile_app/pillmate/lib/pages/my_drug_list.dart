@@ -145,24 +145,24 @@ class _MyDrugListState extends State<MyDrugList> {
     _inactiveCapsuleDrugsList.clear();
     _inactiveTabDrugsList.clear();
     _activeDrugsList.forEach((element) {
-      if(element.typeOfMedicine == 'แคปซูล'){
+      if(element.typeOfMedicine.toLowerCase() == 'capsule'){
         setState(() {
           _capsuleDrugsList.add(element);
         });
       }
-      else if(element.typeOfMedicine == 'เม็ด'){
+      else if(element.typeOfMedicine.toLowerCase() == 'tablet'){
         setState(() {
           _tabDrugsList.add(element);
         });
       }
     });
     _inactiveDrugsList.forEach((element) {
-      if(element.typeOfMedicine == 'แคปซูล'){
+      if(element.typeOfMedicine.toLowerCase() == 'capsule'){
         setState(() {
           _inactiveCapsuleDrugsList.add(element);
         });
       }
-      else if(element.typeOfMedicine == 'เม็ด'){
+      else if(element.typeOfMedicine.toLowerCase() == 'tablet'){
         setState(() {
           _inactiveTabDrugsList.add(element);
         });

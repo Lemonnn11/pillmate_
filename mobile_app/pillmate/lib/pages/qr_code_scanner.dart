@@ -6,6 +6,7 @@ import 'package:pillmate/pages/add_drug.dart';
 import 'package:pillmate/pages/drug_information.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:vibration/vibration.dart';
 
 import '../services/sqlite_service.dart';
 
@@ -197,16 +198,17 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
 
     controller.scannedDataStream.listen((barcode) => {
     if(!isNavigate && barcode != null){
+      // vibrate(),
       isNavigate = true,
-      // Navigator.push(
-      // context,
-      // MaterialPageRoute(
-      //   builder: (context) => AddDrug(info: barcode!.code.toString()),
-      // ),
-      // ).then((_){
-      //   isNavigate = false;
-      //   controller.dispose();
-      // })
+      Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddDrug(info: barcode!.code.toString()),
+      ),
+      ).then((_){
+        isNavigate = false;
+        controller.dispose();
+      })
 
     }
     });

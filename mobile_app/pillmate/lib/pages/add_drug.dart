@@ -6,14 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pillmate/models/medicine.dart';
+import 'package:vibration/vibration.dart';
 
 import '../constants/constants.dart';
 import '../services/sqlite_service.dart';
 
 class AddDrug extends StatefulWidget {
-  final String info = '{"timePeriodForMed":"...","date":"2024-02-19T01:44:23.470Z","pharID":"Fy751CumG69MLZfZLvqe","additionalAdvice":"ยานี้อาจระคายเคืองกระเพาะอาหาร ให้รับประทานหลังอาหารทันที","quantity":250,"amountOfMeds":10,"genericName":"Paracetamol","expiredDate":"2023-11-04T00:00:00.000Z","adverseDrugReaction":"หากมีอาการผื่นแพ้ เยื่อบุผิวลอก ให้หยุดใช้ยาและหากมีอาการหนักควรปรึกษาแพทย์ทันที","timeOfMed":"หลังอาหาร","typeOfMedicine":"Tablet","tradeName":"Bakamol Tab. 500 mg","dosagePerTake":2,"takeMedWhen":"เช้า กลางวัน เย็น","QRCodeID":"8c5ea443-83e4-4d92-88d9-5d0e06a06db8","timePerDay":3,"conditionOfUse":"ลดคลื่นไส้อาเจียน"}';
-  // final String info;
-  const AddDrug({super.key});
+  // final String info = '{"timePeriodForMed":"...","date":"2024-02-19T01:44:23.470Z","pharID":"Fy751CumG69MLZfZLvqe","additionalAdvice":"ยานี้อาจระคายเคืองกระเพาะอาหาร ให้รับประทานหลังอาหารทันที","quantity":250,"amountOfMeds":10,"genericName":"Paracetamol","expiredDate":"2023-11-04T00:00:00.000Z","adverseDrugReaction":"หากมีอาการผื่นแพ้ เยื่อบุผิวลอก ให้หยุดใช้ยาและหากมีอาการหนักควรปรึกษาแพทย์ทันที","timeOfMed":"หลังอาหาร","typeOfMedicine":"Tablet","tradeName":"Bakamol Tab. 500 mg","dosagePerTake":2,"takeMedWhen":"เช้า กลางวัน เย็น","QRCodeID":"8c5ea443-83e4-4d92-88d9-5d0e06a06db8","timePerDay":3,"conditionOfUse":"ลดคลื่นไส้อาเจียน"}';
+  final String info;
+  const AddDrug({super.key, required this.info});
 
   @override
   State<AddDrug> createState() => _AddDrugState();
@@ -46,6 +47,13 @@ class _AddDrugState extends State<AddDrug> {
       onError: (e) => print("Error completing: $e"),
     );
   }
+
+  Future<void> vibrate()async {
+    if (await Vibration.hasVibrator() ?? false) {
+      Vibration.vibrate();
+    }
+  }
+
 
   int checkDayOverAmountOfdayInMonth(int day){
     var dt = DateTime.now();
@@ -181,10 +189,10 @@ class _AddDrugState extends State<AddDrug> {
     this._sqliteService= SqliteService();
     this._sqliteService.initializeDB();
     formattedDate(data['expiredDate'], data['date']);
-    formattedType(data['typeOfMedicine'].toString());
     _getPharmacyName();
     initFontSize();
     initDarkMode();
+    vibrate();
   }
 
   Future<void> initDarkMode() async {
@@ -203,7 +211,7 @@ class _AddDrugState extends State<AddDrug> {
     });
   }
   
-  void formattedType(String typeOfMedicine){
+  String formattedType(String typeOfMedicine){
     switch(typeOfMedicine){
       case 'Tablet':
         typeOfMedicine = typeOfMedicine.replaceAll('Tablet', 'เม็ด');
@@ -212,6 +220,7 @@ class _AddDrugState extends State<AddDrug> {
         typeOfMedicine = typeOfMedicine.replaceAll('Capsule', 'แคปซูล');
         break;
     }
+    return typeOfMedicine;
   }
 
   void formattedDate(String expiredDate, String dispensingDate){
@@ -372,7 +381,7 @@ class _AddDrugState extends State<AddDrug> {
                               fontFamily: 'PlexSansThaiRg',
                               color: !darkMode ? Colors.black: Colors.white,
                             ),),
-                          Text(data['typeOfMedicine'],
+                          Text(formattedType(data['typeOfMedicine']),
                             style: TextStyle(
                               fontSize: editFontsize ?  14 + change.toDouble() : 14,
                               fontFamily: 'PlexSansThaiRg',
@@ -437,7 +446,7 @@ class _AddDrugState extends State<AddDrug> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(data['amountOfMeds'].toString() + ' '+ data['typeOfMedicine'],
+                        Text(data['amountOfMeds'].toString() + ' '+ formattedType(data['typeOfMedicine']),
                           style: TextStyle(
                               fontSize: editFontsize ?  16 + change.toDouble() : 16,
                               fontFamily: 'PlexSansThaiRg',
@@ -493,7 +502,7 @@ class _AddDrugState extends State<AddDrug> {
                                       fontFamily: 'PlexSansThaiRg',
                                     color:!darkMode ? Colors.black: Colors.white,
                                   ),),
-                                Text(data['typeOfMedicine'],
+                                Text(formattedType(data['typeOfMedicine']),
                                   style: TextStyle(
                                       fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiRg',
@@ -591,7 +600,7 @@ class _AddDrugState extends State<AddDrug> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(data['timeOfMed'],
+                                Text(data['timeOfMed'] == '...' ? 'ตามเวลา': data['timeOfMed'],
                                   style: TextStyle(
                                       fontSize: editFontsize ?  18 + change.toDouble() : 18,
                                       fontFamily: 'PlexSansThaiRg',
@@ -605,7 +614,7 @@ class _AddDrugState extends State<AddDrug> {
                     ),
                   ),
                   SizedBox(width: 16,),
-                  data['timeOfMed'].contains('เวลา') ?
+                  data['timeOfMed'].contains('...') ?
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -674,7 +683,7 @@ class _AddDrugState extends State<AddDrug> {
                 ],
               ),
               SizedBox(height: 4,),
-              data['timeOfMed'].contains('เวลา') || data['timeOfMed'].contains('เมื่อ') ?
+              data['timeOfMed'].contains('...') || data['timeOfMed'].contains('เมื่อ') ?
               Container():
               Wrap(
                 crossAxisAlignment: WrapCrossAlignment.end,
@@ -862,12 +871,13 @@ class _AddDrugState extends State<AddDrug> {
               Wrap(
                 crossAxisAlignment: WrapCrossAlignment.end,
                 children: [
-                  data['takeMedWhen'].contains('เช้า') ? Container(
+                   Container(
                     width: screenWidth*0.29,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
+                        data['timeOfMed'].contains('...') || data['timeOfMed'].contains('เมื่อ') ?
+                        Container():Padding(
                           padding: const EdgeInsets.only(top: 4.0),
                           child: Text(
                             'การแจ้งเตือน',
@@ -878,7 +888,7 @@ class _AddDrugState extends State<AddDrug> {
                             ),
                           ),
                         ),
-                        Padding(
+                        data['takeMedWhen'].contains('เช้า') ? Padding(
                           padding: const EdgeInsets.only(top: 4.0),
                           child: Container(
                             height: 50,
@@ -918,10 +928,10 @@ class _AddDrugState extends State<AddDrug> {
                               ),
                             ),
                           ),
-                        ),
+                        ):Container(width: 0, height: 0,),
                       ],
                     ),
-                  ): Container(width: 0, height: 0,),
+                  ),
                   SizedBox(width: 8,),
                   data['takeMedWhen'].contains('กลางวัน') ? Padding(
                     padding: const EdgeInsets.only(top: 4.0),
