@@ -240,12 +240,13 @@ class _HomepageState extends State<Homepage> {
           tmpp += ',';
         }
       }
-      await _sqliteService.increaseAmountTaken(qrcodeID, amountTaken, tmpp);
+      await _sqliteService.increaseAmountTaken(qrcodeID, amountTaken, tmpp).then((_) =>
+          setState(() {
+            getMedicines();
+            amoungMedTaken +=1;
+          })
+      );
       await _sqliteService.alterDailyAmountTaken(amoungMedTaken);
-      setState(() {
-        getMedicines();
-        amoungMedTaken +=1;
-      });
     }
   }
 
@@ -1287,12 +1288,12 @@ class _HomepageState extends State<Homepage> {
             shape: CircleBorder(),
             backgroundColor: !darkMode ? Color(0xff059E78): Color(0xff94DDB5),
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => QRCodeScanner()
-              ));
               // Navigator.of(context).push(MaterialPageRoute(
-              //     builder: (context) => AddDrug()
+              //   builder: (context) => QRCodeScanner()
               // ));
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => AddDrug()
+              ));
             },
           ),
         ),

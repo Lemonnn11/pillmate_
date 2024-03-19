@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pillmate/constants/constants.dart';
+import 'package:pillmate/pages/appearance.dart';
 import 'package:pillmate/pages/qr_code_scanner.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -312,8 +313,12 @@ class _ProfilePageState extends State<ProfilePage> {
                           color:  !darkMode ? Color(0xffE7E7E7): Color(0xff8B8B8B)
                       ),
                       GestureDetector(
-                        onTap: (){
-                          Navigator.pushNamed(context, '/appearance');
+                        onTap: () async {
+                          final result = await Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Appearance()));
+                          setState(() {
+                            darkMode = result;
+                          });
                         },
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: screenWidth*0.04, vertical: 9),

@@ -139,7 +139,7 @@ class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
                               Container(
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12),
-                                    color: Color(0xffB8E7FB)
+                                    color: !widget.darkMode? Color(0xffB8E7FB): Color(0xffD9F2FD)
                                 ),
                                 child:  Padding(
                                   padding: EdgeInsets.symmetric(vertical: screenHeight*0.0005, horizontal: screenWidth*0.025),

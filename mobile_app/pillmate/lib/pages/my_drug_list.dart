@@ -592,6 +592,7 @@ class _MyDrugListState extends State<MyDrugList> {
                         scrollDirection: Axis.vertical,
                         itemBuilder: (BuildContext context, int index) {
                           return ReusableMyHistoryListCard(
+                            darkmode: darkMode,
                             editFontSize: editFontsize,
                             change: change,
                             med: _inactiveDrugsList[index], lastIndex: index ==  _inactiveDrugsList.length-1 ? true:false,);
@@ -601,6 +602,7 @@ class _MyDrugListState extends State<MyDrugList> {
                         scrollDirection: Axis.vertical,
                         itemBuilder: (BuildContext context, int index) {
                           return ReusableMyHistoryListCard(
+                            darkmode: darkMode,
                             editFontSize: editFontsize,
                             change: change,
                             med: _inactiveTabDrugsList[index], lastIndex: index ==  _inactiveTabDrugsList.length-1 ? true:false,);
@@ -610,6 +612,7 @@ class _MyDrugListState extends State<MyDrugList> {
                         scrollDirection: Axis.vertical,
                         itemBuilder: (BuildContext context, int index) {
                           return ReusableMyHistoryListCard(
+                            darkmode: darkMode,
                             editFontSize: editFontsize,
                             change: change,
                             med: _inactiveCapsuleDrugsList[index], lastIndex: index ==  _inactiveCapsuleDrugsList.length-1 ? true:false,);

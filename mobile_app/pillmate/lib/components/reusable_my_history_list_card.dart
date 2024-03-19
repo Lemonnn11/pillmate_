@@ -10,8 +10,9 @@ class ReusableMyHistoryListCard extends StatelessWidget {
   final bool lastIndex;
   final bool editFontSize;
   final int change;
+  final bool darkmode;
 
-  ReusableMyHistoryListCard ({super.key, required this.lastIndex, required this.med, required this.editFontSize, required this.change});
+  ReusableMyHistoryListCard ({super.key, required this.lastIndex, required this.med, required this.editFontSize, required this.change, required this.darkmode});
 
   @override
   Widget build(BuildContext context) {
@@ -48,20 +49,20 @@ class ReusableMyHistoryListCard extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            '18 มกราคม 66, 09:00 น.',
-                            style: TextStyle(
-                                fontSize: editFontSize ?  14 + change.toDouble() : 14,
-                                fontFamily: 'PlexSansThaiRg',
-                                color: Color(0xff575757)
-                            ),
-                          ),
+                          // Text(
+                          //   '18 มกราคม 66, 09:00 น.',
+                          //   style: TextStyle(
+                          //       fontSize: editFontSize ?  14 + change.toDouble() : 14,
+                          //       fontFamily: 'PlexSansThaiRg',
+                          //       color: Color(0xff575757)
+                          //   ),
+                          // ),
                           Text(
                             med.genericName,
                             style: TextStyle(
                                 fontSize: editFontSize ?  16 + change.toDouble() : 16,
                                 fontFamily: 'PlexSansThaiSm',
-                                color: Color(0xff121212)
+                                color: !darkmode ? Color(0xff121212): Colors.white,
                             ),
                           ),
 
@@ -72,7 +73,7 @@ class ReusableMyHistoryListCard extends StatelessWidget {
                               Container(
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12),
-                                    color: Color(0xffFBEC84)
+                                    color: !darkmode ? Color(0xffFBEC84): Color(0xffFFF4BB)
                                 ),
                                 child:  Padding(
                                   padding: EdgeInsets.symmetric(vertical: screenHeight*0.0005, horizontal: screenWidth*0.025),
@@ -92,7 +93,7 @@ class ReusableMyHistoryListCard extends StatelessWidget {
                               Container(
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12),
-                                    color: Color(0xffB8E7FB)
+                                    color: !darkmode? Color(0xffB8E7FB): Color(0xffD9F2FD)
                                 ),
                                 child:  Padding(
                                   padding: EdgeInsets.symmetric(vertical: screenHeight*0.0005, horizontal: screenWidth*0.025),
@@ -121,7 +122,7 @@ class ReusableMyHistoryListCard extends StatelessWidget {
                       style: TextStyle(
                           fontSize: editFontSize ?  14 + change.toDouble() : 14,
                           fontFamily: 'PlexSansThaiMd',
-                          color: Colors.black
+                          color: !darkmode ? Color(0xff121212): Colors.white,
                       ),
                     ),
                   ),

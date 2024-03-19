@@ -76,7 +76,7 @@ class _AppearanceState extends State<Appearance> {
         ),
         leading: IconButton(
           icon: Icon(Ionicons.chevron_back_outline, color: !darkMode ?   Colors.black:Colors.white,size: 30), onPressed: () {
-          Navigator.pop(context);
+          Navigator.pop(context, darkMode );
         },
         ),
       ),
@@ -107,6 +107,7 @@ class _AppearanceState extends State<Appearance> {
                       onChanged: (value){
                         setState((){
                           this.isSwitched = value;
+                          darkMode = isSwitched;
                           if(isSwitched){
                               _sqliteService.turnOnDarkMode();
                           }else{
