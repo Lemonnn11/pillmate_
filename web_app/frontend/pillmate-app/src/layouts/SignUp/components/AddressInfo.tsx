@@ -60,15 +60,12 @@ export const AddressInfo: React.FC<AddressInfoProps> = (props) => {
 
         if(pharmacyName !== '' && addressLine1 !== '' && 
         subDistrict !== 'ตำบล/แขวง' && district !== 'อำเภอ/เขต' && province !== 'จังหวัด'){
-            // const pharmacy: PharmacyModel = new PharmacyModel("", pharmacyName, addressLine1+addressLine2+", "+subDistrict+", " + district + ", " + province + " " + zipcode, );
             const pharmacy1: PharmacyModel = new PharmacyModel();
             pharmacy1.setEmail(props.pharmacy!.email);
             pharmacy1.setStoreName(pharmacyName!);
             pharmacy1.setAddress(addressLine1+addressLine2+", "+subDistrict+", " + district + ", " + province + " " + zipcode);
             pharmacy1.setProvince(district);
             pharmacy1.setCity(province!);
-            pharmacy1.setLatitude("13.77765254802144");
-            pharmacy1.setLongitude("100.52532826905029");
             const pharmacy = await getLatLngFromGoogleAPI(pharmacy1);
             props.handlePharmacy(pharmacy);
 

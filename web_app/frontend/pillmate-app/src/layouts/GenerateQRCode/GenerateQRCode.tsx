@@ -448,7 +448,7 @@ export const GenerateQRCode = () => {
                                 รับประทานยา{takeMedWhen === '...' ? '': takeMedWhen} ครั้งละ {dosagePerTake} {unit}
                             </div>
                             <div>
-                                วันละ {timePerDay} ครั้ง {takeMedWhen === '...' ? `ทุกๆ ${every} ชั่วโมง`: `${timeOfTakenn}`}
+                                วันละ {timePerDay} ครั้ง {takeMedWhen === '...' ? `ทุกๆ ${every}`: `${timeOfTakenn}`}
                             </div>
                             <div className='d-flex gap-1 mt-3'>
                                 <div style={{fontFamily: "LINESeedSansTHBold"}}>
