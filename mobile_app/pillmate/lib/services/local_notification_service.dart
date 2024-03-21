@@ -49,11 +49,11 @@ class LocalNotificationService{
       await _flutterLocalNotificationsPlugin.zonedSchedule(
           i,
           'Medication Notification',
-          'Morning Medication!!!',
+          'Time for your medication',
           notiTime[i],
           const NotificationDetails(
-              android: AndroidNotificationDetails('your channel id', 'your channel name',
-                  channelDescription: 'your channel description')),
+              android: AndroidNotificationDetails('1', 'Medication Notification',
+                  channelDescription: 'for notifying medication')),
           androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
           uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime);
     }

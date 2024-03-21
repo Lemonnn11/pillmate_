@@ -178,7 +178,6 @@ class _FontSizeState extends State<FontSize> {
                                setState(() {
                                  if(isSwitched){
                                    fontSize = value;
-                                   print(fontSize);
                                  }
                                });
                              }
