@@ -8,6 +8,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../constants/constants.dart';
+import '../services/firestore.dart';
 
 class DrugInformation extends StatefulWidget {
   final MedicineModel med;
@@ -57,17 +58,14 @@ class _DrugInformationState extends State<DrugInformation> {
   }
 
   void _getPharmacyName() async {
-    _firestore.collection("pharmacies").where("pharID", isEqualTo: widget.med.pharID).get().then(
-          (querySnapshot) {
-        print("Successfully completed");
-        for (var docSnapshot in querySnapshot.docs) {
-          setState(() {
-            storeName = docSnapshot.data()['storeName'];
-          });
-        }
-      },
-      onError: (e) => print("Error completing: $e"),
+    FirestoreService firestoreService = FirestoreService(firestore: _firestore);
+    await firestoreService.getPharmacyName(widget.med.pharID).then((value) {
+      setState(() {
+        storeName = value!;
+      });
+    }
     );
+
   }
 
   String formattedType(String typeOfMedicine){

@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../constants/constants.dart';
 import '../models/medicine.dart';
+import '../services/firestore.dart';
 import '../services/sqlite_service.dart';
 import 'package:ionicons/ionicons.dart';
 
@@ -55,17 +56,14 @@ class _DeleteDrugState extends State<DeleteDrug> {
   }
 
   void _getPharmacyName() async {
-    _firestore.collection("pharmacies").where("pharID", isEqualTo: widget.med.pharID).get().then(
-          (querySnapshot) {
-        print("Successfully completed");
-        for (var docSnapshot in querySnapshot.docs) {
-          setState(() {
-            storeName = docSnapshot.data()['storeName'];
-          });
-        }
-      },
-      onError: (e) => print("Error completing: $e"),
+    FirestoreService firestoreService = FirestoreService(firestore: _firestore);
+    await firestoreService.getPharmacyName(widget.med.pharID).then((value) {
+      setState(() {
+        storeName = value!;
+      });
+    }
     );
+
   }
 
   String formattedType(String typeOfMedicine){

@@ -14,6 +14,19 @@ class ReusableMyHistoryListCard extends StatelessWidget {
 
   ReusableMyHistoryListCard ({super.key, required this.lastIndex, required this.med, required this.editFontSize, required this.change, required this.darkmode});
 
+
+  String formattedType(String typeOfMedicine){
+    switch(typeOfMedicine){
+      case 'Tablet':
+        typeOfMedicine = typeOfMedicine.replaceAll('Tablet', 'เม็ด');
+        break;
+      case 'Capsule':
+        typeOfMedicine = typeOfMedicine.replaceAll('Capsule', 'แคปซูล');
+        break;
+    }
+    return typeOfMedicine;
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -78,7 +91,7 @@ class ReusableMyHistoryListCard extends StatelessWidget {
                                 child:  Padding(
                                   padding: EdgeInsets.symmetric(vertical: screenHeight*0.0005, horizontal: screenWidth*0.025),
                                   child: Text(
-                                    med.dosagePerTake.toString(),
+                                    '${med.dosagePerTake.toString()} ${formattedType(med.typeOfMedicine)}',
                                     style: TextStyle(
                                         fontSize: editFontSize ?  14 + change.toDouble() : 14,
                                         fontFamily: 'PlexSansThaiRg',
@@ -118,7 +131,7 @@ class ReusableMyHistoryListCard extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(right: screenWidth*0.017),
                     child: Text(
-                      med.amountOfMeds.toString(),
+                      '${med.amountOfMeds.toString()} ${formattedType(med.typeOfMedicine)}',
                       style: TextStyle(
                           fontSize: editFontSize ?  14 + change.toDouble() : 14,
                           fontFamily: 'PlexSansThaiMd',

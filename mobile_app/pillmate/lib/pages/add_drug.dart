@@ -9,12 +9,13 @@ import 'package:pillmate/models/medicine.dart';
 import 'package:vibration/vibration.dart';
 
 import '../constants/constants.dart';
+import '../services/firestore.dart';
 import '../services/sqlite_service.dart';
 
 class AddDrug extends StatefulWidget {
-  final String info = '{"timePeriodForMed":"...","date":"2024-02-19T01:44:23.470Z","pharID":"Fy751CumG69MLZfZLvqe","additionalAdvice":"ยานี้อาจระคายเคืองกระเพาะอาหาร ให้รับประทานหลังอาหารทันที","quantity":250,"amountOfMeds":10,"genericName":"Paracetamol","expiredDate":"2023-11-04T00:00:00.000Z","adverseDrugReaction":"หากมีอาการผื่นแพ้ เยื่อบุผิวลอก ให้หยุดใช้ยาและหากมีอาการหนักควรปรึกษาแพทย์ทันที","timeOfMed":"หลังอาหาร","typeOfMedicine":"Tablet","tradeName":"Bakamol Tab. 500 mg","dosagePerTake":2,"takeMedWhen":"เช้า กลางวัน เย็น","QRCodeID":"8c5ea443-83e4-4d92-88d9-5d0e06a06db8","timePerDay":3,"conditionOfUse":"ลดคลื่นไส้อาเจียน"}';
-  // final String info;
-  const AddDrug({super.key});
+  // final String info = '{"timePeriodForMed":"...","date":"2024-02-19T01:44:23.470Z","pharID":"Fy751CumG69MLZfZLvqe","additionalAdvice":"ยานี้อาจระคายเคืองกระเพาะอาหาร ให้รับประทานหลังอาหารทันที","quantity":250,"amountOfMeds":10,"genericName":"Paracetamol","expiredDate":"2023-11-04T00:00:00.000Z","adverseDrugReaction":"หากมีอาการผื่นแพ้ เยื่อบุผิวลอก ให้หยุดใช้ยาและหากมีอาการหนักควรปรึกษาแพทย์ทันที","timeOfMed":"หลังอาหาร","typeOfMedicine":"Tablet","tradeName":"Bakamol Tab. 500 mg","dosagePerTake":2,"takeMedWhen":"เช้า กลางวัน เย็น","QRCodeID":"8c5ea443-83e4-4d92-88d9-5d0e06a06db8","timePerDay":3,"conditionOfUse":"ลดคลื่นไส้อาเจียน"}';
+  final String info;
+  const AddDrug({super.key, required this.info});
 
   @override
   State<AddDrug> createState() => _AddDrugState();
@@ -33,19 +34,15 @@ class _AddDrugState extends State<AddDrug> {
   int change = 0;
   bool darkMode = false;
 
-
   void _getPharmacyName() async {
-    _firestore.collection("pharmacies").where("pharID", isEqualTo: data["pharID"]).get().then(
-          (querySnapshot) {
-        print("Successfully completed");
-        for (var docSnapshot in querySnapshot.docs) {
-          setState(() {
-            storeName = docSnapshot.data()['storeName'];
-          });
-        }
-      },
-      onError: (e) => print("Error completing: $e"),
+    FirestoreService firestoreService = FirestoreService(firestore: _firestore);
+    await firestoreService.getPharmacyName(data['pharID']).then((value) {
+     setState(() {
+       storeName = value!;
+     });
+    }
     );
+
   }
 
   Future<void> vibrate()async {
