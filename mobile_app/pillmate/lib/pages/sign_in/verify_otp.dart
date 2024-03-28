@@ -490,7 +490,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                       PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: pin1+pin2+pin3+pin4+pin5+pin6);
                       final user = await _auth.signInWithCredential(credential);
                       if (user != null) {
-                        print(_personList.length);
+                        print(user);
                         if(_personList.length > 0){
                           Navigator.pushNamed(context, '/homepage');
                         }else{
