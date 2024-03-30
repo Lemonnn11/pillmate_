@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
 import 'package:pillmate/services/auth.dart';
 
-main() {
+@GenerateNiceMocks([MockSpec<Auth>()])
+void main() {
   // Mock sign in with Google.
   // Sign in.
 
@@ -46,10 +48,6 @@ main() {
         phoneNumber: '0812345678'
     );
     final auth = MockFirebaseAuth(mockUser: user);
-    whenCalling(Invocation.method(
-        #confirmPasswordReset, null, {#code: contains('code')}))
-        .on(auth)
-        .thenThrow(FirebaseAuthException(code: 'invalid-action-code');
     final authService = Auth(auth: auth);
     final verificationId = await authService.signInWithPhoneNumber(phoneNumber);
     expect(verificationId, 'The provided phone number is not valid.');
