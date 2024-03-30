@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Auth{
-  final FirebaseAuth auth;
-
-  Auth({required this.auth});
+  late FirebaseAuth auth;
 
   Future<String?> signInWithPhoneNumber(String phoneNumber) async {
     String res = '';

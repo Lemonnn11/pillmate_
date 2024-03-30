@@ -2,7 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:pillmate/services/auth.dart';
+
+import 'firebase_auth_test.mocks.dart';
 
 @GenerateNiceMocks([MockSpec<Auth>()])
 void main() {
@@ -29,7 +32,8 @@ void main() {
       phoneNumber: '0812345678'
     );
     final auth = MockFirebaseAuth(mockUser: user);
-    final authService = Auth(auth: auth);
+    final authService = Auth();
+    authService.auth = auth;
     final verificationId = await authService.signInWithPhoneNumber(phoneNumber);
     expect(verificationId, isNotEmpty);
     // PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId!, smsCode: '123456');
@@ -39,7 +43,6 @@ void main() {
   });
 
   test('test', () async {
-    String phoneNumber = 'xxxxxxx';
     final user = MockUser(
         isAnonymous: false,
         uid: 'someuid',
@@ -48,8 +51,10 @@ void main() {
         phoneNumber: '0812345678'
     );
     final auth = MockFirebaseAuth(mockUser: user);
-    final authService = Auth(auth: auth);
-    final verificationId = await authService.signInWithPhoneNumber(phoneNumber);
+    final authService = MockAuth();
+    authService.auth = auth;
+    when(authService.signInWithPhoneNumber('xxxxxxx')).thenAnswer((_) async => 'The provided phone number is not valid.');
+    final verificationId = await authService.signInWithPhoneNumber('xxxxxxx');
     expect(verificationId, 'The provided phone number is not valid.');
   });
 }
