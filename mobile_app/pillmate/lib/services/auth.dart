@@ -5,36 +5,39 @@ class Auth{
 
   Auth({required this.auth});
 
-  Future<String?> signIn({required String email, required String password}) async {
-    try {
-      await auth.signInWithEmailAndPassword(
-        email: email.trim(),
-        password: password.trim(),
-      );
-      return "Success";
-    } on FirebaseAuthException catch (e) {
-      return e.message;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
   Future<String?> signInWithPhoneNumber(String phoneNumber) async {
-    String id = '';
+    String res = '';
     await auth.verifyPhoneNumber(
       phoneNumber: '+66 ' + phoneNumber,
       timeout: const Duration(seconds: 120),
       verificationCompleted: (PhoneAuthCredential credential) {},
       verificationFailed: (FirebaseAuthException e) {
         if (e.code == 'invalid-phone-number') {
-          print('The provided phone number is not valid.');
+          res = 'The provided phone number is not valid.';
         }
       },
       codeSent: (verificationId, [forceResendingToken]) {
-        id = verificationId;
+        res = verificationId;
       },
       codeAutoRetrievalTimeout: (verificationId) {},
     );
-    return id;
+    return res;
+  }
+
+  Future<String?> verifyOTP(String verificationId, String code) async {
+    try{
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: code);
+      final user = await auth.signInWithCredential(credential);
+      if (user != null) {
+        return 'validated';
+      }
+    }catch (e) {
+      if(e.toString().contains('invalid-verification')){
+        return 'invalid-verification';
+      }
+      else if(e.toString().contains('Unable to establish connection')){
+        return 'Unable to establish connection';
+      }
+    }
   }
 }

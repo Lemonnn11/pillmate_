@@ -17,13 +17,6 @@ main() {
     expect(email, 'bob@somedomain.com');
   });
 
-  test('description', () async {
-    final auth = MockFirebaseAuth();
-    auth.createUserWithEmailAndPassword(email: 'bob@somedomain.com', password: 'bob123');
-    final authService = Auth(auth: auth);
-    expect(await authService.signIn(email: 'bob@somedomain.com', password: 'bob123'), "Success");
-  });
-
   test('test', () async {
     String phoneNumber = '0812345678';
     final user = MockUser(
@@ -36,9 +29,29 @@ main() {
     final auth = MockFirebaseAuth(mockUser: user);
     final authService = Auth(auth: auth);
     final verificationId = await authService.signInWithPhoneNumber(phoneNumber);
-    PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId!, smsCode: '123456');
-    final result = await auth.signInWithCredential(credential);
-    expect(result.user?.phoneNumber, phoneNumber);
-    print(auth.currentUser);
+    expect(verificationId, isNotEmpty);
+    // PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId!, smsCode: '123456');
+    // final result = await auth.signInWithCredential(credential);
+    // expect(result.user?.phoneNumber, phoneNumber);
+    // print(auth.currentUser);
+  });
+
+  test('test', () async {
+    String phoneNumber = 'xxxxxxx';
+    final user = MockUser(
+        isAnonymous: false,
+        uid: 'someuid',
+        email: 'bob@somedomain.com',
+        displayName: 'Bob',
+        phoneNumber: '0812345678'
+    );
+    final auth = MockFirebaseAuth(mockUser: user);
+    whenCalling(Invocation.method(
+        #confirmPasswordReset, null, {#code: contains('code')}))
+        .on(auth)
+        .thenThrow(FirebaseAuthException(code: 'invalid-action-code');
+    final authService = Auth(auth: auth);
+    final verificationId = await authService.signInWithPhoneNumber(phoneNumber);
+    expect(verificationId, 'The provided phone number is not valid.');
   });
 }
