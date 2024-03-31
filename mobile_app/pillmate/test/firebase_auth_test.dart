@@ -9,8 +9,6 @@ import 'firebase_auth_test.mocks.dart';
 
 @GenerateNiceMocks([MockSpec<Auth>()])
 void main() {
-  // Mock sign in with Google.
-  // Sign in.
 
   test('description', () async {
     final auth = MockFirebaseAuth();
@@ -22,7 +20,7 @@ void main() {
     expect(email, 'bob@somedomain.com');
   });
 
-  test('test', () async {
+  test('test code sent pass', () async {
     String phoneNumber = '0812345678';
     final user = MockUser(
       isAnonymous: false,
@@ -34,7 +32,7 @@ void main() {
     final auth = MockFirebaseAuth(mockUser: user);
     final authService = Auth();
     authService.auth = auth;
-    final verificationId = await authService.signInWithPhoneNumber(phoneNumber);
+    final verificationId = await authService.signInWithPhoneNumber(phoneNumber);-
     expect(verificationId, isNotEmpty);
     // PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId!, smsCode: '123456');
     // final result = await auth.signInWithCredential(credential);
@@ -42,7 +40,7 @@ void main() {
     // print(auth.currentUser);
   });
 
-  test('test', () async {
+  test('test code sent failed', () async {
     final user = MockUser(
         isAnonymous: false,
         uid: 'someuid',

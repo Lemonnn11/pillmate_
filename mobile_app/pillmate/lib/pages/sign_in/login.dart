@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pillmate/pages/sign_in/verify_otp.dart';
+import 'package:pillmate/services/auth.dart';
 
 import '../../constants/constants.dart';
 import '../../services/sqlite_service.dart';
@@ -25,6 +26,7 @@ class _LoginPageState extends State<LoginPage> {
   int change = 0;
   bool darkMode = false;
 
+  late Auth _authService;
   late SqliteService _sqliteService;
 
   Future<void> initFontSize() async {
@@ -40,6 +42,8 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     this._sqliteService= SqliteService();
+    this._authService = Auth();
+    this._authService.auth = _auth;
     this._sqliteService.initializeDB();
     initFontSize();
     initDarkMode();
@@ -183,26 +187,38 @@ class _LoginPageState extends State<LoginPage> {
                           });
                         }
                         else{
-                          await _auth.verifyPhoneNumber(
-                            phoneNumber: '+66 ' + phoneNumber,
-                            timeout: const Duration(seconds: 120),
-                            verificationCompleted: (PhoneAuthCredential credential) {},
-                            verificationFailed: (FirebaseAuthException e) {
-                              if (e.code == 'invalid-phone-number') {
-                                print('The provided phone number is not valid.');
-                              }
-                            },
-                            codeSent: (verificationId, [forceResendingToken]) {
-                              this.verificationId = verificationId;
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => VerifyOTP(verificationId: this.verificationId, phoneNumber: phoneNumber),
-                                ),
-                              );
-                            },
-                            codeAutoRetrievalTimeout: (verificationId) {},
-                          );
+                          await _authService.signInWithPhoneNumber(phoneNumber).then((verificationID) {
+                            this.verificationId = verificationID!;
+                            print('verificationId: ${verificationID}');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => VerifyOTP(verificationId: this.verificationId, phoneNumber: phoneNumber),
+                              ),
+                            );
+                          });
+
+                          // await _auth.verifyPhoneNumber(
+                          //   phoneNumber: '+66 ' + phoneNumber,
+                          //   timeout: const Duration(seconds: 120),
+                          //   verificationCompleted: (PhoneAuthCredential credential) {},
+                          //   verificationFailed: (FirebaseAuthException e) {
+                          //     if (e.code == 'invalid-phone-number') {
+                          //       print('The provided phone number is not valid.');
+                          //     }
+                          //   },
+                          //   codeSent: (verificationId, [forceResendingToken]) {
+                          //     print('verificationId: ${verificationId}');
+                          //     this.verificationId = verificationId;
+                          //     Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(
+                          //         builder: (context) => VerifyOTP(verificationId: this.verificationId, phoneNumber: phoneNumber),
+                          //       ),
+                          //     );
+                          //   },
+                          //   codeAutoRetrievalTimeout: (verificationId) {},
+                          // );
                         }
                       },
                       child:

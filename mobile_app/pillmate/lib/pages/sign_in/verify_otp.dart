@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:pillmate/models/personal_information.dart';
 
 import '../../constants/constants.dart';
+import '../../services/auth.dart';
 import '../../services/sqlite_service.dart';
 
 class VerifyOTP extends StatefulWidget {
@@ -39,6 +40,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
   bool editFontsize = false;
   int change = 0;
   bool darkMode = false;
+  late Auth _authService;
 
   void startTimer(){
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
@@ -61,6 +63,8 @@ class _VerifyOTPState extends State<VerifyOTP> {
     startTimer();
     this._sqliteService= SqliteService();
     this._sqliteService.initializeDB();
+    this._authService = Auth();
+    this._authService.auth = _auth;
     getPersons();
     initFontSize();
     initDarkMode();
@@ -486,28 +490,50 @@ class _VerifyOTPState extends State<VerifyOTP> {
                 width: screenWidth,
                 child: ElevatedButton(
                   onPressed: () async {
-                    try{
-                      PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: pin1+pin2+pin3+pin4+pin5+pin6);
-                      final user = await _auth.signInWithCredential(credential);
-                      if (user != null) {
+                    print('pins: ${pin1+pin2+pin3+pin4+pin5+pin6} ${verificationId}');
+                    String? result = await _authService.verifyOTP(verificationId, pin1+pin2+pin3+pin4+pin5+pin6);
+                    print('result: ${result}');
+
+                    if(result != null){
+                      if(result == 'validated'){
                         if(_personList.length > 0){
                           Navigator.pushNamed(context, '/homepage');
                         }else{
                           Navigator.pushNamed(context, '/welcome');
                         }
                       }
-                    }catch (e) {
-                      if(e.toString().contains('invalid-verification')){
+                      else if(result == 'invalid-verification'){
                         setState(() {
                           showInvalidOTP = true;
                         });
-                      }
-                      else if(e.toString().contains('Unable to establish connection')){
+                      }else if(result == 'Unable to establish connection'){
                         setState(() {
                           showEmptyOTP = true;
                         });
                       }
                     }
+                    // try{
+                    //   PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: pin1+pin2+pin3+pin4+pin5+pin6);
+                    //   final user = await _auth.signInWithCredential(credential);
+                    //   if (user != null) {
+                    //     if(_personList.length > 0){
+                    //       Navigator.pushNamed(context, '/homepage');
+                    //     }else{
+                    //       Navigator.pushNamed(context, '/welcome');
+                    //     }
+                    //   }
+                    // }catch (e) {
+                    //   if(e.toString().contains('invalid-verification')){
+                    //     setState(() {
+                    //       showInvalidOTP = true;
+                    //     });
+                    //   }
+                    //   else if(e.toString().contains('Unable to establish connection')){
+                    //     setState(() {
+                    //       showEmptyOTP = true;
+                    //     });
+                    //   }
+                    // }
                   },
                   child:
                   Text('ยืนยัน', style: TextStyle(fontFamily: 'PlexSansThaiSm', fontSize: 18, color: !darkMode ? Colors.white: Colors.black),

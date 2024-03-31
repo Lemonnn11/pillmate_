@@ -1,10 +1,15 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Auth{
   late FirebaseAuth auth;
 
   Future<String?> signInWithPhoneNumber(String phoneNumber) async {
+    Completer<String?> completer = Completer<String?>();
+
     String res = '';
+
     await auth.verifyPhoneNumber(
       phoneNumber: '+66 ' + phoneNumber,
       timeout: const Duration(seconds: 120),
@@ -13,13 +18,18 @@ class Auth{
         if (e.code == 'invalid-phone-number') {
           res = 'The provided phone number is not valid.';
         }
+        completer.complete(res);
       },
-      codeSent: (verificationId, [forceResendingToken]) {
+      codeSent: (String verificationId, [int? forceResendingToken]) {
         res = verificationId;
+        completer.complete(res);
       },
-      codeAutoRetrievalTimeout: (verificationId) {},
+      codeAutoRetrievalTimeout: (String verificationId) {
+        completer.complete(verificationId);
+      },
     );
-    return res;
+
+    return completer.future;
   }
 
   Future<String?> verifyOTP(String verificationId, String code) async {
