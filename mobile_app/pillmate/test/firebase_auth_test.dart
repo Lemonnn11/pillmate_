@@ -31,10 +31,6 @@ void main() {
       when(authService.signInWithPhoneNumber(phoneNumber)).thenAnswer((_) async => 'AD8T5IsJEjZbC0X3KySGIDX7HXnIrUnWbKVSWqXrlgh32r-lQPWOlZmpQMNmjV2oeTebcywNVACiBXzCs3or7__7nxcGxIC4PjAhxHNuhBBipl9ZhQWu9bFiRLT-gDaYOuzDzcJK6hMOaZJ3CKQFeUfZZnp2ebCZKg');
       final verificationId = await authService.signInWithPhoneNumber(phoneNumber);
       expect(verificationId, 'AD8T5IsJEjZbC0X3KySGIDX7HXnIrUnWbKVSWqXrlgh32r-lQPWOlZmpQMNmjV2oeTebcywNVACiBXzCs3or7__7nxcGxIC4PjAhxHNuhBBipl9ZhQWu9bFiRLT-gDaYOuzDzcJK6hMOaZJ3CKQFeUfZZnp2ebCZKg');
-      // PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId!, smsCode: '123456');
-      // final result = await auth.signInWithCredential(credential);
-      // expect(result.user?.phoneNumber, phoneNumber);
-      // print(auth.currentUser);
     });
 
     test('test code sent failed', () async {

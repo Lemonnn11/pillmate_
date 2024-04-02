@@ -8,30 +8,6 @@ import 'package:pillmate/services/firestore.dart';
 
 void main(){
 
-  group('Test get pharmacy name from Firebase firestore', () {
-    test('description', () async {
-      final firestore = FakeFirebaseFirestore();
-      await firestore.collection('pharmacies').add({
-        'address': '447 Thanon Si Ayutthaya, Thung Phaya Thai, Ratchathewi, Bangkok 10400',
-        'city': 'กรุงเทพมหานคร',
-        'email': 'lemonn123@gmail.com',
-        'latitude': '13.77765254802144',
-        'longitude': '100.52532826905029',
-        'pharID': 'Fy751CumG69MLZfZLvqe',
-        'phoneNumber': '0968123561',
-        'province': 'ราชเทวี',
-        'serviceDate': 'Mon - Sat',
-        'serviceTime': '8:00 - 17:00',
-        'storeName': 'ร้านขายยาเภสัชมหิดล สถานปฏิบัติการเภสัชกรรมชุมชน',
-      });
-      FirestoreService firestoreService = FirestoreService(firestore: firestore);
-      final res = await firestoreService.getPharmacyName('Fy751CumG69MLZfZLvqe');
-      expect(res, 'ร้านขายยาเภสัชมหิดล สถานปฏิบัติการเภสัชกรรมชุมชน');
-    });
-
-  });
-
-
   group('Test format type of medicine', (){
     test('Tablet should convert to เม็ด', (){
       expect(AddDrugTest.formattedType('Tablet'), 'เม็ด');

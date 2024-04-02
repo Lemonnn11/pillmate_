@@ -39,6 +39,7 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
   bool editFontsize = false;
   int change = 0;
   late SqliteService _sqliteService;
+  late FirestoreService firestoreService;
   bool darkMode = false;
 
   @override
@@ -46,6 +47,7 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
     // TODO: implement initState
     super.initState();
     this._sqliteService= SqliteService();
+    this.firestoreService = FirestoreService(firestore: _firestore);
     this._sqliteService.initializeDB();
     _getPharmaciesInfo();
     getCurrentLocation();
@@ -110,7 +112,6 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
   }
 
   void _getPharmaciesInfo() async {
-    FirestoreService firestoreService = FirestoreService(firestore: _firestore);
     await firestoreService.getPharmaciesInfo().then((value) {
       setState(() {
         _pharList = value!;
@@ -149,33 +150,12 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
   }
 
 
-  void searchPharmacy(String query){
-    _resultList = [];
-    if(query == null || query == ''){
+  Future<void> searchPharmacy(String query) async {
+    await firestoreService.searchPharmacy(query).then((value) {
       setState(() {
-        _resultList = _pharList;
+        _resultList = value!;
       });
-    }
-    else{
-      _pharList.forEach((pharmacy) {
-        if(pharmacy['storeName']!.contains(query)){
-          setState(() {
-            _resultList.add(pharmacy);
-          });
-        }else if(pharmacy['province']!.contains(query)){
-          setState(() {
-            _resultList.add(pharmacy);
-          });
-        }else if(pharmacy['city']!.contains(query)){
-          setState(() {
-            _resultList.add(pharmacy);
-          });
-        }
-      });
-      setState(() {
-        _resultList;
-      });
-    }
+    });
   }
 
 

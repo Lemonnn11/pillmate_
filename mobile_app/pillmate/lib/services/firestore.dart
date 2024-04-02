@@ -33,4 +33,24 @@ class FirestoreService{
     print(_pharList);
     return _pharList;
   }
+
+  Future<List<Map<String, String>>> searchPharmacy(String query) async {
+    List<Map<String, String>> pharList = await getPharmaciesInfo();
+    List<Map<String, String>> resultList = [];
+    if(query == null || query == ''){
+      resultList = pharList;
+    }
+    else{
+      pharList.forEach((pharmacy) {
+        if(pharmacy['storeName']!.contains(query)){
+          resultList.add(pharmacy);
+        }else if(pharmacy['province']!.contains(query)){
+          resultList.add(pharmacy);
+        }else if(pharmacy['city']!.contains(query)){
+          resultList.add(pharmacy);
+        }
+      });
+    }
+    return resultList;
+  }
   }
