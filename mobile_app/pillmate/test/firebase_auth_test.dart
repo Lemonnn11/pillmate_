@@ -5,9 +5,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:pillmate/services/auth.dart';
 
-import 'firebase_auth_test.mocks.dart';
-
-@GenerateNiceMocks([MockSpec<FirebaseAuth>()])
+@GenerateNiceMocks([MockSpec<FirebaseAuth>(), MockSpec<Auth>()])
 void main() {
   late MockFirebaseAuth auth;
   late Auth authService;
