@@ -40,12 +40,13 @@ class MapService{
     return _currLocation;
   }
 
-  Future<String> getDistanceFromLatLng(String origins, String destinations) async {
+  Future<String> getDistanceFromLatLng(String origins, String destinations, http.Client client) async {
     String distance = "";
     String _host = 'https://maps.google.com/maps/api/distancematrix/json';
     final url = '$_host?key=AIzaSyDBq1_J47STSxQY5RsV9X4sWHS6R2NC7gM&language=en&destinations=$destinations&origins=$origins';
     if (origins != null && destinations != null) {
-      var response = await http.get(Uri.parse(url));
+      print(': ${url}');
+      var response = await client.get(Uri.parse(url));
       if (response.statusCode == 200) {
         Map data = jsonDecode(response.body);
         print(data);

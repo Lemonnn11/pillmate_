@@ -47,56 +47,6 @@ class _FakeStreamedResponse_1 extends _i1.SmartFake
         );
 }
 
-/// A class which mocks [MapService].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockMapService extends _i1.Mock implements _i3.MapService {
-  @override
-  _i4.Future<_i5.LatLng?> getCurrentLocation() => (super.noSuchMethod(
-        Invocation.method(
-          #getCurrentLocation,
-          [],
-        ),
-        returnValue: _i4.Future<_i5.LatLng?>.value(),
-        returnValueForMissingStub: _i4.Future<_i5.LatLng?>.value(),
-      ) as _i4.Future<_i5.LatLng?>);
-
-  @override
-  _i4.Future<String> getDistanceFromLatLng(
-    String? origins,
-    String? destinations,
-  ) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getDistanceFromLatLng,
-          [
-            origins,
-            destinations,
-          ],
-        ),
-        returnValue: _i4.Future<String>.value(_i6.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getDistanceFromLatLng,
-            [
-              origins,
-              destinations,
-            ],
-          ),
-        )),
-        returnValueForMissingStub:
-            _i4.Future<String>.value(_i6.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getDistanceFromLatLng,
-            [
-              origins,
-              destinations,
-            ],
-          ),
-        )),
-      ) as _i4.Future<String>);
-}
 
 /// A class which mocks [Client].
 ///
