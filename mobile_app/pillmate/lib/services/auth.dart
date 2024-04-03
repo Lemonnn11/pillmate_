@@ -37,6 +37,7 @@ class Auth{
       PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: code);
       final user = await auth.signInWithCredential(credential);
       if (user != null) {
+        print(user);
         return 'validated';
       }
     }catch (e) {
