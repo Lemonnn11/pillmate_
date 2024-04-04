@@ -10,18 +10,18 @@ import 'map_test.mocks.dart';
 
 @GenerateNiceMocks([MockSpec<MapService>(), MockSpec<http.Client>(), MockSpec<GeocodingPlatform>()])
 void main(){
-  // late MapService mapService;
-  // setUpAll((){
-  //   mapService = MockMapService();
-  // });
+  late MapService mapService;
+  setUpAll((){
+    mapService = MockMapService();
+  });
 
-  // group('test get current location', () {
-  //   test('get current location on mobile phone', () async {
-  //     when(mapService.getCurrentLocation()).thenAnswer((_) async => LatLng(13.77765254802144, 100.52532826905029) );
-  //     final res = await mapService.getCurrentLocation();
-  //     expect(res, LatLng(13.77765254802144, 100.52532826905029));
-  //   });
-  // });
+  group('test get current location', () {
+    test('get current location on mobile phone', () async {
+      when(mapService.getCurrentLocation()).thenAnswer((_) async => LatLng(13.77765254802144, 100.52532826905029) );
+      final res = await mapService.getCurrentLocation();
+      expect(res, LatLng(13.77765254802144, 100.52532826905029));
+    });
+  });
 
   group('test get distance between latlng', () {
     test('test get distance from point to point by latlng', () async {
@@ -36,11 +36,26 @@ void main(){
 
   });
 
-  // group('test convert latlng to address', () {
-  //   test('convert given latlng to address in string', () async {
-  //     MapService mapService1 = MapService();
-  //     final res = await mapService1.convertLatLngToAddress(13.794563725876568, 100.3255952091743);
-  //     print(res);
-  //   });
-  // });
+  group('test convert latlng to address', () {
+    test('convert given latlng to address in string', () async {
+      MapService mapService1 = MapService();
+      MockGeocodingPlatform geocodingPlatform = MockGeocodingPlatform();
+      List<Placemark> placemarks = [Placemark(
+        name: '58',
+        street: '58 58/4 หมู่ 4 ซอย บ้านตั้งสิน ตำบล ศาลายา อำเภอพุทธมณฑล นครปฐม 73170 ประเทศไทย',
+        isoCountryCode: 'TH',
+        country: 'ประเทศไทย',
+        postalCode:'73170',
+        administrativeArea:'นครปฐม',
+        subAdministrativeArea:'อำเภอพุทธมณฑล',
+        locality:'ตำบล ศาลายา',
+        subLocality:'',
+        thoroughfare:'ซอย บ้านตั้งสิน',
+        subThoroughfare:'58/4 หมู่ 4',
+      )];
+      when(geocodingPlatform.placemarkFromCoordinates(13.794563725876568, 100.3255952091743)).thenAnswer((_) async => placemarks);
+      final res = await mapService1.convertLatLngToAddress(13.794563725876568, 100.3255952091743, geocodingPlatform);
+      expect(res, '58 58/4 หมู่ 4 ซอย บ้านตั้งสิน ตำบล ศาลายา อำเภอพุทธมณฑล นครปฐม 73170 ประเทศไทย');
+    });
+  });
 }

@@ -92,6 +92,13 @@ class LocalNotificationService{
     }
   }
 
+  static Future<List<PendingNotificationRequest>> getActiveNotifications() async {
+    List<PendingNotificationRequest> activeNotifications = [];
+    activeNotifications = await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
+    print(activeNotifications);
+    return activeNotifications;
+  }
+
   static Future cancelAllNotifications() async {
     await _flutterLocalNotificationsPlugin.cancelAll();
   }

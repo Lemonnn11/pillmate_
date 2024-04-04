@@ -79,6 +79,7 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
         lat,
         lng,
       );
+      print(placemarks);
       if (placemarks != null && placemarks.isNotEmpty) {
         final placemark = placemarks.reversed.last;
         setState(() {

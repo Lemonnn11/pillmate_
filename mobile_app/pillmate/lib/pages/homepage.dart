@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pillmate/constants/constants.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -265,6 +266,7 @@ class _HomepageState extends State<Homepage> {
     createAppConfig();
     initFontSize();
     initDarkMode();
+    getActiveNoti();
   }
 
   Future<void> createAppConfig() async {
@@ -285,6 +287,11 @@ class _HomepageState extends State<Homepage> {
     setState(() {
       darkMode = status;
     });
+  }
+
+  Future<void> getActiveNoti() async{
+    List<PendingNotificationRequest> activeNoti = await LocalNotificationService.getActiveNotifications();
+    print('activeNoti: ${activeNoti}');
   }
 
   Future<void> scheduledNotification() async {
