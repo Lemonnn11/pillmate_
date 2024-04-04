@@ -463,3 +463,71 @@ class MockClient extends _i1.Mock implements _i2.Client {
         returnValueForMissingStub: null,
       );
 }
+
+/// A class which mocks [GeocodingPlatform].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGeocodingPlatform extends _i1.Mock implements _i7.GeocodingPlatform {
+  @override
+  _i4.Future<void> setLocaleIdentifier(String? localeIdentifier) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setLocaleIdentifier,
+          [localeIdentifier],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<List<_i7.Location>> locationFromAddress(String? address) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #locationFromAddress,
+          [address],
+        ),
+        returnValue: _i4.Future<List<_i7.Location>>.value(<_i7.Location>[]),
+        returnValueForMissingStub:
+            _i4.Future<List<_i7.Location>>.value(<_i7.Location>[]),
+      ) as _i4.Future<List<_i7.Location>>);
+
+  @override
+  _i4.Future<bool> isPresent() => (super.noSuchMethod(
+        Invocation.method(
+          #isPresent,
+          [],
+        ),
+        returnValue: _i4.Future<bool>.value(false),
+        returnValueForMissingStub: _i4.Future<bool>.value(false),
+      ) as _i4.Future<bool>);
+
+  @override
+  _i4.Future<List<_i7.Placemark>> placemarkFromCoordinates(
+    double? latitude,
+    double? longitude,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #placemarkFromCoordinates,
+          [
+            latitude,
+            longitude,
+          ],
+        ),
+        returnValue: _i4.Future<List<_i7.Placemark>>.value(<_i7.Placemark>[]),
+        returnValueForMissingStub:
+            _i4.Future<List<_i7.Placemark>>.value(<_i7.Placemark>[]),
+      ) as _i4.Future<List<_i7.Placemark>>);
+
+  @override
+  _i4.Future<List<_i7.Placemark>> placemarkFromAddress(String? address) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #placemarkFromAddress,
+          [address],
+        ),
+        returnValue: _i4.Future<List<_i7.Placemark>>.value(<_i7.Placemark>[]),
+        returnValueForMissingStub:
+            _i4.Future<List<_i7.Placemark>>.value(<_i7.Placemark>[]),
+      ) as _i4.Future<List<_i7.Placemark>>);
+}
