@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -7,7 +8,7 @@ import 'package:http/http.dart' as http;
 
 import 'map_test.mocks.dart';
 
-@GenerateNiceMocks([MockSpec<MapService>(), MockSpec<http.Client>()])
+@GenerateNiceMocks([MockSpec<MapService>(), MockSpec<http.Client>(), MockSpec<GeocodingPlatform>()])
 void main(){
   // late MapService mapService;
   // setUpAll((){
@@ -35,11 +36,11 @@ void main(){
 
   });
 
-  group('test convert latlng to address', () {
-    test('convert given latlng to address in string', () async {
-      MapService mapService1 = MapService();
-      final res = await mapService1.convertLatLngToAddress(13.794563725876568, 100.3255952091743);
-      print(res);
-    });
-  });
+  // group('test convert latlng to address', () {
+  //   test('convert given latlng to address in string', () async {
+  //     MapService mapService1 = MapService();
+  //     final res = await mapService1.convertLatLngToAddress(13.794563725876568, 100.3255952091743);
+  //     print(res);
+  //   });
+  // });
 }
