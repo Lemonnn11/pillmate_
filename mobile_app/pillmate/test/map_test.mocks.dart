@@ -4,9 +4,10 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i4;
-import 'dart:convert' as _i7;
-import 'dart:typed_data' as _i8;
+import 'dart:convert' as _i8;
+import 'dart:typed_data' as _i9;
 
+import 'package:geocoding/geocoding.dart' as _i7;
 import 'package:google_maps_flutter/google_maps_flutter.dart' as _i5;
 import 'package:http/http.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
@@ -47,6 +48,100 @@ class _FakeStreamedResponse_1 extends _i1.SmartFake
         );
 }
 
+/// A class which mocks [MapService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockMapService extends _i1.Mock implements _i3.MapService {
+  @override
+  _i4.Future<_i5.LatLng?> getCurrentLocation() => (super.noSuchMethod(
+        Invocation.method(
+          #getCurrentLocation,
+          [],
+        ),
+        returnValue: _i4.Future<_i5.LatLng?>.value(),
+        returnValueForMissingStub: _i4.Future<_i5.LatLng?>.value(),
+      ) as _i4.Future<_i5.LatLng?>);
+
+  @override
+  _i4.Future<String> getDistanceFromLatLng(
+    String? origins,
+    String? destinations,
+    _i2.Client? client,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getDistanceFromLatLng,
+          [
+            origins,
+            destinations,
+            client,
+          ],
+        ),
+        returnValue: _i4.Future<String>.value(_i6.dummyValue<String>(
+          this,
+          Invocation.method(
+            #getDistanceFromLatLng,
+            [
+              origins,
+              destinations,
+              client,
+            ],
+          ),
+        )),
+        returnValueForMissingStub:
+            _i4.Future<String>.value(_i6.dummyValue<String>(
+          this,
+          Invocation.method(
+            #getDistanceFromLatLng,
+            [
+              origins,
+              destinations,
+              client,
+            ],
+          ),
+        )),
+      ) as _i4.Future<String>);
+
+  @override
+  _i4.Future<String> convertLatLngToAddress(
+    double? lat,
+    double? lng,
+    _i7.GeocodingPlatform? geocodingPlatform,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #convertLatLngToAddress,
+          [
+            lat,
+            lng,
+            geocodingPlatform,
+          ],
+        ),
+        returnValue: _i4.Future<String>.value(_i6.dummyValue<String>(
+          this,
+          Invocation.method(
+            #convertLatLngToAddress,
+            [
+              lat,
+              lng,
+              geocodingPlatform,
+            ],
+          ),
+        )),
+        returnValueForMissingStub:
+            _i4.Future<String>.value(_i6.dummyValue<String>(
+          this,
+          Invocation.method(
+            #convertLatLngToAddress,
+            [
+              lat,
+              lng,
+              geocodingPlatform,
+            ],
+          ),
+        )),
+      ) as _i4.Future<String>);
+}
 
 /// A class which mocks [Client].
 ///
@@ -117,7 +212,7 @@ class MockClient extends _i1.Mock implements _i2.Client {
     Uri? url, {
     Map<String, String>? headers,
     Object? body,
-    _i7.Encoding? encoding,
+    _i8.Encoding? encoding,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -161,7 +256,7 @@ class MockClient extends _i1.Mock implements _i2.Client {
     Uri? url, {
     Map<String, String>? headers,
     Object? body,
-    _i7.Encoding? encoding,
+    _i8.Encoding? encoding,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -205,7 +300,7 @@ class MockClient extends _i1.Mock implements _i2.Client {
     Uri? url, {
     Map<String, String>? headers,
     Object? body,
-    _i7.Encoding? encoding,
+    _i8.Encoding? encoding,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -249,7 +344,7 @@ class MockClient extends _i1.Mock implements _i2.Client {
     Uri? url, {
     Map<String, String>? headers,
     Object? body,
-    _i7.Encoding? encoding,
+    _i8.Encoding? encoding,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -319,7 +414,7 @@ class MockClient extends _i1.Mock implements _i2.Client {
       ) as _i4.Future<String>);
 
   @override
-  _i4.Future<_i8.Uint8List> readBytes(
+  _i4.Future<_i9.Uint8List> readBytes(
     Uri? url, {
     Map<String, String>? headers,
   }) =>
@@ -329,10 +424,10 @@ class MockClient extends _i1.Mock implements _i2.Client {
           [url],
           {#headers: headers},
         ),
-        returnValue: _i4.Future<_i8.Uint8List>.value(_i8.Uint8List(0)),
+        returnValue: _i4.Future<_i9.Uint8List>.value(_i9.Uint8List(0)),
         returnValueForMissingStub:
-            _i4.Future<_i8.Uint8List>.value(_i8.Uint8List(0)),
-      ) as _i4.Future<_i8.Uint8List>);
+            _i4.Future<_i9.Uint8List>.value(_i9.Uint8List(0)),
+      ) as _i4.Future<_i9.Uint8List>);
 
   @override
   _i4.Future<_i2.StreamedResponse> send(_i2.BaseRequest? request) =>
