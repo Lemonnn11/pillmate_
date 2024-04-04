@@ -1,17 +1,18 @@
 import 'dart:convert';
 
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
+import 'package:location/location.dart' as location;
 import 'package:http/http.dart' as http;
 
 class MapService{
 
 
   Future<LatLng?> getCurrentLocation() async {
-    Location _locationController = new Location();
+    location.Location _locationController = new location.Location();
     LatLng? _currLocation = null;
     bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
+    location.PermissionStatus _permissionGranted;
 
     _serviceEnabled = await _locationController.serviceEnabled();
     if (_serviceEnabled) {
@@ -21,16 +22,16 @@ class MapService{
     }
 
     _permissionGranted = await _locationController.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
+    if (_permissionGranted == location.PermissionStatus.denied) {
       _permissionGranted = await _locationController.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
+      if (_permissionGranted != location.PermissionStatus.granted) {
         print('location permission denied');
         return _currLocation;
       }
     }
     else {
       // initLocation = await _locationController.getLocation();
-      _locationController.onLocationChanged.listen((LocationData currLocation) {
+      _locationController.onLocationChanged.listen((location.LocationData currLocation) {
         if (currLocation.latitude != null && currLocation.longitude != null) {
           _currLocation = LatLng(currLocation.latitude!, currLocation.longitude!);
           // _adjustCameraWithPosition(_currLocation!);
@@ -54,5 +55,26 @@ class MapService{
       }
     }
     return distance;
+  }
+
+  Future<String> convertLatLngToAddress(double lat, double lng, GeocodingPlatform geocodingPlatform) async {
+    String res = '';
+    try {
+      geocodingPlatform.setLocaleIdentifier('th');
+      List<Placemark> placemarks = await geocodingPlatform.placemarkFromCoordinates(
+        lat,
+        lng,
+      );
+      if (placemarks != null && placemarks.isNotEmpty) {
+        final placemark = placemarks.reversed.last;
+        res = '${placemark.street}';
+      } else {
+        res = 'No placemarks found.';
+      }
+    } catch (e) {
+      res = 'Error converting coordinates to address';
+      print('Error converting coordinates to address: $e');
+    }
+    return res;
   }
 }

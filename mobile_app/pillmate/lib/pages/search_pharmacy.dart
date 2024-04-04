@@ -74,10 +74,10 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
 
   void convertLatLngToAddress(double lat, double lng) async {
     try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(
+      GeocodingPlatform.instance!.setLocaleIdentifier('th');
+      List<Placemark> placemarks = await GeocodingPlatform.instance!.placemarkFromCoordinates(
         lat,
         lng,
-        localeIdentifier: 'th',
       );
       if (placemarks != null && placemarks.isNotEmpty) {
         final placemark = placemarks.reversed.last;

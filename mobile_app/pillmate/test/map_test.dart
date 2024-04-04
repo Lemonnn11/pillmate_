@@ -34,4 +34,12 @@ void main(){
     });
 
   });
+
+  group('test convert latlng to address', () {
+    test('convert given latlng to address in string', () async {
+      MapService mapService1 = MapService();
+      final res = await mapService1.convertLatLngToAddress(13.794563725876568, 100.3255952091743);
+      print(res);
+    });
+  });
 }
