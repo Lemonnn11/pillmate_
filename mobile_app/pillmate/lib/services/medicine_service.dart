@@ -5,17 +5,48 @@ import 'package:pillmate/services/sqlite_service.dart';
 
 class MedicineService{
 
+  final SqliteService sqliteService ;
+  MedicineService({required this.sqliteService});
+
+  Future<Map<String, List<MedicineModel>>> getMedicines() async {
+    final _activeDrugsList = await sqliteService.getActiveMedicine();
+    final _inactiveDrugsList = await sqliteService.getInactiveMedicine();
+    Map<String, List<MedicineModel>> res = {};
+    List<MedicineModel> _capsuleDrugsList = [];
+    List<MedicineModel> _tabDrugsList = [];
+    List<MedicineModel> _inactiveCapsuleDrugsList = [];
+    List<MedicineModel> _inactiveTabDrugsList = [];
+    _activeDrugsList.forEach((element) {
+      if(element.typeOfMedicine.toLowerCase() == 'capsule'){
+        _capsuleDrugsList.add(element);
+      }
+      else if(element.typeOfMedicine.toLowerCase() == 'tablet'){
+        _tabDrugsList.add(element);
+      }
+    });
+    _inactiveDrugsList.forEach((element) {
+      if(element.typeOfMedicine.toLowerCase() == 'capsule'){
+        _inactiveCapsuleDrugsList.add(element);
+      }
+      else if(element.typeOfMedicine.toLowerCase() == 'tablet'){
+        _inactiveTabDrugsList.add(element);
+      }
+    });
+    res['capsuleDrugsList'] = _capsuleDrugsList;
+    res['tabDrugsList'] = _tabDrugsList;
+    res['inactiveCapsuleDrugsList'] = _inactiveCapsuleDrugsList;
+    res['inactiveTabDrugsList'] = _inactiveTabDrugsList;
+    return res;
+    }
+
   Map<String, List<MedicineModel>> addToSperateList(List<MedicineModel> _drugsList){
-    late SqliteService _sqliteService;
-    _sqliteService= SqliteService();
-    //_sqliteService.initializeDB();
     Map<String, List<MedicineModel>> res = {};
     List<MedicineModel> _morningDrugsList = [];
     List<MedicineModel> _noonDrugsList = [];
     List<MedicineModel> _eveningDrugsList = [];
     List<MedicineModel> _nightDrugsList = [];
-
     _drugsList.forEach((element) async {
+      print(element.takeMedWhen);
       if(element.takeMedWhen != null || element.takeMedWhen != "" ){
         String tmp = '';
         var listOfMed = element.medicationSchedule.split(',');
@@ -50,7 +81,7 @@ class MedicineService{
               tmp+=',';
             }
           }
-          await _sqliteService.alterMedicationSchedule(element.qrcodeID, tmp);
+          await sqliteService.alterMedicationSchedule(element.qrcodeID, tmp);
         }
         if(dailyMed[0] == DateTime.now().day.toString()){
           for(int i = 0; i < dailyMed.length;i++){
