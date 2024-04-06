@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pillmate/models/medicine.dart';
+import 'package:pillmate/pages/qr_code_scanner.dart';
 import 'package:vibration/vibration.dart';
 
 import '../constants/constants.dart';
@@ -33,6 +34,7 @@ class _AddDrugState extends State<AddDrug> {
   bool editFontsize = false;
   int change = 0;
   bool darkMode = false;
+
 
   void _getPharmacyName() async {
     FirestoreService firestoreService = FirestoreService(firestore: _firestore);
@@ -181,8 +183,7 @@ class _AddDrugState extends State<AddDrug> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    data = json.decode(widget.info);
-    print(data);
+    decodeInfoToJSON();
     this._sqliteService= SqliteService();
     this._sqliteService.initializeDB();
     formattedDate(data['expiredDate'], data['date']);
@@ -190,6 +191,10 @@ class _AddDrugState extends State<AddDrug> {
     initFontSize();
     initDarkMode();
     vibrate();
+  }
+
+  void decodeInfoToJSON(){
+    data = json.decode(widget.info);
   }
 
   Future<void> initDarkMode() async {
@@ -336,7 +341,9 @@ class _AddDrugState extends State<AddDrug> {
         ),
         leading: IconButton(
           icon: Icon(Ionicons.chevron_back_outline, color: !darkMode ? Colors.black: Colors.white,size: 30,), onPressed: () {
-          Navigator.pushNamed(context, "/homepage");
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => QRCodeScanner()
+          ));
         },
 
         ),
