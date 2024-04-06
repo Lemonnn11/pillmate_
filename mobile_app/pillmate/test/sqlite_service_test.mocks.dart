@@ -224,6 +224,19 @@ class MockSqliteService extends _i1.Mock implements _i3.SqliteService {
       ) as _i4.Future<List<_i7.MedicineModel>>);
 
   @override
+  _i4.Future<List<_i7.MedicineModel>> getInactiveMedicine() =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getInactiveMedicine,
+          [],
+        ),
+        returnValue:
+            _i4.Future<List<_i7.MedicineModel>>.value(<_i7.MedicineModel>[]),
+        returnValueForMissingStub:
+            _i4.Future<List<_i7.MedicineModel>>.value(<_i7.MedicineModel>[]),
+      ) as _i4.Future<List<_i7.MedicineModel>>);
+
+  @override
   _i4.Future<List<_i8.DaileyMedModel>> getDailyMedicines() =>
       (super.noSuchMethod(
         Invocation.method(
@@ -375,19 +388,6 @@ class MockSqliteService extends _i1.Mock implements _i3.SqliteService {
         returnValue: _i4.Future<void>.value(),
         returnValueForMissingStub: _i4.Future<void>.value(),
       ) as _i4.Future<void>);
-
-  @override
-  _i4.Future<List<_i7.MedicineModel>> getInactiveMedicine() =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getInactiveMedicine,
-          [],
-        ),
-        returnValue:
-            _i4.Future<List<_i7.MedicineModel>>.value(<_i7.MedicineModel>[]),
-        returnValueForMissingStub:
-            _i4.Future<List<_i7.MedicineModel>>.value(<_i7.MedicineModel>[]),
-      ) as _i4.Future<List<_i7.MedicineModel>>);
 
   @override
   _i4.Future<bool> getEditFontSizeStatus() => (super.noSuchMethod(
