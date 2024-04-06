@@ -44,7 +44,6 @@ class LocalNotificationService{
         }
       }
     }
-    print("jukru: " + notiTime.toString());
     for(int i = 0;i < notiTime.length;i++){
       await _flutterLocalNotificationsPlugin.zonedSchedule(
           i,
