@@ -60,7 +60,7 @@ public class PharmacyController {
         try{
             Pharmacy pharmacy = pharmacyService.getPharmacyByAccount(email);
             if(pharmacy == null){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }else{
                 return new ResponseEntity<>(pharmacy, HttpStatus.OK);
             }

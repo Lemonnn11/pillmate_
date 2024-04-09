@@ -115,7 +115,7 @@ void main(){
       expect(res, pharmacies);
     });
 
-    test('get all pharmacies', () async {
+    test('search specific pharmacy by given query name', () async {
       final List<Map<String, dynamic>> pharmacies = [
         {
           'pharID': 'Fy751CumG69MLZfZLvqe',

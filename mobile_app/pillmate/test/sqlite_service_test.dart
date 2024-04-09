@@ -233,7 +233,7 @@ void main(){
       when(sqliteService.getDailyMedicines()).thenAnswer((_) async => dailyMedList);
       List<DaileyMedModel>? tmpList = await sqliteService.getDailyMedicines();
       expect(tmpList?.first.isNotified, 1);
-      sqliteService.alterDailyMed(1);
+      sqliteService.turnOffNotification();
       when(sqliteService.getDailyMedicines()).thenAnswer((_) async => dailyMedList2);
       List<DaileyMedModel>? tmpList2 = await sqliteService.getDailyMedicines();
       expect(tmpList2?.first.isNotified, 0);
@@ -247,7 +247,7 @@ void main(){
       when(sqliteService.getDailyMedicines()).thenAnswer((_) async => dailyMedList1);
       List<DaileyMedModel>? tmpList = await sqliteService.getDailyMedicines();
       expect(tmpList?.first.isNotified, 0);
-      sqliteService.alterDailyMed(1);
+      sqliteService.turnOnNotification();
       when(sqliteService.getDailyMedicines()).thenAnswer((_) async => dailyMedList2);
       List<DaileyMedModel>? tmpList2 = await sqliteService.getDailyMedicines();
       expect(tmpList2?.first.isNotified, 1);
