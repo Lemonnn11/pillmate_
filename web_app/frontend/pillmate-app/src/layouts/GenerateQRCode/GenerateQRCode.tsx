@@ -64,6 +64,7 @@ export const GenerateQRCode = () => {
     const [ timeOfTakenn, setTimeOfTakenn] = useState('');
     const [ loadingModal, setLoadingModal ] = useState(false);
     const [ url, setUrl ] = useState('');
+    const [ loadingError, setLoadingError ] = useState(false);
 
     const date = new Date()
     const result = date.toLocaleDateString('th-TH', {
@@ -91,28 +92,32 @@ export const GenerateQRCode = () => {
         return () => authCheck();
     }, [auth]);
 
-    useEffect(() => {
+    const getLoadingURL = (id: string) => {
         const storage = getStorage();
-                    const sparkyRef = ref(storage, `${imageID}.png`);
+        const sparkyRef = ref(storage, `${id}.png`);
 
-                    getDownloadURL(sparkyRef).then((url) => {
-                        const xhr = new XMLHttpRequest();
-                        xhr.responseType = 'blob';
-                        xhr.onload = (event) => {
-                          const blob = xhr.response;
-                        };
-                        xhr.open('GET', url);
-                        xhr.send();
+        getDownloadURL(sparkyRef).then((url) => {
+            const xhr = new XMLHttpRequest();
+            xhr.responseType = 'blob';
+            xhr.onload = (event) => {
+            const blob = xhr.response;
+            };
+            xhr.open('GET', url);
+            xhr.send();
                     
                         // Or inserted into an <img> element
                         // const img = document.getElementById('myimg');
                         // img!.setAttribute('src', url);
-                        setUrl(url);
-                      })
-                      .catch((error) => {
-                        // Handle any errors
-                      });
-    }, [imageID]);
+            setUrl(url);
+            setLoadingError(false);
+        })
+        .catch((error) => {
+        // Handle any errors
+        setLoadingError(true);
+        console.log(`error message: ${error.message}`);
+        
+        });
+    }
 
     const authCheck = onAuthStateChanged(auth, (user) => {
         if(!user){
@@ -339,8 +344,8 @@ export const GenerateQRCode = () => {
                         throw new Error('Error found');
                     }else{
                         const response = await create.json()
-                        console.log(response["id"])
-                        setImageID(response["id"])
+                        console.log(response["id"]);
+                        getLoadingURL(response["id"]);
                         setLoadingModal(false);
                         setModalShow(true);
                     }
@@ -388,7 +393,7 @@ export const GenerateQRCode = () => {
                                 {url !== ''? <div ref={componentRef}>
                                     <img  src={url} id="myimg"/>
                                 </div>: <div className='d-flex justify-content-center align-items-center' style={{height: '20vh'}}>
-                                    Loading QR Code...
+                                    {loadingError ? 'Loading Error':'Loading QR Code...'}
                                 </div>}
                             
                             </div>
