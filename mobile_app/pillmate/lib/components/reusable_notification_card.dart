@@ -17,6 +17,17 @@ class ReusableNotificationCard extends StatelessWidget {
 
   const ReusableNotificationCard({super.key, required this.image, required this.medicineModel, required this.callback, required this.when, required this.editFontsize, required this.change, required this.darkMode, });
 
+  String formattedType(String typeOfMedicine){
+    switch(typeOfMedicine){
+      case 'Tablet':
+        typeOfMedicine = typeOfMedicine.replaceAll('Tablet', 'เม็ด');
+        break;
+      case 'Capsule':
+        typeOfMedicine = typeOfMedicine.replaceAll('Capsule', 'แคปซูล');
+        break;
+    }
+    return typeOfMedicine;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +78,7 @@ class ReusableNotificationCard extends StatelessWidget {
                                 child:  Padding(
                                   padding: EdgeInsets.symmetric(vertical: screenHeight*0.0005, horizontal: screenWidth*0.025),
                                   child: Text(
-                                    medicineModel.dosagePerTake.toString(),
+                                    '${medicineModel.dosagePerTake.toString()} ${formattedType(medicineModel.typeOfMedicine)}',
                                     style: TextStyle(
                                         fontSize: editFontsize ?  14 + change.toDouble() : 14,
                                         fontFamily: 'PlexSansThaiRg',

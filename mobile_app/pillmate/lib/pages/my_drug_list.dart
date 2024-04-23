@@ -145,29 +145,30 @@ class _MyDrugListState extends State<MyDrugList> {
     _inactiveCapsuleDrugsList.clear();
     _inactiveTabDrugsList.clear();
     _activeDrugsList.forEach((element) {
-      if(element.typeOfMedicine == 'แคปซูล'){
+      if(element.typeOfMedicine.toLowerCase() == 'capsule'){
         setState(() {
           _capsuleDrugsList.add(element);
         });
       }
-      else if(element.typeOfMedicine == 'เม็ด'){
+      else if(element.typeOfMedicine.toLowerCase() == 'tablet'){
         setState(() {
           _tabDrugsList.add(element);
         });
       }
     });
     _inactiveDrugsList.forEach((element) {
-      if(element.typeOfMedicine == 'แคปซูล'){
+      if(element.typeOfMedicine.toLowerCase() == 'capsule'){
         setState(() {
           _inactiveCapsuleDrugsList.add(element);
         });
       }
-      else if(element.typeOfMedicine == 'เม็ด'){
+      else if(element.typeOfMedicine.toLowerCase() == 'tablet'){
         setState(() {
           _inactiveTabDrugsList.add(element);
         });
       }
     });
+
   }
 
   @override
@@ -592,6 +593,7 @@ class _MyDrugListState extends State<MyDrugList> {
                         scrollDirection: Axis.vertical,
                         itemBuilder: (BuildContext context, int index) {
                           return ReusableMyHistoryListCard(
+                            darkmode: darkMode,
                             editFontSize: editFontsize,
                             change: change,
                             med: _inactiveDrugsList[index], lastIndex: index ==  _inactiveDrugsList.length-1 ? true:false,);
@@ -601,6 +603,7 @@ class _MyDrugListState extends State<MyDrugList> {
                         scrollDirection: Axis.vertical,
                         itemBuilder: (BuildContext context, int index) {
                           return ReusableMyHistoryListCard(
+                            darkmode: darkMode,
                             editFontSize: editFontsize,
                             change: change,
                             med: _inactiveTabDrugsList[index], lastIndex: index ==  _inactiveTabDrugsList.length-1 ? true:false,);
@@ -610,6 +613,7 @@ class _MyDrugListState extends State<MyDrugList> {
                         scrollDirection: Axis.vertical,
                         itemBuilder: (BuildContext context, int index) {
                           return ReusableMyHistoryListCard(
+                            darkmode: darkMode,
                             editFontSize: editFontsize,
                             change: change,
                             med: _inactiveCapsuleDrugsList[index], lastIndex: index ==  _inactiveCapsuleDrugsList.length-1 ? true:false,);

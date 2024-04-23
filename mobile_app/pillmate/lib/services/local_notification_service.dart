@@ -44,16 +44,15 @@ class LocalNotificationService{
         }
       }
     }
-    print("jukru: " + notiTime.toString());
     for(int i = 0;i < notiTime.length;i++){
       await _flutterLocalNotificationsPlugin.zonedSchedule(
           i,
           'Medication Notification',
-          'Morning Medication!!!',
+          'Time for your medication',
           notiTime[i],
           const NotificationDetails(
-              android: AndroidNotificationDetails('your channel id', 'your channel name',
-                  channelDescription: 'your channel description')),
+              android: AndroidNotificationDetails('1', 'Medication Notification',
+                  channelDescription: 'for notifying medication')),
           androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
           uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime);
     }
@@ -90,6 +89,13 @@ class LocalNotificationService{
           androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
           uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime);
     }
+  }
+
+  static Future<List<PendingNotificationRequest>> getActiveNotifications() async {
+    List<PendingNotificationRequest> activeNotifications = [];
+    activeNotifications = await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
+    print(activeNotifications);
+    return activeNotifications;
   }
 
   static Future cancelAllNotifications() async {

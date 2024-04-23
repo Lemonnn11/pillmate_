@@ -15,6 +15,7 @@ import 'package:pillmate/pages/qr_code_scanner.dart';
 
 import '../components/reusable_bottom_navigation_bar.dart';
 import '../constants/constants.dart';
+import '../services/firestore.dart';
 import '../services/sqlite_service.dart';
 import 'add_drug.dart';
 
@@ -38,6 +39,7 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
   bool editFontsize = false;
   int change = 0;
   late SqliteService _sqliteService;
+  late FirestoreService firestoreService;
   bool darkMode = false;
 
   @override
@@ -45,10 +47,10 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
     // TODO: implement initState
     super.initState();
     this._sqliteService= SqliteService();
+    this.firestoreService = FirestoreService(firestore: _firestore);
     this._sqliteService.initializeDB();
     _getPharmaciesInfo();
     getCurrentLocation();
-    _resultList = _pharList;
     authChangesListener();
     initFontSize();
     initDarkMode();
@@ -72,11 +74,12 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
 
   void convertLatLngToAddress(double lat, double lng) async {
     try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(
+      GeocodingPlatform.instance!.setLocaleIdentifier('th');
+      List<Placemark> placemarks = await GeocodingPlatform.instance!.placemarkFromCoordinates(
         lat,
         lng,
-        localeIdentifier: 'th',
       );
+      print(placemarks);
       if (placemarks != null && placemarks.isNotEmpty) {
         final placemark = placemarks.reversed.last;
         setState(() {
@@ -110,25 +113,12 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
   }
 
   void _getPharmaciesInfo() async {
-    await for (var snapshot in _firestore.collection('pharmacies').snapshots()){
-      for(var pharmacy in snapshot.docs){
-        final pharmacyData = pharmacy.data();
-         Map<String, String>? pharmaciesInfo = {};
-         pharmaciesInfo['pharID'] = pharmacyData['pharID'].toString();
-         pharmaciesInfo['storeName'] = pharmacyData['storeName'].toString();
-         pharmaciesInfo['address'] = pharmacyData['address'].toString();
-         pharmaciesInfo['province'] = pharmacyData['province'].toString();
-         pharmaciesInfo['city'] = pharmacyData['city'].toString();
-         pharmaciesInfo['latitude'] = pharmacyData['latitude'].toString();
-         pharmaciesInfo['longitude'] = pharmacyData['longitude'].toString();
-         pharmaciesInfo['phoneNumber'] = pharmacyData['phoneNumber'].toString();
-         pharmaciesInfo['serviceTime'] = pharmacyData['serviceTime'].toString();
-         pharmaciesInfo['serviceDate'] = pharmacyData['serviceDate'].toString();
-         setState(() {
-            _pharList.add(pharmaciesInfo);
-         });
-      }
-    }
+    await firestoreService.getPharmaciesInfo().then((value) {
+      setState(() {
+        _pharList = value!;
+        _resultList = value!;
+      });
+    });
   }
 
   Future<void> getCurrentLocation() async {
@@ -161,33 +151,12 @@ class _SearchPharmacyState extends State<SearchPharmacy> {
   }
 
 
-  void searchPharmacy(String query){
-    _resultList = [];
-    if(query == null || query == ''){
+  Future<void> searchPharmacy(String query) async {
+    await firestoreService.searchPharmacy(query).then((value) {
       setState(() {
-        _resultList = _pharList;
+        _resultList = value!;
       });
-    }
-    else{
-      _pharList.forEach((pharmacy) {
-        if(pharmacy['storeName']!.contains(query)){
-          setState(() {
-            _resultList.add(pharmacy);
-          });
-        }else if(pharmacy['province']!.contains(query)){
-          setState(() {
-            _resultList.add(pharmacy);
-          });
-        }else if(pharmacy['city']!.contains(query)){
-          setState(() {
-            _resultList.add(pharmacy);
-          });
-        }
-      });
-      setState(() {
-        _resultList;
-      });
-    }
+    });
   }
 
 

@@ -27,6 +27,18 @@ class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
     formattedDate();
   }
 
+  String formattedType(String typeOfMedicine){
+    switch(typeOfMedicine){
+      case 'Tablet':
+        typeOfMedicine = typeOfMedicine.replaceAll('Tablet', 'เม็ด');
+        break;
+      case 'Capsule':
+        typeOfMedicine = typeOfMedicine.replaceAll('Capsule', 'แคปซูล');
+        break;
+    }
+    return typeOfMedicine;
+  }
+
   void formattedDate(){
     DateTime des = DateTime.parse(widget.med.date);
     final formatter = new DateFormat('d MMMM y');
@@ -124,7 +136,7 @@ class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
                                 child:  Padding(
                                   padding: EdgeInsets.symmetric(vertical: screenHeight*0.0005, horizontal: screenWidth*0.025),
                                   child: Text(
-                                    widget.med.dosagePerTake.toString(),
+                                    '${widget.med.dosagePerTake.toString()} ${formattedType(widget.med.typeOfMedicine)}',
                                     style: TextStyle(
                                         fontSize: widget.editFontSize ?  14 + widget.change.toDouble() : 14,
                                         fontFamily: 'PlexSansThaiRg',
@@ -139,7 +151,7 @@ class _ReusableMyDrugListCardState extends State<ReusableMyDrugListCard> {
                               Container(
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12),
-                                    color: Color(0xffB8E7FB)
+                                    color: !widget.darkMode? Color(0xffB8E7FB): Color(0xffD9F2FD)
                                 ),
                                 child:  Padding(
                                   padding: EdgeInsets.symmetric(vertical: screenHeight*0.0005, horizontal: screenWidth*0.025),

@@ -102,8 +102,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                 currLocation.longitude!.toString(),
                 widget.pharmacy['latitude']! + ',' +
                     widget.pharmacy['longitude']!);
-            Future<List<LatLng>> polylineCoordinates = getPolyPoints();
-            print("test: " + polylineCoordinates.toString());
+            // Future<List<LatLng>> polylineCoordinates = getPolyPoints();
           });
         }
       });

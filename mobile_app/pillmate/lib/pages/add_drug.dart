@@ -6,8 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pillmate/models/medicine.dart';
+import 'package:pillmate/pages/qr_code_scanner.dart';
+import 'package:vibration/vibration.dart';
 
 import '../constants/constants.dart';
+import '../services/firestore.dart';
 import '../services/sqlite_service.dart';
 
 class AddDrug extends StatefulWidget {
@@ -34,32 +37,164 @@ class _AddDrugState extends State<AddDrug> {
 
 
   void _getPharmacyName() async {
-    _firestore.collection("pharmacies").where("pharID", isEqualTo: data["pharID"]).get().then(
-          (querySnapshot) {
-        print("Successfully completed");
-        for (var docSnapshot in querySnapshot.docs) {
-          setState(() {
-            storeName = docSnapshot.data()['storeName'];
-          });
-        }
-      },
-      onError: (e) => print("Error completing: $e"),
+    FirestoreService firestoreService = FirestoreService(firestore: _firestore);
+    await firestoreService.getPharmacyName(data['pharID']).then((value) {
+     setState(() {
+       storeName = value!;
+     });
+    }
     );
+
+  }
+
+  Future<void> vibrate()async {
+    if (await Vibration.hasVibrator() ?? false) {
+      Vibration.vibrate();
+    }
+  }
+
+
+  int checkDayOverAmountOfdayInMonth(int day){
+    var dt = DateTime.now();
+    switch(dt.month.toString()){
+      case '1': {
+        if(day > 31){
+          return day-31;
+        }else{
+          return day;
+        }
+      }
+
+      case '2': {
+        bool isLeapYear = false;
+        if (dt.year % 4 == 0) {
+          if (dt.year % 100 == 0) {
+            if (dt.year % 400 == 0) {
+              isLeapYear = true;
+            } else {
+              isLeapYear = false;
+            }
+          } else {
+            isLeapYear = true;
+          }
+        } else {
+          isLeapYear = false;
+        }
+        if(isLeapYear){
+          if(day > 29){
+            return day-29;
+          }else{
+            return day;
+          }
+        }else{
+          if(day > 28){
+            return day-28;
+          }else{
+            return day;
+          }
+        }
+
+      }
+
+      case '3': {
+        if(day > 31){
+          return day-31;
+        }else{
+          return day;
+        }
+      }
+
+      case '4': {
+        if(day > 30){
+          return day-30;
+        }else{
+          return day;
+        }
+      }
+
+      case '5': {
+        if(day > 31){
+          return day-31;
+        }else{
+          return day;
+        }
+      }
+
+      case '6': {
+        if(day > 30){
+          return day-30;
+        }else{
+          return day;
+        }
+      }
+
+      case '7': {
+        if(day > 31){
+          return day-31;
+        }else{
+          return day;
+        }
+      }
+
+      case '8': {
+        if(day > 31){
+          return day-31;
+        }else{
+          return day;
+        }
+      }
+      break;
+
+      case '9': {
+        if(day > 30){
+          return day-30;
+        }else{
+          return day;
+        }
+      }
+
+      case '10': {
+        if(day > 31){
+          return day-31;
+        }else{
+          return day;
+        }
+      }
+      case '11': {
+        if(day > 30){
+          return day-30;
+        }else{
+          return day;
+        }
+      }
+
+      case '12': {
+        if(day > 31){
+          return day-31;
+        }else{
+          return day;
+        }
+      }
+    }
+    return day;
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    data = json.decode(widget.info);
-    print(data);
+    decodeInfoToJSON();
     this._sqliteService= SqliteService();
     this._sqliteService.initializeDB();
     formattedDate(data['expiredDate'], data['date']);
-    formattedType(data['typeOfMedicine'].toString());
     _getPharmacyName();
     initFontSize();
     initDarkMode();
+    vibrate();
+  }
+
+  void decodeInfoToJSON(){
+    data = json.decode(widget.info);
   }
 
   Future<void> initDarkMode() async {
@@ -78,7 +213,7 @@ class _AddDrugState extends State<AddDrug> {
     });
   }
   
-  void formattedType(String typeOfMedicine){
+  String formattedType(String typeOfMedicine){
     switch(typeOfMedicine){
       case 'Tablet':
         typeOfMedicine = typeOfMedicine.replaceAll('Tablet', 'เม็ด');
@@ -87,6 +222,7 @@ class _AddDrugState extends State<AddDrug> {
         typeOfMedicine = typeOfMedicine.replaceAll('Capsule', 'แคปซูล');
         break;
     }
+    return typeOfMedicine;
   }
 
   void formattedDate(String expiredDate, String dispensingDate){
@@ -205,7 +341,9 @@ class _AddDrugState extends State<AddDrug> {
         ),
         leading: IconButton(
           icon: Icon(Ionicons.chevron_back_outline, color: !darkMode ? Colors.black: Colors.white,size: 30,), onPressed: () {
-          Navigator.pushNamed(context, "/homepage");
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => QRCodeScanner()
+          ));
         },
 
         ),
@@ -247,7 +385,7 @@ class _AddDrugState extends State<AddDrug> {
                               fontFamily: 'PlexSansThaiRg',
                               color: !darkMode ? Colors.black: Colors.white,
                             ),),
-                          Text(data['typeOfMedicine'],
+                          Text(formattedType(data['typeOfMedicine']),
                             style: TextStyle(
                               fontSize: editFontsize ?  14 + change.toDouble() : 14,
                               fontFamily: 'PlexSansThaiRg',
@@ -312,7 +450,7 @@ class _AddDrugState extends State<AddDrug> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(data['amountOfMeds'].toString() + ' '+ data['typeOfMedicine'],
+                        Text(data['amountOfMeds'].toString() + ' '+ formattedType(data['typeOfMedicine']),
                           style: TextStyle(
                               fontSize: editFontsize ?  16 + change.toDouble() : 16,
                               fontFamily: 'PlexSansThaiRg',
@@ -368,7 +506,7 @@ class _AddDrugState extends State<AddDrug> {
                                       fontFamily: 'PlexSansThaiRg',
                                     color:!darkMode ? Colors.black: Colors.white,
                                   ),),
-                                Text(data['typeOfMedicine'],
+                                Text(formattedType(data['typeOfMedicine']),
                                   style: TextStyle(
                                       fontSize: editFontsize ?  16 + change.toDouble() : 16,
                                       fontFamily: 'PlexSansThaiRg',
@@ -466,7 +604,7 @@ class _AddDrugState extends State<AddDrug> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(data['timeOfMed'],
+                                Text(data['timeOfMed'] == '...' ? 'ตามเวลา': data['timeOfMed'],
                                   style: TextStyle(
                                       fontSize: editFontsize ?  18 + change.toDouble() : 18,
                                       fontFamily: 'PlexSansThaiRg',
@@ -480,7 +618,7 @@ class _AddDrugState extends State<AddDrug> {
                     ),
                   ),
                   SizedBox(width: 16,),
-                  data['timeOfMed'].contains('เวลา') ?
+                  data['timeOfMed'].contains('...') ?
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -549,7 +687,7 @@ class _AddDrugState extends State<AddDrug> {
                 ],
               ),
               SizedBox(height: 4,),
-              data['timeOfMed'].contains('เวลา') || data['timeOfMed'].contains('เมื่อ') ?
+              data['timeOfMed'].contains('...') || data['timeOfMed'].contains('เมื่อ') ?
               Container():
               Wrap(
                 crossAxisAlignment: WrapCrossAlignment.end,
@@ -737,12 +875,13 @@ class _AddDrugState extends State<AddDrug> {
               Wrap(
                 crossAxisAlignment: WrapCrossAlignment.end,
                 children: [
-                  data['takeMedWhen'].contains('เช้า') ? Container(
+                   Container(
                     width: screenWidth*0.29,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
+                        data['timeOfMed'].contains('...') || data['timeOfMed'].contains('เมื่อ') ?
+                        Container():Padding(
                           padding: const EdgeInsets.only(top: 4.0),
                           child: Text(
                             'การแจ้งเตือน',
@@ -753,7 +892,7 @@ class _AddDrugState extends State<AddDrug> {
                             ),
                           ),
                         ),
-                        Padding(
+                        data['takeMedWhen'].contains('เช้า') ? Padding(
                           padding: const EdgeInsets.only(top: 4.0),
                           child: Container(
                             height: 50,
@@ -793,10 +932,10 @@ class _AddDrugState extends State<AddDrug> {
                               ),
                             ),
                           ),
-                        ),
+                        ):Container(width: 0, height: 0,),
                       ],
                     ),
-                  ): Container(width: 0, height: 0,),
+                  ),
                   SizedBox(width: 8,),
                   data['takeMedWhen'].contains('กลางวัน') ? Padding(
                     padding: const EdgeInsets.only(top: 4.0),
@@ -1352,11 +1491,11 @@ class _AddDrugState extends State<AddDrug> {
                               tmpp+=',';
                               for(int i = 0; i < round - 1;i++){
                                 if(i == round-2){
-                                  tmpp += (dt.day + i + 1).toString();
+                                  tmpp += (checkDayOverAmountOfdayInMonth(dt.day + i + 1)).toString();
                                   tmpp += " ";
                                   tmpp += data['takeMedWhen'];
                                 }else{
-                                  tmpp += (dt.day + 1 + i).toString();
+                                  tmpp += (checkDayOverAmountOfdayInMonth(dt.day + i + 1)).toString();
                                   tmpp += " ";
                                   tmpp += data['takeMedWhen'];
                                   tmpp += ",";
@@ -1366,11 +1505,11 @@ class _AddDrugState extends State<AddDrug> {
                               tmpp = '';
                               for(int i = 0; i < round;i++){
                                 if(i == round-1){
-                                  tmpp += (dt.day + i + 1).toString();
+                                  tmpp += (checkDayOverAmountOfdayInMonth(dt.day + i + 1)).toString();
                                   tmpp += " ";
                                   tmpp += data['takeMedWhen'];
                                 }else{
-                                  tmpp += (dt.day + 1 + i).toString();
+                                  tmpp += (checkDayOverAmountOfdayInMonth(dt.day + i + 1)).toString();
                                   tmpp += " ";
                                   tmpp += data['takeMedWhen'];
                                   tmpp += ",";
@@ -1381,11 +1520,11 @@ class _AddDrugState extends State<AddDrug> {
                           else{
                             for(int i = 0; i < round;i++){
                               if(i == round-1){
-                                tmpp += (dt.day + i + 1).toString();
+                                tmpp += (checkDayOverAmountOfdayInMonth(dt.day + i + 1)).toString();
                                 tmpp += " ";
                                 tmpp += data['takeMedWhen'];
                               }else{
-                                tmpp += (dt.day + 1 + i).toString();
+                                tmpp += (checkDayOverAmountOfdayInMonth(dt.day + i + 1)).toString();
                                 tmpp += " ";
                                 tmpp += data['takeMedWhen'];
                                 tmpp += ",";

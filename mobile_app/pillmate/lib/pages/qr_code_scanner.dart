@@ -6,6 +6,7 @@ import 'package:pillmate/pages/add_drug.dart';
 import 'package:pillmate/pages/drug_information.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:vibration/vibration.dart';
 
 import '../services/sqlite_service.dart';
 
@@ -24,6 +25,7 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
   bool editFontsize = false;
   int change = 0;
   late SqliteService _sqliteService;
+  RegExp pattern = RegExp(r'^[0-9]+$');
 
   @override
   void dispose() {
@@ -196,7 +198,7 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
     });
 
     controller.scannedDataStream.listen((barcode) => {
-    if(!isNavigate && barcode != null){
+    if(!isNavigate && barcode != null && !pattern.hasMatch(barcode!.code.toString())){
       isNavigate = true,
       Navigator.push(
       context,
@@ -207,7 +209,6 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
         isNavigate = false;
         controller.dispose();
       })
-
     }
     });
   }
