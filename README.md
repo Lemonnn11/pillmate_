@@ -3,6 +3,7 @@ The Pillmate application is separated into 2 sub-systems including web and mobil
 ## Table of Contents
 * [Technologies](#technologies)
 * [Features](#features)
+* [Testing](#testing)
 ## Technologies
 The project is built with:
 - Web Application
