@@ -28,5 +28,10 @@ The project is built with:
   - Notify Medication
   - View Collaborating Pharmacies' Location
   - Manage Patient Information
+## Testing
+- Unit Testing
+- Integration Testing
+- System Testing
+- Usability Testing
 
 
