@@ -37,11 +37,11 @@ The project is built with:
   To run a Flutter Application<br>
   - To check Flutter installation, run `flutter doctor` in the terminal.
   - To run the application on an emulator or physical device, run `flutter run` in the terminal.
-- web Application
+- web Application<br>
   To run a Frontend(React app) Application<br>
   - To check Node.js and npm installation, run `node -v` and `npm -v` in the terminal.
   - To install all dependencies required for the application, run `npm install` in the terminal.
-  - To run the React application, run `npm start` in the terminal.
+  - To run the React application, run `npm start` in the terminal.<br>
   To run a Backend(Spring boot app) Application<br>
   - To check JDK installation, run `java -version` in the terminal.
   - To run the Spring boot application, run PillmateApplication in the Spring boot.
