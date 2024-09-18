@@ -35,7 +35,8 @@ The project is built with:
 ## User Guide
 - Mobile Application<br>
   To run a Flutter Application<br>
-  To check your Flutter installation, run `flutter doctor` in the terminal.
+  - To check Flutter installation, run `flutter doctor` in the terminal.
+  - To run the application on an emulator or physical device, run `flutter run` in the terminal.
 - web Application
 
 
