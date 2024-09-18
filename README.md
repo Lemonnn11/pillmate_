@@ -33,8 +33,8 @@ The project is built with:
 ## Testing
 - Unit Testing
 ## User Guide
-- Mobile Application
-  To run a Flutter Apllication
+- Mobile Application<br>
+  To run a Flutter Application<br>
   To check your Flutter installation, run `flutter doctor` in the terminal.
 - web Application
 
