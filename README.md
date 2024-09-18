@@ -33,8 +33,9 @@ The project is built with:
 ## Testing
 - Unit Testing
 ## User Guide
-- Integration Testing
-- System Testing
-- Usability Testing
+- Mobile Application
+  To run a Flutter Apllication
+  To check your Flutter installation, run `flutter doctor` in the terminal.
+- web Application
 
 
